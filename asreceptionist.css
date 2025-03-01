@@ -1,0 +1,138 @@
+body {
+    position: relative;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    min-height: 100vh;
+    padding-top: 60px;
+    background: none; /* Remove background from body */
+    margin: 0;
+}
+
+/* Blurred Background */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: url('bg.jpg') no-repeat center center;
+    background-size: cover;
+    filter: blur(10px); /* Apply blur effect */
+    z-index: -1; /* Keeps it behind all content */
+}
+
+
+h1{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+}
+
+.navbar {
+    width: 100%;
+    position: absolute;
+    top: 0%;
+    left: 0;
+    background-color: rgb(109, 174, 218);
+    padding: 15px 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.navbar-brand img {
+    width: 100px; /* Adjust as needed */
+    height: 100px; /* Adjust as needed */
+    border-radius: 10%; /* Makes it a perfect circle */
+    object-fit: cover; /* Ensures it fills the circle properly */
+}
+.sidebar {
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding-top: 10px;
+}
+
+.container-fluid {
+    display: flex;
+    align-items: center;
+    position: absolute;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand img {
+    margin-right: 10px;
+}
+
+.card {
+    background-color: transparent;
+    border: none; /* Optional: removes the card border */
+    box-shadow: none; /* Optional: removes any shadow */
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.wrapper {
+      width: 450px;
+      background-color: rgb(109, 174, 218);
+      color: rgb(8, 8, 8);
+      padding: 20px;
+      border: solid;
+      border-color: white;
+      border-radius: 40px;
+}
+  
+    
+.wrapper h1 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: rgb(11, 81, 172);
+    text-align: center;
+    padding: 10px;  
+}
+    
+.wrapper .input-box{
+    width: 100%;
+    height:  50px;
+    margin: 10px 0px;
+    position: relative;
+    border-radius: 10%;
+    background-color: rgb(251, 251, 252);
+}
+.input-box input{
+    padding: 0px 20px;
+    width: 100%;
+    height: 100%;
+    background:transparent;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    color: rgb(25, 31, 31);
+    border-radius: 40px;     
+ }
+.btn{
+    width: 100%;
+    height: 50px;
+    background-color:rgb(24, 87, 204); ;
+    color: rgb(234, 231, 238);
+    border-radius: 10px;
+    font-size: 14px;
+    border: 3px solid rgb(14, 72, 90);
+}
+.wrapper i{
+    position: absolute;
+    left: 500px;
+}
+ 
+  

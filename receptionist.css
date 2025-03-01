@@ -1,0 +1,35 @@
+body {
+    display: flex;
+}
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background: #343a40;
+    color: white;
+    padding: 15px;
+    position: fixed;
+}
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    margin: 5px 0;
+}
+.sidebar a:hover {
+    background: #495057;
+}
+.content {
+    margin-left: 250px;
+    padding: 20px;
+    width: 100%;
+}
+.navbar {
+    background: #007bff;
+    color: white;
+}
+.dashboard-card {
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+}
