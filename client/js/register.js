@@ -10,17 +10,20 @@ document
     const role = document.getElementById("role").value;
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
+    const fullName = document.getElementById("fullName").value;
+    const email = document.getElementById("email").value;
 
-    const response = await fetch("http://localhost:3000/register", {
+    const response = await fetch("http://localhost:3000/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ role, username, password }),
+      body: JSON.stringify({ role, fullName, username, email, password }),
     });
 
     const data = await response.json();
+    console.log(data)
     document.getElementById("message").textContent = data.message;
 
     if (response.ok) {
-      setTimeout(() => (window.location.href = "login.html"), 2000);
+      window.location.href = "index.html"
     }
   });

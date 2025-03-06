@@ -26,7 +26,7 @@ document
       r_address: document.getElementById("r_address").value,
     };
 
-    fetch("http://localhost:3000/add-patient", {
+    fetch("http://localhost:3000/patients/add-patient", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
