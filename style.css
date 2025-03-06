@@ -79,6 +79,7 @@ body {
     transition: 0.3s;
     text-align: center;
 }
+
 .sidebar button:hover {
     background-color: #1B4965; 
     color: #F8F9FA;

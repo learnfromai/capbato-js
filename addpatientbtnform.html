@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Patient</title>
+    <link rel="stylesheet" href="addpatientbtnform.css">
+</head>
+<body>
+
+    <div class="form-container">
+        <form id="patientFormFields">
+            <div class="form-section">
+                <h3>PATIENT'S INFORMATION</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="lastname">Last Name:</label>
+                        <input type="text" id="lastname" name="lastname" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="firstname">First Name:</label>
+                        <input type="text" id="firstname" name="firstname" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="middlename">Middle Name:</label>
+                        <input type="text" id="middlename" name="middlename" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dob">Date of Birth:</label>
+                        <input type="date" id="dob" name="dob" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age">Age:</label>
+                        <input type="number" id="age" name="age" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">Gender:</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contact">Contact Number:</label>
+                        <input type="tel" id="contact" name="contact" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="marital_status">Marital Status:</label>
+                        <select id="marital_status" name="marital_status" required>
+                            <option value="">Select Status</option>
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                            <option value="Divorced">Divorced</option>
+                            <option value="Widowed">Widowed</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="occupation">Occupation:</label>
+                        <input type="text" id="occupation" name="occupation" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="weight">Weight (kg):</label>
+                        <input type="number" id="weight" name="weight" min="1" max="500">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="height">Height (cm):</label>
+                        <input type="number" id="height" name="height" min="30" max="300">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" name="address" required>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-header">
+                    <h3>RESPONSIBLE PARTY INFORMATION</h3>
+                    <label class="checkbox-label">
+                        Check if same as above
+                        <input type="checkbox" id="sameAsPatient">
+                    </label>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="r_lastname">Last Name:</label>
+                        <input type="text" id="r_lastname" name="r_lastname">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="r_firstname">First Name:</label>
+                        <input type="text" id="r_firstname" name="r_firstname">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="r_middlename">Middle Name:</label>
+                        <input type="text" id="r_middlename" name="r_middlename">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="r_dob">Date of Birth:</label>
+                        <input type="date" id="r_dob" name="r_dob">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="r_age">Age:</label>
+                        <input type="number" id="r_age" name="r_age">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="r_contact">Contact Number:</label>
+                        <input type="tel" id="r_contact" name="r_contact">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="relationship">Relationship to the patient:</label>
+                        <input type="text" id="relationship" name="relationship"></input>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="r_address">Address:</label>
+                    <input type="text" id="r_address" name="r_address">
+                </div>                
+            </div>
+
+            <button type="submit" class="submit-btn">Submit</button>
+        </form>
+    </div>
+  
+
+    <form id="patientForm">
+        <div class="form-section">
+            <h3>PATIENT'S INFORMATION</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="lastname">Last Name:</label>
+                    <input type="text" id="lastname" name="lastname" required>
+                </div>
+                <div class="form-group">
+                    <label for="firstname">First Name:</label>
+                    <input type="text" id="firstname" name="firstname" required>
+                </div>
+                <div class="form-group">
+                    <label for="middlename">Middle Name:</label>
+                    <input type="text" id="middlename" name="middlename" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" required>
+            </div>
+        </div>
+        <button class="submit-btn">Submit</button>
+    </form>
+
+    <script>
+        document.getElementById("patientFormFields").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent page reload
+
+        const patientData = {
+            lastname: document.getElementById("lastname").value,
+            firstname: document.getElementById("firstname").value,
+            middlename: document.getElementById("middlename").value,
+            dob: document.getElementById("dob").value,
+            age: document.getElementById("age").value,
+            gender: document.getElementById("gender").value,
+            contact: document.getElementById("contact").value,
+            marital_status: document.getElementById("marital_status").value,
+            occupation: document.getElementById("occupation").value,
+            weight: document.getElementById("weight").value,
+            height: document.getElementById("height").value,
+            address: document.getElementById("address").value,
+            r_lastname: document.getElementById("r_lastname").value,
+            r_firstname: document.getElementById("r_firstname").value,
+            r_middlename: document.getElementById("r_middlename").value,
+            r_dob: document.getElementById("r_dob").value,
+            r_age: document.getElementById("r_age").value,
+            r_contact: document.getElementById("r_contact").value,
+            relationship: document.getElementById("relationship").value,
+            r_address: document.getElementById("r_address").value
+        };
+
+        fetch("http://localhost:3000/add-patient", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(patientData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                window.parent.postMessage("patientAdded", "*"); // Notify parent page to refresh table
+                window.parent.document.getElementById("overlay").style.display = "none"; // Close form
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            window.parent.document.getElementById("overlay").style.display = "none"; // Close form even on error
+        });
+    });
+    </script>
+    
+
+</body>
+</html>

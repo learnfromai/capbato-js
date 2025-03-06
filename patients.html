@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patients</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="patients.css">
+</head>
+<body>
+    <div class="container">
+        <img src="logo.jpg" alt="" class="logo">
+        <h2 class="title">M.G. Amores Medical Clinic</h2>
+    </div>
+
+    <div class="hover-area"></div>
+
+    <div class="sidebar">
+        <!-- Dashboard -->
+        <button type="button" class="dashboardbtn" id="dashboardbtn">Dashboard</button>
+
+        <!-- Appointment -->
+        <button type="button" class="appointmentbtn">Appointments</button>
+
+        <!-- Patients -->
+        <div class="patientbtn">
+            <button id="patientbtn" type="button">Patients</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("patientbtn").addEventListener("click", function () {
+                window.location.href = "patients.html";
+            });
+
+            document.getElementById("dashboardbtn").addEventListener("click", function () {
+                window.location.href = "dashboard.html";
+            });
+
+            let addPatientBtn = document.querySelector(".add-patient-btn");
+            let overlay = document.getElementById("overlay");
+            let iframe = document.getElementById("addPatientIframe");
+            let closeBtn = document.getElementById("closeBtn");
+
+            if (addPatientBtn && overlay && iframe && closeBtn) {
+                addPatientBtn.addEventListener("click", function () {
+                    overlay.style.display = "flex";
+                    iframe.src = "addpatientbtnform.html";
+                });
+
+                closeBtn.addEventListener("click", function () {
+                    overlay.style.display = "none";
+                    iframe.src = "";
+                });
+
+                // Listen for form submission from iframe
+                window.addEventListener("message", function (event) {
+                    if (event.data === "patientAdded") {
+                        loadPatients(); // Refresh table after new patient is added
+                        document.getElementById("overlay").style.display = "none"; // Close form
+                    }
+                });
+            }
+        });
+
+        // Fetch patient records from Node.js server
+        function loadPatients() {
+            fetch("http://localhost:3000/patients")
+                .then(response => response.json())
+                .then(data => {
+                    let tableBody = document.getElementById("patientTableBody");
+                    tableBody.innerHTML = ""; // Clear previous data
+
+                    data.forEach(patient => {
+                        let row = `<tr>
+                            <td>${patient.patient_id}</td>
+                            <td>${patient.last_name}</td>
+                            <td>${patient.first_name}</td>
+                            <td>${patient.middle_name}</td>
+                            <td>${patient.date_of_birth}</td>
+                        </tr>`;
+                        tableBody.innerHTML += row;
+                    });
+                })
+                .catch(error => console.error("Error fetching data:", error));
+        }
+
+        document.addEventListener("DOMContentLoaded", loadPatients);
+    </script>
+    
+    <div class="table-container">
+        <div class="table-header">
+            <h2>Patient Records</h2>
+            <button class="add-patient-btn">ADD NEW PATIENT</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Patient ID</th>
+                    <th>Last Name</th>
+                    <th>First Name</th>
+                    <th>Middle Name</th>
+                    <th>Date of Birth</th>
+                </tr>
+            </thead>
+            <tbody id="patientTableBody">
+                <!-- Patient data will load here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Floating Iframe Modal -->
+    <div class="overlay" id="overlay">
+        <div class="iframe-container">
+            <button class="close-btn" id="closeBtn">X</button>
+            <iframe id="addPatientIframe"></iframe>
+        </div>
+    </div>
+</body>
+</html>
