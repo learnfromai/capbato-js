@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Patient</title>
-    <link rel="stylesheet" href="addpatientbtnform.css">
+    <link rel="stylesheet" href="../assets/styles/addpatientbtnform.css">
 </head>
 <body>
 
@@ -173,54 +173,7 @@
         <button class="submit-btn">Submit</button>
     </form>
 
-    <script>
-        document.getElementById("patientFormFields").addEventListener("submit", function(event) {
-        event.preventDefault(); // Prevent page reload
-
-        const patientData = {
-            lastname: document.getElementById("lastname").value,
-            firstname: document.getElementById("firstname").value,
-            middlename: document.getElementById("middlename").value,
-            dob: document.getElementById("dob").value,
-            age: document.getElementById("age").value,
-            gender: document.getElementById("gender").value,
-            contact: document.getElementById("contact").value,
-            marital_status: document.getElementById("marital_status").value,
-            occupation: document.getElementById("occupation").value,
-            weight: document.getElementById("weight").value,
-            height: document.getElementById("height").value,
-            address: document.getElementById("address").value,
-            r_lastname: document.getElementById("r_lastname").value,
-            r_firstname: document.getElementById("r_firstname").value,
-            r_middlename: document.getElementById("r_middlename").value,
-            r_dob: document.getElementById("r_dob").value,
-            r_age: document.getElementById("r_age").value,
-            r_contact: document.getElementById("r_contact").value,
-            relationship: document.getElementById("relationship").value,
-            r_address: document.getElementById("r_address").value
-        };
-
-        fetch("http://localhost:3000/add-patient", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(patientData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message) {
-                window.parent.postMessage("patientAdded", "*"); // Notify parent page to refresh table
-                window.parent.document.getElementById("overlay").style.display = "none"; // Close form
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            window.parent.document.getElementById("overlay").style.display = "none"; // Close form even on error
-        });
-    });
-    </script>
-    
+    <script src="../js/addpatientbtnform.js"></script>
 
 </body>
 </html>
