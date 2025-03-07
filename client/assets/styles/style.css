@@ -101,3 +101,7 @@ body {
 .hover-area:hover + .sidebar {
     left: 0;
 }
+
+.title-page {
+    text-align: center;
+}

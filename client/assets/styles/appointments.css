@@ -1,0 +1,84 @@
+.appointment-container {
+    width: 90%;
+    margin: auto;
+    margin-top: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Center the Title While Keeping Button on Right */
+.appointments-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+/* ✅ This Centers the Title */
+.appointments-header .title-page {
+    flex-grow: 1;
+    text-align: center;
+    margin: 0;
+}
+
+/* ✅ Keeps the Button on the Right */
+.add-appointment-btn {
+    background-color: #28a745; /* Green */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.add-appointment-btn:hover {
+    background-color: #218838; /* Darker green */
+}
+
+/* ✅ Styling for the table */
+.appointments-table {
+    width: 100%;
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background: #f4f4f4;
+}
+
+/* ✅ Status Colors */
+.status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.status.pending {
+    background: #ffcc80;
+    color: #8c5000;
+}
+
+.status.confirmed {
+    background: #b9f6ca;
+    color: #006400;
+}
+
+.status.cancelled {
+    background: #ff8a80;
+    color: #8b0000;
+}

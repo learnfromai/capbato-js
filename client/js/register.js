@@ -13,17 +13,23 @@ document
     const fullName = document.getElementById("fullName").value;
     const email = document.getElementById("email").value;
 
-    const response = await fetch("http://localhost:3000/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ role, fullName, username, email, password }),
-    });
+    try {
+      const response = await fetch("http://localhost:3000/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role, fullName, username, email, password }),
+      });
 
-    const data = await response.json();
-    console.log(data)
-    document.getElementById("message").textContent = data.message;
+      const data = await response.json();
+      console.log(data)
+      document.getElementById("message").textContent = data.message;
 
-    if (response.ok) {
-      window.location.href = "index.html"
+      if (response.ok) {
+        setTimeout(() => window.location.href = "login.html", 2000);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      document.getElementById("message").textContent = "Something went wrong.";
     }
   });
+

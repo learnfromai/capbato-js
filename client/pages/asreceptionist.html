@@ -3,37 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Receptionist Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/styles/asreceptionist.css">
     <link rel="stylesheet" href="../assets/styles/style.css">
 </head>
 <body>
     <nav class="navbar">
         <a class="navbar-brand" href="#">
-          <img src="../assets/images/logo.png" alt="Logo" width="100" height="100" class="d-inline-block align-text-top">
+          <img src="../assets/images/logo.png" alt="Logo" width="100" height="100">
           <h1>M.G. Amores Medical Clinic</h1>
         </a>
-  </nav>
+    </nav>
+
     <center>
         <div class="wrapper">
             <h1>RECEPTIONIST</h1>
-            <form action="">
+            <form id="loginForm"> <!-- ✅ Added Form ID -->
+                <input type="hidden" id="role" value="receptionist"> <!-- ✅ Hidden Role -->
+                
                 <div class="input-box">
-                    <input type="text" name="txtUname" id="" placeholder="UserName" required>
+                    <input type="text" id="username" placeholder="UserName" required> <!-- ✅ Correct ID -->
                 </div>
                 <div class="input-box">
-                    <input type="password" name="txtPword" id="" placeholder="Password" required>
+                    <input type="password" id="password" placeholder="Password" required> <!-- ✅ Correct ID -->
                 </div>
                 <div class="remember-forgot">
-                    <label for="">
-                    <input type="checkbox" name="" id=""> Remember Me
+                    <label>
+                        <input type="checkbox"> Remember Me
                     </label>
-                    <a href="#">Forgot Passwortd</a>
+                    <a href="#">Forgot Password</a>
                 </div>
-                <button type="button" class="btn">Login</button>
+                <button type="submit" class="btn">Login</button> <!-- ✅ Changed to Submit -->
             </form>
+            <p id="message" class="text-danger mt-2"></p> <!-- ✅ Error Display -->
         </div>
     </center>
+
+    <script src="../js/login.js"></script> <!-- ✅ Ensure login.js is linked -->
 </body>
 </html>

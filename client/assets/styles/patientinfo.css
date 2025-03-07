@@ -1,0 +1,90 @@
+/* Ensure the header matches other pages */
+.clinic-title {
+    margin-left: 10px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* ✅ Center Page Content */
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* ✅ Profile Content Layout */
+.profile-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    width: 80%;
+}
+
+/* ✅ Card Style for Info Sections */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+}
+
+.card h3 {
+    color: #2563eb;
+}
+
+/* ✅ Back Button */
+.back-btn {
+    margin: 20px 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.back-btn:hover {
+    background: #1d4ed8;
+}
+
+.left-section {
+    margin-top: 20px;
+    flex: 1;
+}
+
+/* Right Side (Appointments & Medical History) */
+.right-section {
+    margin-top: 20px;
+    flex: 1;
+}
+
+/* Card Styling */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+table th {
+    background: #007bff;
+    color: white;
+}
+

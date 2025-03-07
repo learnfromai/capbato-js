@@ -26,23 +26,28 @@ document
       r_address: document.getElementById("r_address").value,
     };
 
+    console.log("🟡 Sending Data:", patientData); // Debugging log
+
     fetch("http://localhost:3000/patients/add-patient", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(patientData),
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log("🟢 Server Response:", data); // Debugging log
         if (data.message) {
-          window.parent.postMessage("patientAdded", "*"); // Notify parent page to refresh table
-          window.parent.document.getElementById("overlay").style.display =
-            "none"; // Close form
+          // ✅ Notify parent page to refresh table
+          window.parent.postMessage("patientAdded", "*");
+
+          // ✅ Close the floating form
+          window.parent.document.getElementById("overlay").style.display = "none";
+
+          // ✅ Clear the form fields
+          document.getElementById("patientFormFields").reset();
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
-        window.parent.document.getElementById("overlay").style.display = "none"; // Close form even on error
+        console.error("🔴 Error:", error);
       });
   });

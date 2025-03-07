@@ -5,6 +5,9 @@ import db from './config/db.js'
 import patientRoutes from './routes/patients.routes.js'
 import indexRoutes from './routes/index.routes.js'
 import authRoutes from './routes/auth.routes.js'
+import appointmentRoutes from './routes/appointments.routes.js';
+
+
 
 const app = express()
 const PORT = 3000
@@ -28,6 +31,7 @@ db.getConnection((err, connection) => {
 app.use('/', indexRoutes)
 app.use('/patients', patientRoutes)
 app.use('/auth', authRoutes)
+app.use('/appointments', appointmentRoutes);
 
 
 // Start Server

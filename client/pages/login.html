@@ -10,8 +10,8 @@
 <body>
     <nav class="navbar">
         <a class="navbar-brand" href="#">
-            <img src="../assets/images/logo.png" alt="Logo" width="100" height="100" class="d-inline-block align-text-top">
-            <h1>M.G. Amores Medical Clinic</h1>
+            <img src="../assets/images/logo.png" alt="Logo" width="100" height="100">
+            <h1>M.G. AMORES MEDICAL CLINIC</h1>
         </a>
     </nav>
 
@@ -21,7 +21,7 @@
                 <div class="card text-center" style="width: 15rem;">
                     <img src="../assets/images/admin.png" class="card-img-top" alt="Admin">
                     <div class="card-body">
-                        <a href="./admin.html" class="btn btn-primary">ADMIN</a>
+                        <a href="./asreceptionist.html?role=admin" class="btn btn-primary">ADMIN</a>  <!-- ✅ Role in URL -->
                     </div>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                 <div class="card text-center" style="width: 15rem;">
                     <img src="../assets/images/receptionist.png" class="card-img-top" alt="Receptionist">
                     <div class="card-body">
-                        <a href="./asreceptionist.html" class="btn btn-primary">RECEPTIONIST</a>
+                        <a href="./asreceptionist.html?role=receptionist" class="btn btn-primary">RECEPTIONIST</a>  <!-- ✅ Role in URL -->
                     </div>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                 <div class="card text-center" style="width: 15rem;">
                     <img src="../assets/images/doctor.png" class="card-img-top" alt="Doctor">
                     <div class="card-body">
-                        <a href="#" class="btn btn-primary">DOCTOR</a>
+                        <a href="./asreceptionist.html?role=doctor" class="btn btn-primary">DOCTOR</a>  <!-- ✅ Role in URL -->
                     </div>
                 </div>
             </div>
@@ -54,20 +54,6 @@
         </div>
     </div>
 
-
-    <form id="loginForm">
-        <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" id="username" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" id="password" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Login</button>
-        <p id="message" class="text-center mt-2"></p>
-    </form>
-    
     <script src="../js/login.js"></script>
 </body>
 </html>

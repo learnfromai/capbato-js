@@ -1,10 +1,10 @@
-import mysql from 'mysql2'
+import mysql from 'mysql'
 
 const pool = mysql.createPool({
   host: 'localhost',
   user: 'root',
-  password: 'kimkim123',
-  database: 'mysql',
+  password: '',
+  database: 'clinic-management-system',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
