@@ -78,8 +78,7 @@ function loadAppointmentsByDate() {
             console.log("📋 All Appointments Fetched:", data);
 
             let filteredAppointments = data.filter(appointment => {
-                let dbDate = new Date(appointment.appointment_date).toISOString().split("T")[0];
-                return dbDate === selectedDate;
+                return adjustForServerTimezone(appointment.appointment_date) === selectedDate;
             });
 
             console.log("✅ Filtered Appointments:", filteredAppointments);
@@ -166,3 +165,9 @@ async function cancelAppointment(appointmentId) {
         alert("❌ Failed to cancel appointment.");
     }
 }
+
+function adjustForServerTimezone(isoString){
+    const date = new Date(isoString);
+    date.setHours(date.getHours() + 8);
+    return date.toISOString().split('T')[0];
+};
