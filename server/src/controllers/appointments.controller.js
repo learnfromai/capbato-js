@@ -13,11 +13,13 @@ exports.getAppointments = (req, res) => {
 
 // ✅ Add a new appointment
 exports.addAppointment = (req, res) => {
-    const { patient_name, visit_type, appointment_date, appointment_time, status } = req.body;  // ✅ Match frontend
+    const { patient_name, visit_type, appointment_date, appointment_time } = req.body; 
+const status = "Confirmed"; // ✅ Automatically set status to "Confirmed"
 
-    if (!patient_name || !visit_type || !appointment_date || !appointment_time || !status) {
-        return res.status(400).json({ error: "All fields are required" });
-    }
+if (!patient_name || !visit_type || !appointment_date || !appointment_time) {
+    return res.status(400).json({ error: "All fields are required" });
+}
+
 
     const sql = "INSERT INTO appointments (patient_name, visit_type, appointment_date, appointment_time, status) VALUES (?, ?, ?, ?, ?)";
     db.query(sql, [patient_name, visit_type, appointment_date, appointment_time, status], (err, result) => {
@@ -26,5 +28,23 @@ exports.addAppointment = (req, res) => {
             return res.status(500).json({ error: "Failed to insert appointment" });
         }
         res.status(201).json({ message: "✅ Appointment added successfully!", id: result.insertId });
+    });
+};
+
+exports.cancelAppointment = (req, res) => {
+    const appointmentId = req.params.id;
+    const { status } = req.body;
+
+    if (!status) {
+        return res.status(400).json({ error: "Status is required." });
+    }
+
+    const sql = "UPDATE appointments SET status = ? WHERE id = ?";
+    db.query(sql, [status, appointmentId], (err, result) => {
+        if (err) {
+            console.error("🔴 Error updating appointment:", err);
+            return res.status(500).json({ error: "Failed to update appointment status." });
+        }
+        res.json({ message: "✅ Appointment cancelled successfully!" });
     });
 };

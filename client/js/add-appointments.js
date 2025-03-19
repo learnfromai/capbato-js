@@ -6,7 +6,7 @@ document.getElementById("addAppointmentForm").addEventListener("submit", async f
     const visit_type = document.getElementById("visitType").value.trim();
     const appointment_date = document.getElementById("date").value;
     const appointment_time = document.getElementById("time").value;
-    const status = document.getElementById("status").checked ? "Confirmed" : "Pending";
+    const status = "Confirmed"; // Always set status as "Confirmed"
 
     // ✅ Ensure all fields are filled
     if (!patient_name || !visit_type || !appointment_date || !appointment_time) {
@@ -14,9 +14,7 @@ document.getElementById("addAppointmentForm").addEventListener("submit", async f
         return;
     }
 
-    // ✅ Debugging Log
     console.log("🟡 Sending appointment data:", { patient_name, visit_type, appointment_date, appointment_time, status });
-    
 
     try {
         const response = await fetch("http://localhost:3000/appointments/add", {
@@ -30,14 +28,8 @@ document.getElementById("addAppointmentForm").addEventListener("submit", async f
 
         if (response.ok) {
             console.log("✅ Appointment added successfully!");
-
-            // ✅ Notify the parent page (appointments.html) to refresh the table
             window.parent.postMessage("appointmentAdded", "*");
-
-            // ✅ Close the floating form
             window.parent.document.getElementById("addAppointmentOverlay").style.display = "none";
-
-            // ✅ Clear the form fields
             document.getElementById("addAppointmentForm").reset();
         } else {
             alert("⚠️ Error: " + data.error);

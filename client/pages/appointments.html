@@ -10,29 +10,31 @@
 <body>
     <!-- Header -->
     <div class="container">
-        <img src="../assets/images/logo.png" alt="" class="logo">
+        <img src="../assets/images/logo.png" alt="Clinic Logo" class="logo">
         <h2 class="title">M.G. AMORES MEDICAL CLINIC</h2>
     </div>
 
     <div class="hover-area"></div>
 
     <div class="sidebar">
-        <!-- Dashboard -->
-        <button type="button" class="dashboardbtn" id="dashboardbtn">Dashboard</button>
-
-        <!-- Appointment -->
-        <button id="appointmentbtn" type="button" class="appointmentbtn">Appointment</button>
-
-        <!-- Patients -->
-        <button id="patientbtn" type="button" class="patientbtn">Patients</button>
+        <button id="dashboardbtn" class="dashboardbtn">Dashboard</button>
+        <button id="appointmentbtn" class="appointmentbtn">Appointment</button>
+        <button id="patientbtn" class="patientbtn">Patients</button>
     </div>
 
     <div class="appointments-table">
         <div class="appointment-container">
+            <!-- ✅ Date Filter Input -->
+            <label for="appointmentDate">Select Date:</label>
+            <input type="date" id="appointmentDate">
+            <button id="filterByDate" class="filter-btn">Show Appointments for Selected Date</button>
+            <button id="showAllAppointments" class="filter-btn">Show All Appointments</button>
+
             <div class="appointments-header">
                 <h2 class="title-page">Appointments</h2>
                 <button id="openAddAppointment" class="add-appointment-btn">Add Appointment</button>
             </div>
+
             <div class="appointments-table">
                 <table>
                     <thead>
@@ -43,8 +45,9 @@
                             <th>Date</th>
                             <th>Time</th>
                             <th>Status</th>
+                            <th>Action</th> <!-- New column for cancel button -->
                         </tr>
-                    </thead>
+                    </thead>                    
                     <tbody id="appointmentsTableBody">
                         <!-- Data will be inserted dynamically here -->
                     </tbody>

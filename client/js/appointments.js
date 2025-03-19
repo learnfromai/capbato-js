@@ -6,7 +6,19 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("dashboardbtn").addEventListener("click", () => window.location.href = "index.html");
     document.getElementById("appointmentbtn").addEventListener("click", () => window.location.href = "appointments.html");
 
-    loadAppointments(); // ✅ Load appointments on page load
+    // ✅ Default date filter
+    const dateInput = document.getElementById("appointmentDate");
+    if (dateInput) {
+        const today = new Date().toISOString().split("T")[0];
+        dateInput.value = today;
+    }
+
+    // ✅ Buttons for filtering
+    document.getElementById("filterByDate").addEventListener("click", loadAppointmentsByDate);
+    document.getElementById("showAllAppointments").addEventListener("click", loadAllAppointments);
+
+    // ✅ Load all appointments on page load
+    loadAllAppointments();
 
     // ✅ Floating form elements
     const addAppointmentBtn = document.getElementById("openAddAppointment");
@@ -31,48 +43,126 @@ document.addEventListener("DOMContentLoaded", function () {
         window.addEventListener("message", function (event) {
             if (event.data === "appointmentAdded") {
                 console.log("🔄 Refreshing appointments table");
-                loadAppointments(); // ✅ Refresh table
+                loadAllAppointments(); // ✅ Refresh table
             }
         });
-        
     }
 });
 
-// ✅ Function to Load Appointments
-function loadAppointments() {
-    console.log("🔄 Fetching appointments from database...");
+// ✅ Function to Load All Appointments
+function loadAllAppointments() {
+    console.log("🔄 Fetching all appointments from database...");
+
+    fetch("http://localhost:3000/appointments")
+        .then(response => response.json())
+        .then(data => updateAppointmentsTable(data))
+        .catch(error => {
+            console.error("🔴 Error fetching appointments:", error);
+            document.getElementById("appointmentsTableBody").innerHTML = `<tr><td colspan="6" style="text-align:center;color:red;">Error loading appointments.</td></tr>`;
+        });
+}
+
+// ✅ Function to Load Appointments for Selected Date
+function loadAppointmentsByDate() {
+    console.log("🔄 Fetching appointments for selected date...");
+
+    const selectedDate = document.getElementById("appointmentDate").value;
+    if (!selectedDate) {
+        alert("⚠️ Please select a date.");
+        return;
+    }
 
     fetch("http://localhost:3000/appointments")
         .then(response => response.json())
         .then(data => {
-            let tableBody = document.getElementById("appointmentsTableBody");
-            tableBody.innerHTML = ""; // Clear previous data
+            console.log("📋 All Appointments Fetched:", data);
 
-            if (!data || data.length === 0) {
-                console.warn("⚠️ No appointments found in the database.");
-                tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No appointments found.</td></tr>`;
+            let filteredAppointments = data.filter(appointment => {
+                let dbDate = new Date(appointment.appointment_date).toISOString().split("T")[0];
+                return dbDate === selectedDate;
+            });
+
+            console.log("✅ Filtered Appointments:", filteredAppointments);
+
+            if (filteredAppointments.length === 0) {
+                console.warn("⚠️ No appointments found for the selected date.");
+                document.getElementById("appointmentsTableBody").innerHTML = `<tr><td colspan="6" style="text-align:center;">No appointments found for the selected date.</td></tr>`;
                 return;
             }
 
-            data.forEach((appointment, index) => {
-                let statusClass = appointment.status ? appointment.status.toLowerCase() : "pending";
-                let row = `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${appointment.patient_name}</td>
-                        <td>${appointment.visit_type}</td>
-                        <td>${appointment.appointment_date}</td>
-                        <td>${appointment.appointment_time}</td>
-                        <td><span class="status ${statusClass}">${appointment.status}</span></td>
-                    </tr>
-                `;
-                tableBody.innerHTML += row;
-            });
-
-            console.log("✅ Appointments table updated successfully!");
+            updateAppointmentsTable(filteredAppointments);
         })
         .catch(error => {
             console.error("🔴 Error fetching appointments:", error);
             document.getElementById("appointmentsTableBody").innerHTML = `<tr><td colspan="6" style="text-align:center;color:red;">Error loading appointments.</td></tr>`;
         });
+}
+
+// ✅ Function to Populate the Appointments Table
+function updateAppointmentsTable(appointments) {
+    let tableBody = document.getElementById("appointmentsTableBody");
+    tableBody.innerHTML = ""; // Clear previous data
+
+    if (!appointments || appointments.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No appointments found.</td></tr>`;
+        return;
+    }
+
+    appointments.forEach((appointment, index) => {
+        let statusClass = appointment.status.toLowerCase();
+        let row = `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${appointment.patient_name}</td>
+                <td>${appointment.visit_type}</td>
+                <td>${appointment.appointment_date}</td>
+                <td>${appointment.appointment_time}</td>
+                <td><span class="status ${statusClass}">${appointment.status}</span></td>
+                <td>
+                    <button class="cancel-btn" data-id="${appointment.id}">Cancel</button>
+                </td>
+            </tr>
+        `;
+        tableBody.innerHTML += row;
+    });
+
+    // Attach event listeners to the cancel buttons
+    document.querySelectorAll(".cancel-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            let appointmentId = this.getAttribute("data-id");
+            confirmCancellation(appointmentId);
+        });
+    });
+
+    console.log("✅ Appointments table updated!");
+}
+
+function confirmCancellation(appointmentId) {
+    let confirmation = confirm("Are you sure you want to cancel this appointment?");
+    if (confirmation) {
+        cancelAppointment(appointmentId);
+    }
+}
+
+async function cancelAppointment(appointmentId) {
+    try {
+        const response = await fetch(`http://localhost:3000/appointments/cancel/${appointmentId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status: "Cancelled" })
+        });
+
+        const data = await response.json();
+        console.log("🟢 Appointment cancelled:", data);
+
+        if (response.ok) {
+            alert("✅ Appointment cancelled successfully!");
+            loadAllAppointments(); // Refresh the table
+        } else {
+            alert("⚠️ Error: " + data.error);
+        }
+    } catch (error) {
+        console.error("🔴 Error cancelling appointment:", error);
+        alert("❌ Failed to cancel appointment.");
+    }
 }
