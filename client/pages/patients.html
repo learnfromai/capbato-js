@@ -28,24 +28,31 @@
     
     <div class="table-container">
         <div class="table-header">
-            <h2>Patient Records</h2>
+            <h2 class="table-title">Patient Records</h2>
             <button class="add-patient-btn">ADD NEW PATIENT</button>
         </div>
+        
+        <!-- Search Bar -->
+        <input type="text" id="searchInput" class="search-bar" placeholder="Search patients...">
+        
+   
+    
         <table>
             <thead>
                 <tr>
-                    <th>Patient ID</th>
-                    <th>Last Name</th>
+                    <th id="sortPatientId">Patient ID 🔽</th>
+                    <th id="sortLastName">Last Name 🔽</th>
                     <th>First Name</th>
                     <th>Middle Name</th>
                     <th>Date of Birth</th>
                 </tr>
-            </thead>
+            </thead>            
             <tbody id="patientTableBody">
                 <!-- Patient data will load here -->
             </tbody>
         </table>
     </div>
+    
 
     <!-- Floating Iframe Modal -->
     <div class="overlay" id="overlay">

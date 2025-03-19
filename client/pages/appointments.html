@@ -27,31 +27,37 @@
         <button id="patientbtn" type="button" class="patientbtn">Patients</button>
     </div>
 
-        <div class="appointments-table">
-            <div class="appointment-container">
-                <div class="appointments-header">
-                    <h2 class="title-page">Appointments</h2>
-                    <button class="add-appointment-btn">Add Appointment</button>
-                </div>
-                <div class="appointments-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Patient Name</th>
-                                <th>Visit Type</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="appointmentsTableBody">
-                            <!-- Data will be inserted dynamically here -->
-                        </tbody>
-                    </table>
-                </div>
+    <div class="appointments-table">
+        <div class="appointment-container">
+            <div class="appointments-header">
+                <h2 class="title-page">Appointments</h2>
+                <button id="openAddAppointment" class="add-appointment-btn">Add Appointment</button>
             </div>
-            
+            <div class="appointments-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Patient Name</th>
+                            <th>Visit Type</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appointmentsTableBody">
+                        <!-- Data will be inserted dynamically here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Form Overlay -->
+    <div class="overlay" id="addAppointmentOverlay">
+        <div class="iframe-container">
+            <button class="close-btn" id="closeAddAppointment">X</button>
+            <iframe id="addAppointmentIframe"></iframe>
         </div>
     </div>
 
