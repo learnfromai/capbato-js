@@ -13,7 +13,6 @@ CREATE TABLE patients (
     Height INT(3) CHECK (Height > 0),
     Address VARCHAR(240),
     
-    -- Guardian Details
     GLastName VARCHAR(120),
     GFirstName VARCHAR(120),
     GMiddleName VARCHAR(120),

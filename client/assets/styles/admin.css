@@ -11,7 +11,6 @@ body {
     margin: 0;
 }
 
-/* Blurred Background */
 body::before {
     content: "";
     position: fixed;
@@ -92,50 +91,50 @@ input {
       padding: 20px;
       border: 2px solid;
       border-radius: 40px;
-    }
-  
-    
-    .wrapper h1 {
-      color: rgb(21, 28, 49);
-      text-align: center;
-      padding: 10px;  
-    }
-    
-    .wrapper .input-box{
-      width: 100%;
-      height:  50px;
-      margin: 10px 0px;
-      position: relative;
-      border-radius: 5%;
-      background-color: rgb(251, 251, 252);
-    }
+}
 
-    .input-box input{
-      padding: 0px 20px;
-      width: 100%;
-      height: 100%;
-      background:transparent;
-      border: none;
-      outline: none;
-      font-size: 14px;
-      color: rgb(25, 31, 31);
-      border-radius: 40px;     
-    }
-    .btn{
-      width: 100%;
-      height: 50px;
-      background-color:rgb(24, 87, 204); ;
-      color: rgb(234, 231, 238);
-      border-radius: 10px;
-      font-size: 14px;
-      border: 3px solid rgb(14, 72, 90);
-    }
-    .wrapper i{
-        position: absolute;
-        left: 500px;
-    }
-    .btn-primary:hover {
-      background-color: #0056b3 !important; /* Darker blue on hover */
-      transform: scale(1.05); /* Slight zoom */
-      transition: all 0.3s ease-in-out;
-  }
+
+.wrapper h1 {
+    color: rgb(21, 28, 49);
+    text-align: center;
+    padding: 10px;  
+}
+
+.wrapper .input-box{
+    width: 100%;
+    height:  50px;
+    margin: 10px 0px;
+    position: relative;
+    border-radius: 5%;
+    background-color: rgb(251, 251, 252);
+}
+
+.input-box input{
+    padding: 0px 20px;
+    width: 100%;
+    height: 100%;
+    background:transparent;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    color: rgb(25, 31, 31);
+    border-radius: 40px;     
+}
+.btn{
+    width: 100%;
+    height: 50px;
+    background-color:rgb(24, 87, 204); ;
+    color: rgb(234, 231, 238);
+    border-radius: 10px;
+    font-size: 14px;
+    border: 3px solid rgb(14, 72, 90);
+}
+.wrapper i{
+    position: absolute;
+    left: 500px;
+}
+.btn-primary:hover {
+    background-color: #0056b3 !important; /* Darker blue on hover */
+    transform: scale(1.05); /* Slight zoom */
+    transition: all 0.3s ease-in-out;
+}

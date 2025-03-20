@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   const urlParams = new URLSearchParams(window.location.search);
-  const role = urlParams.get("role"); // ✅ Get role from URL
+  const role = urlParams.get("role"); 
 
   if (!role) {
       document.getElementById("message").textContent = "Invalid role selection.";
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
           const response = await fetch("http://localhost:3000/auth/login", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ username, password, role }) // ✅ Send role to server
+              body: JSON.stringify({ username, password, role }) 
           });
 
           const data = await response.json();

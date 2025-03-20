@@ -1,7 +1,7 @@
 document
   .getElementById("patientFormFields")
   .addEventListener("submit", function (event) {
-    event.preventDefault(); // Prevent page reload
+    event.preventDefault(); 
 
     const patientData = {
       lastname: document.getElementById("lastname").value,
@@ -26,7 +26,7 @@ document
       r_address: document.getElementById("r_address").value,
     };
 
-    console.log("🟡 Sending Data:", patientData); // Debugging log
+    console.log("Sending Data:", patientData); 
 
     fetch("http://localhost:3000/patients/add-patient", {
       method: "POST",
@@ -35,19 +35,17 @@ document
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("🟢 Server Response:", data); // Debugging log
+        console.log("Server Response:", data);
         if (data.message) {
-          // ✅ Notify parent page to refresh table
+          
           window.parent.postMessage("patientAdded", "*");
 
-          // ✅ Close the floating form
           window.parent.document.getElementById("overlay").style.display = "none";
 
-          // ✅ Clear the form fields
           document.getElementById("patientFormFields").reset();
         }
       })
       .catch((error) => {
-        console.error("🔴 Error:", error);
+        console.error("Error:", error);
       });
   });

@@ -8,8 +8,6 @@
     <link rel="stylesheet" href="../assets/styles/patientInfo.css">
 </head>
 <body>
-
-    <!-- ✅ Updated Header to Match Other Pages -->
     <div class="container">
         <img src="../assets/images/logo.png" alt="" class="logo">
         <h2 class="title">M.G. Amores Medical Clinic</h2>
@@ -18,26 +16,20 @@
     <div class="hover-area"></div>
 
     <div class="sidebar">
-        <!-- Dashboard -->
         <button type="button" class="dashboardbtn" id="dashboardbtn">Dashboard</button>
 
-        <!-- Appointment -->
         <button type="button" class="appointmentbtn" id="appointmentbtn">Appointments</button>
 
-        <!-- Patients -->
         <div class="patientbtn">
             <button id="patientbtn" type="button">Patients</button>
         </div>
     </div>
 
-    <!-- ✅ New Layout with Left and Right Sections -->
     <div class="profile-container">
         <h2 class="title-page">Patient Profile</h2>
 
         <div class="profile-content">
-            <!-- ✅ Left Side: Patient & Guardian Details -->
             <div class="left-section">
-                <!-- Patient Details -->
                 <div class="card">
                     <h3>Patient Information</h3>
                     <p><strong>Patient ID:</strong> <span id="patientID"></span></p>
@@ -53,7 +45,6 @@
                     <p><strong>Height:</strong> <span id="height"></span></p>
                 </div>
 
-                <!-- Guardian Details -->
                 <div class="card">
                     <h3>Responsible Party Information</h3>
                     <p><strong>Guardian Name:</strong> <span id="guardianFullName"></span></p>
@@ -65,9 +56,7 @@
                 </div>
             </div>
 
-            <!-- ✅ Right Side: Appointments & Medical History -->
             <div class="right-section">
-                <!-- Appointments -->
                 <div class="card">
                     <h3>Appointments</h3>
                     <table>
@@ -84,8 +73,6 @@
                         </tbody>
                     </table>
                 </div>
-
-                <!-- Medical History -->
                 <div class="card">
                     <h3>Medical History</h3>
                     <p><span id="medicalHistory"></span></p>
@@ -93,7 +80,6 @@
             </div>
         </div>
 
-        <!-- Go Back Button -->
         <button onclick="goBack()" class="back-btn">Go Back</button>
     </div>
 

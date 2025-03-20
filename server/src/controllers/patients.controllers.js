@@ -1,6 +1,5 @@
 import db from '../config/db.js';
 
-// Get patient details by ID
 export function getPatientById(req, res) {
     const patientId = req.params.id;
 
@@ -14,7 +13,6 @@ export function getPatientById(req, res) {
             return res.status(404).json({ error: 'Patient not found' });
         }
 
-        // Convert patient details to uppercase before sending response
         const patient = result[0];
         for (const key in patient) {
             if (typeof patient[key] === 'string') {
@@ -26,7 +24,6 @@ export function getPatientById(req, res) {
     });
 }
 
-// Get all patients
 export function getPatients(req, res) {
     const sql = `
         SELECT 
@@ -47,9 +44,8 @@ export function getPatients(req, res) {
     });
 }
 
-// Add new patient with uppercase conversion
 export function addPatient(req, res) {
-    console.log("🟡 Backend Received Data:", req.body); // Debugging log
+    console.log("🟡 Backend Received Data:", req.body); 
 
     const {
         lastname,
@@ -74,7 +70,6 @@ export function addPatient(req, res) {
         r_address,
     } = req.body;
 
-    // Convert all string values to uppercase before saving
     const patientData = [
         lastname.toUpperCase(),
         firstname.toUpperCase(),

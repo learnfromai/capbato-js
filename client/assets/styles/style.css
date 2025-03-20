@@ -4,13 +4,10 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* CHECKED */
 body {
     display: flex;
     flex-direction: column;
 }
-
-/* CHECKED */
 
 .container {
     display: flex;
@@ -22,16 +19,12 @@ body {
     height: 100px;
 }
 
-/* CHECKED */
-
 .container img {
     width: 100px;
     height: auto;
     margin-right: 20px;
     border-radius: 10px;
 }
-
-/* CHECKED */
 
 .container h1 {
     margin: 0;
@@ -44,8 +37,6 @@ body {
     background-color: #E6F2FF;
 }
 
-/* CHECKED */
-
 .sidebar {
     position: fixed;
     left: -200px; 
@@ -57,14 +48,10 @@ body {
     padding-top: 60px;
 }
 
-/* CHECKED */
-
 .sidebar:hover {
     left: 0;
 }
 
-
-/* CHECKED */
 .sidebar button {
     display: block;
     width: 80%;
@@ -84,8 +71,6 @@ body {
     background-color: #1B4965; 
     color: #F8F9FA;
 }
-
-/* CHECKED */
 
 .hover-area {
     position: fixed;

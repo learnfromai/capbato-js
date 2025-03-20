@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", async function () {
-    // Extract patient ID from URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const patientId = urlParams.get("patient_id");
 
@@ -13,7 +12,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         const data = await response.json();
 
         if (response.ok) {
-            // Ensure all fields are uppercase and handle missing values safely
             document.getElementById("patientID").textContent = data.PatientID || "N/A";
             document.getElementById("fullName").textContent = `${(data.FirstName || "N/A")} ${(data.MiddleName || "")} ${(data.LastName || "N/A")}`.toUpperCase();
             document.getElementById("gender").textContent = (data.Gender || "N/A").toUpperCase();
@@ -26,7 +24,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             document.getElementById("weight").textContent = (data.Weight || "N/A") + " kg";
             document.getElementById("height").textContent = (data.Height || "N/A") + " cm";
 
-            // Guardian details
             document.getElementById("guardianFullName").textContent = `${(data.GFirstName || "N/A")} ${(data.GMiddleName || "")} ${(data.GLastName || "N/A")}`.toUpperCase();
             document.getElementById("guardianDOB").textContent = data.GDateOfBirth || "N/A";
             document.getElementById("guardianAge").textContent = data.GAge || "N/A";
@@ -34,7 +31,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             document.getElementById("guardianRelationship").textContent = (data.GRelationship || "N/A").toUpperCase();
             document.getElementById("guardianAddress").textContent = (data.GAddress || "N/A").toUpperCase();
 
-            // Medical History (Optional)
             document.getElementById("medicalHistory").textContent = (data.MedicalHistory || "No medical history available.").toUpperCase();
         } else {
             alert("Error: " + (data.error || "Failed to fetch patient data"));
@@ -45,7 +41,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 });
 
-// Function to go back to the previous page
 function goBack() {
     window.history.back();
 }

@@ -1,20 +1,18 @@
 document.getElementById("addAppointmentForm").addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    // ✅ Collect form values
     const patient_name = document.getElementById("patientName").value.trim();
     const visit_type = document.getElementById("visitType").value.trim();
     const appointment_date = document.getElementById("date").value;
     const appointment_time = document.getElementById("time").value;
-    const status = "Confirmed"; // Always set status as "Confirmed"
-
-    // ✅ Ensure all fields are filled
+    const status = "Confirmed"; 
+    
     if (!patient_name || !visit_type || !appointment_date || !appointment_time) {
-        alert("⚠️ Please fill in all fields.");
+        alert(" Please fill in all fields.");
         return;
     }
 
-    console.log("🟡 Sending appointment data:", { patient_name, visit_type, appointment_date, appointment_time, status });
+    console.log("Sending appointment data:", { patient_name, visit_type, appointment_date, appointment_time, status });
 
     try {
         const response = await fetch("http://localhost:3000/appointments/add", {
@@ -24,18 +22,18 @@ document.getElementById("addAppointmentForm").addEventListener("submit", async f
         });
 
         const data = await response.json();
-        console.log("🟢 Server Response:", data);
+        console.log("Server Response:", data);
 
         if (response.ok) {
-            console.log("✅ Appointment added successfully!");
+            console.log("Appointment added successfully!");
             window.parent.postMessage("appointmentAdded", "*");
             window.parent.document.getElementById("addAppointmentOverlay").style.display = "none";
             document.getElementById("addAppointmentForm").reset();
         } else {
-            alert("⚠️ Error: " + data.error);
+            alert("Error: " + data.error);
         }
     } catch (error) {
-        console.error("🔴 Error adding appointment:", error);
-        alert("❌ Failed to add appointment.");
+        console.error("Error adding appointment:", error);
+        alert("Failed to add appointment.");
     }
 });

@@ -3,13 +3,10 @@ import { getPatients, addPatient, getPatientById } from '../controllers/patients
 
 const router = express.Router();
 
-// Get all patients
 router.get('/', getPatients);
 
-// Get a specific patient by ID
-router.get('/:id', getPatientById); // ✅ New route for fetching patient details
+router.get('/:id', getPatientById); 
 
-// Add a new patient
 router.post('/add-patient', addPatient);
 
 export default router;

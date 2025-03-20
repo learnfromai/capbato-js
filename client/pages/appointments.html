@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="../assets/styles/appointments.css">
 </head>
 <body>
-    <!-- Header -->
     <div class="container">
         <img src="../assets/images/logo.png" alt="Clinic Logo" class="logo">
         <h2 class="title">M.G. AMORES MEDICAL CLINIC</h2>
@@ -24,11 +23,10 @@
 
     <div class="appointments-table">
         <div class="appointment-container">
-            <!-- ✅ Date Filter Input -->
             <label for="appointmentDate">Select Date:</label>
             <input type="date" id="appointmentDate">
-            <button id="filterByDate" class="filter-btn">Show Appointments for Selected Date</button>
-            <button id="showAllAppointments" class="filter-btn">Show All Appointments</button>
+            <button id="filterByDate" class="filter-btn">Show Appointments</button>
+            <button id="showAllAppointments" class="filter-btn">Show All</button>
 
             <div class="appointments-header">
                 <h2 class="title-page">Appointments</h2>
@@ -45,18 +43,16 @@
                             <th>Date</th>
                             <th>Time</th>
                             <th>Status</th>
-                            <th>Action</th> <!-- New column for cancel button -->
+                            <th>Action</th> 
                         </tr>
                     </thead>                    
                     <tbody id="appointmentsTableBody">
-                        <!-- Data will be inserted dynamically here -->
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <!-- Floating Form Overlay -->
     <div class="overlay" id="addAppointmentOverlay">
         <div class="iframe-container">
             <button class="close-btn" id="closeAddAppointment">X</button>

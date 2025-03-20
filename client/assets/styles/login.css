@@ -7,11 +7,10 @@ body {
     height: auto;
     min-height: 100vh;
     padding-top: 60px;
-    background: none; /* Remove background from body */
+    background: none;
     margin: 0;
 }
 
-/* Blurred Background */
 body::before {
     content: "";
     position: fixed;
@@ -21,8 +20,8 @@ body::before {
     height: 100vh;
     background: url('bg.jpg') no-repeat center center;
     background-size: cover;
-    filter: blur(10px); /* Apply blur effect */
-    z-index: -1; /* Keeps it behind all content */
+    filter: blur(10px); 
+    z-index: -1;
 }
 
 h1{
@@ -44,10 +43,10 @@ h1{
 }
 
 .navbar-brand img {
-    width: 100px; /* Adjust as needed */
-    height: 100px; /* Adjust as needed */
-    border-radius: 10%; /* Makes it a perfect circle */
-    object-fit: cover; /* Ensures it fills the circle properly */
+    width: 100px;
+    height: 100px;
+    border-radius: 10%;
+    object-fit: cover;
 }
 
 
@@ -67,8 +66,8 @@ h1{
 
 .card {
     background-color: transparent;
-    border: none; /* Optional: removes the card border */
-    box-shadow: none; /* Optional: removes any shadow */
+    border: none; 
+    box-shadow: none;
 }
 
 

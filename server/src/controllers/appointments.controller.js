@@ -1,6 +1,5 @@
 import db from '../config/db.js'
 
-// ✅ Get all appointments
 export async function getAppointments(req, res) {
   const query = `
 		SELECT 
@@ -23,11 +22,10 @@ export async function getAppointments(req, res) {
   })
 }
 
-// ✅ Add a new appointment
 export async function addAppointment(req, res) {
   const { patient_name, visit_type, appointment_date, appointment_time } =
     req.body
-  const status = 'Confirmed' // ✅ Automatically set status to "Confirmed"
+  const status = 'Confirmed'
 
   if (!patient_name || !visit_type || !appointment_date || !appointment_time) {
     return res.status(400).json({ error: 'All fields are required' })
@@ -40,11 +38,11 @@ export async function addAppointment(req, res) {
     [patient_name, visit_type, appointment_date, appointment_time, status],
     (err, result) => {
       if (err) {
-        console.error('🔴 Error adding appointment:', err)
+        console.error('Error adding appointment:', err)
         return res.status(500).json({ error: 'Failed to insert appointment' })
       }
       res.status(201).json({
-        message: '✅ Appointment added successfully!',
+        message: 'Appointment added successfully!',
         id: result.insertId,
       })
     },
@@ -63,11 +61,11 @@ export async function cancelAppointment(req, res) {
   // eslint-disable-next-line no-unused-vars
   db.query(sql, [status, appointmentId], (err, result) => {
     if (err) {
-      console.error('🔴 Error updating appointment:', err)
+      console.error('Error updating appointment:', err)
       return res
         .status(500)
         .json({ error: 'Failed to update appointment status.' })
     }
-    res.json({ message: '✅ Appointment cancelled successfully!' })
+    res.json({ message: 'Appointment cancelled successfully!' })
   })
 }

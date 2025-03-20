@@ -27,51 +27,44 @@ document.addEventListener("DOMContentLoaded", function () {
       iframe.src = "";
     });
 
-    // ✅ Listen for form submission from iframe
     window.addEventListener("message", function (event) {
       if (event.data === "patientAdded") {
-        loadPatients(); // Refresh table after new patient is added
-        document.getElementById("overlay").style.display = "none"; // Close form
-        iframe.src = ""; // Reset iframe
+        loadPatients(); 
+        document.getElementById("overlay").style.display = "none";
+        iframe.src = ""; 
       }
     });
   }
 });
 
-// Sorting state
-let sortColumn = "last_name"; // Default: Sort by Last Name
-let sortAscending = true; // Default: Ascending order
-let patientsData = []; // Store fetched patient data
+let sortColumn = "last_name"; 
+let sortAscending = true;
+let patientsData = []; 
 
-// Fetch and display patient records
 function loadPatients() {
   fetch("http://localhost:3000/patients")
     .then((response) => response.json())
     .then((data) => {
-      patientsData = data; // Store data globally
+      patientsData = data;
       renderTable(data);
     })
-    .catch((error) => console.error("🔴 Error fetching data:", error));
+    .catch((error) => console.error("Error fetching data:", error));
 }
 
-// Function to render patient table with sorting and search
 function renderTable(data) {
   let tableBody = document.getElementById("patientTableBody");
   tableBody.innerHTML = ""; // Clear previous data
 
-  // Sorting logic
   data.sort((a, b) => {
     let valueA = a[sortColumn];
     let valueB = b[sortColumn];
 
-    // If sorting by Last Name (alphabetically)
     if (sortColumn === "last_name") {
       valueA = valueA.toUpperCase();
       valueB = valueB.toUpperCase();
       return sortAscending ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
     }
 
-    // If sorting by Patient ID (numerically)
     if (sortColumn === "patient_id") {
       return sortAscending ? a.patient_id - b.patient_id : b.patient_id - a.patient_id;
     }
@@ -91,7 +84,6 @@ function renderTable(data) {
   });
 }
 
-// ✅ Search Function
 document.getElementById("searchInput").addEventListener("input", function () {
   let searchText = this.value.toLowerCase();
 
@@ -107,18 +99,15 @@ document.getElementById("searchInput").addEventListener("input", function () {
   renderTable(filteredData);
 });
 
-// Add event listeners to table headers
 document.addEventListener("DOMContentLoaded", function () {
   loadPatients();
 
-  // Sorting Last Name
   document.querySelector("th:nth-child(2)").addEventListener("click", function () {
     sortColumn = "last_name";
     sortAscending = !sortAscending;
     renderTable(patientsData);
   });
 
-  // Sorting Patient ID
   document.querySelector("th:nth-child(1)").addEventListener("click", function () {
     sortColumn = "patient_id";
     sortAscending = !sortAscending;

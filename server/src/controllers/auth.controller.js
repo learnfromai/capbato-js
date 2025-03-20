@@ -9,10 +9,8 @@ export async function register(req, res) {
   }
 
   try {
-    // Hash password before saving
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Insert user into database
     const sql =
       'INSERT INTO users (role, full_name, username, password, email) VALUES (?, ?, ?, ?, ?)'
     

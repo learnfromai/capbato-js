@@ -7,10 +7,8 @@ import {
 
 const router = express.Router()
 
-// ✅ Route to Fetch All Appointments
 router.get('/', getAppointments)
 
-// ✅ Route to Add an Appointment
 router.post('/add', addAppointment)
 
 router.put('/cancel/:id', cancelAppointment)
