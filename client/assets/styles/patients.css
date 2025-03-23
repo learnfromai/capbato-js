@@ -146,3 +146,13 @@ iframe {
 .submit-btn:hover {
     background: #0056b3;
 }
+
+.patient-link {
+    color: black;
+    text-decoration: none; /* Optional: removes underline */
+  }
+  
+  .patient-link:hover {
+    color: gray;
+  }
+  
