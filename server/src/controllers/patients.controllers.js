@@ -28,24 +28,27 @@ export function getPatients(req, res) {
     const sql = `
         SELECT 
             PatientID AS patient_id, 
-            UPPER(LastName) AS last_name, 
-            UPPER(FirstName) AS first_name, 
-            UPPER(MiddleName) AS middle_name, 
+            CONCAT(UPPER(FirstName), ' ', 
+                   IFNULL(CONCAT(UPPER(MiddleName), ' '), ''), 
+                   UPPER(LastName)) AS full_name,
+            UPPER(LastName) AS last_name,
             DATE_FORMAT(DateOfBirth, '%Y-%m-%d') AS date_of_birth 
         FROM patients
+        ORDER BY last_name ASC;
     `;
 
     db.query(sql, (err, result) => {
         if (err) {
             res.status(500).json({ error: err.message });
         } else {
+            console.log("Database Response:", JSON.stringify(result, null, 2));
             res.json(result);
         }
     });
 }
 
 export function addPatient(req, res) {
-    console.log("🟡 Backend Received Data:", req.body); 
+    console.log("🟡 Backend Received Data:", req.body);
 
     const {
         lastname,
@@ -70,44 +73,63 @@ export function addPatient(req, res) {
         r_address,
     } = req.body;
 
-    const patientData = [
-        lastname.toUpperCase(),
-        firstname.toUpperCase(),
-        middlename ? middlename.toUpperCase() : '',
-        dob,
-        age,
-        gender.toUpperCase(),
-        contact,
-        marital_status.toUpperCase(),
-        occupation.toUpperCase(),
-        weight,
-        height,
-        address.toUpperCase(),
-        r_lastname.toUpperCase(),
-        r_firstname.toUpperCase(),
-        r_middlename ? r_middlename.toUpperCase() : '',
-        r_dob,
-        r_age,
-        r_contact,
-        relationship.toUpperCase(),
-        r_address.toUpperCase(),
-    ];
+    const firstLetter = lastname.trim()[0].toUpperCase();
 
-    const sql = `
-        INSERT INTO patients 
-        (LastName, FirstName, MiddleName, DateOfBirth, Age, Gender, ContactNumber, 
-        MaritalStatus, Occupation, Weight, Height, Address, 
-        GLastName, GFirstName, GMiddleName, GDateofBirth, GAge, GContactNumber, GRelationship, GAddress) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    const countSql = `
+        SELECT COUNT(*) AS count
+        FROM patients
+        WHERE PatientID LIKE '${firstLetter}%'
     `;
 
-    db.query(sql, patientData, (err, result) => {
+    db.query(countSql, (err, countResult) => {
         if (err) {
-            console.error("🔴 Error inserting patient:", err);
-            res.status(500).json({ error: "Failed to add patient" });
-        } else {
-            console.log("✅ New patient added successfully!");
-            res.json({ message: "Patient added successfully!", patient_id: result.insertId });
+            console.error("🔴 Error generating PatientID:", err);
+            return res.status(500).json({ error: "Failed to generate PatientID" });
         }
+
+        const count = countResult[0].count + 1;
+        const patientId = `${firstLetter}${count}`;
+
+        const patientData = [
+            patientId,
+            lastname.toUpperCase(),
+            firstname.toUpperCase(),
+            middlename ? middlename.toUpperCase() : '',
+            dob,
+            age,
+            gender.toUpperCase(),
+            contact,
+            marital_status.toUpperCase(),
+            occupation.toUpperCase(),
+            weight,
+            height,
+            address.toUpperCase(),
+            r_lastname.toUpperCase(),
+            r_firstname.toUpperCase(),
+            r_middlename ? r_middlename.toUpperCase() : '',
+            r_dob,
+            r_age,
+            r_contact,
+            relationship.toUpperCase(),
+            r_address.toUpperCase(),
+        ];
+
+        const sql = `
+            INSERT INTO patients 
+            (PatientID, LastName, FirstName, MiddleName, DateOfBirth, Age, Gender, ContactNumber, 
+             MaritalStatus, Occupation, Weight, Height, Address, 
+             GLastName, GFirstName, GMiddleName, GDateOfBirth, GAge, GContactNumber, GRelationship, GAddress) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+
+        db.query(sql, patientData, (err, result) => {
+            if (err) {
+                console.error("🔴 Error inserting patient:", err);
+                return res.status(500).json({ error: "Failed to add patient", details: err });
+            } else {
+                console.log("✅ New patient added successfully!");
+                res.json({ message: "Patient added successfully!", patient_id: patientId });
+            }
+        });
     });
 }

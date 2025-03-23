@@ -14,9 +14,16 @@ body {
     align-items: center;
     background: #E6F2FF;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     height: 100px;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+    /* Sticky header */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999; /* Ensures it's on top of everything else */
 }
 
 .container img {
@@ -31,6 +38,7 @@ body {
     font-size: 2em;
     color: #333;
 }
+
 
 .title {
     color: #2C3E50;

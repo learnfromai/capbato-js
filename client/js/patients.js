@@ -1,28 +1,30 @@
 document.addEventListener("DOMContentLoaded", function () {
-  document.getElementById("patientbtn").addEventListener("click", function () {
+  // Navigation buttons
+  document.getElementById("patientbtn").addEventListener("click", () => {
     window.location.href = "patients.html";
   });
 
-  document.getElementById("dashboardbtn").addEventListener("click", function () {
+  document.getElementById("dashboardbtn").addEventListener("click", () => {
     window.location.href = "index.html";
   });
 
-  document.getElementById("appointmentbtn").addEventListener("click", function () {
+  document.getElementById("appointmentbtn").addEventListener("click", () => {
     window.location.href = "appointments.html";
   });
 
-  let addPatientBtn = document.querySelector(".add-patient-btn");
-  let overlay = document.getElementById("overlay");
-  let iframe = document.getElementById("addPatientIframe");
-  let closeBtn = document.getElementById("closeBtn");
+  // Add patient modal open
+  const addPatientBtn = document.querySelector(".add-patient-btn");
+  const overlay = document.getElementById("overlay");
+  const iframe = document.getElementById("addPatientIframe");
+  const closeBtn = document.getElementById("closeBtn");
 
   if (addPatientBtn && overlay && iframe && closeBtn) {
-    addPatientBtn.addEventListener("click", function () {
+    addPatientBtn.addEventListener("click", () => {
       overlay.style.display = "flex";
       iframe.src = "addpatientbtnform.html";
     });
 
-    closeBtn.addEventListener("click", function () {
+    closeBtn.addEventListener("click", () => {
       overlay.style.display = "none";
       iframe.src = "";
     });
@@ -35,16 +37,18 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+
+  // Initial data fetch
+  loadPatients();
 });
 
-let sortColumn = "last_name"; 
-let sortAscending = true;
-let patientsData = []; 
+let patientsData = [];
 
 function loadPatients() {
   fetch("http://localhost:3000/patients")
     .then((response) => response.json())
     .then((data) => {
+      console.log("API Response:", data);
       patientsData = data;
       renderTable(data);
     })
@@ -52,65 +56,37 @@ function loadPatients() {
 }
 
 function renderTable(data) {
-  let tableBody = document.getElementById("patientTableBody");
-  tableBody.innerHTML = ""; // Clear previous data
+  const tableBody = document.getElementById("patientTableBody");
+  tableBody.innerHTML = "";
 
-  data.sort((a, b) => {
-    let valueA = a[sortColumn];
-    let valueB = b[sortColumn];
-
-    if (sortColumn === "last_name") {
-      valueA = valueA.toUpperCase();
-      valueB = valueB.toUpperCase();
-      return sortAscending ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
-    }
-
-    if (sortColumn === "patient_id") {
-      return sortAscending ? a.patient_id - b.patient_id : b.patient_id - a.patient_id;
-    }
-
-    return 0;
-  });
+  if (!data || data.length === 0) {
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="3" style="text-align:center;">No patients found.</td>
+      </tr>`;
+    return;
+  }
 
   data.forEach((patient) => {
-    let row = `<tr>
-                  <td>${patient.patient_id}</td>
-                  <td><a href="patientInfo.html?patient_id=${patient.patient_id}" class="patient-link">${patient.last_name.toUpperCase()}</a></td>
-                  <td>${patient.first_name.toUpperCase()}</td>
-                  <td>${patient.middle_name ? patient.middle_name.toUpperCase() : ''}</td>
-                  <td>${patient.date_of_birth}</td>
-              </tr>`;
+    const row = `
+      <tr>
+        <td>${patient.patient_id}</td>
+        <td>
+          <a href="patientInfo.html?patient_id=${patient.patient_id}" class="patient-link">
+            ${patient.full_name}
+          </a>
+        </td>
+        <td>${patient.date_of_birth}</td>
+      </tr>`;
     tableBody.innerHTML += row;
   });
 }
 
 document.getElementById("searchInput").addEventListener("input", function () {
-  let searchText = this.value.toLowerCase();
-
-  let filteredData = patientsData.filter((patient) => {
-    return (
-      patient.patient_id.toString().includes(searchText) ||
-      patient.last_name.toLowerCase().includes(searchText) ||
-      patient.first_name.toLowerCase().includes(searchText) ||
-      (patient.middle_name && patient.middle_name.toLowerCase().includes(searchText))
-    );
-  });
-
+  const searchText = this.value.toLowerCase();
+  const filteredData = patientsData.filter((patient) =>
+    patient.patient_id.toLowerCase().includes(searchText) ||
+    patient.full_name.toLowerCase().includes(searchText)
+  );
   renderTable(filteredData);
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  loadPatients();
-
-  document.querySelector("th:nth-child(2)").addEventListener("click", function () {
-    sortColumn = "last_name";
-    sortAscending = !sortAscending;
-    renderTable(patientsData);
-  });
-
-  document.querySelector("th:nth-child(1)").addEventListener("click", function () {
-    sortColumn = "patient_id";
-    sortAscending = !sortAscending;
-    renderTable(patientsData);
-  });
 });

@@ -1,7 +1,6 @@
 .appointment-container {
     width: 90%;
-    margin: auto;
-    margin-top: 20px;
+    margin: 140px auto 20px; /* Adjusted margin to lower the table */
     padding: 20px;
     background: white;
     border-radius: 10px;

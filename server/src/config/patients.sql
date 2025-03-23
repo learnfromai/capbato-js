@@ -1,5 +1,5 @@
 CREATE TABLE patients (
-    PatientID INT(10) PRIMARY KEY AUTO_INCREMENT,
+    PatientID VARCHAR(10) PRIMARY KEY,
     LastName VARCHAR(120) NOT NULL,
     FirstName VARCHAR(120) NOT NULL,
     MiddleName VARCHAR(120),
