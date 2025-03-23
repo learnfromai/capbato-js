@@ -76,7 +76,7 @@ function renderTable(data) {
             ${patient.full_name}
           </a>
         </td>
-        <td>${patient.date_of_birth}</td>
+        <td>${formatDate(patient.date_of_birth)}</td>
       </tr>`;
     tableBody.innerHTML += row;
   });

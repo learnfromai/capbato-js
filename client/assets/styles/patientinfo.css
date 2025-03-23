@@ -78,14 +78,3 @@ table th {
     background: #007bff;
     color: white;
 }
-
-/* Patient name link styles */
-.full_name {
-    color: black;
-    text-decoration: none;
-}
-
-.full_name:hover {
-    color: gray;
-    text-decoration: underline;
-}
