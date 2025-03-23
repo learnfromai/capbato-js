@@ -76,9 +76,9 @@ th {
 }
 
 /* FIXED WIDTHS FOR COLUMNS */
-th:nth-child(1), td:nth-child(1) { width: 20%; } /* Patient ID */
-th:nth-child(2), td:nth-child(2) { width: 60%; } /* Full Name */
-th:nth-child(3), td:nth-child(3) { width: 20%; } /* Date of Birth */
+th:nth-child(1), td:nth-child(1) { width: 30%; } /* Patient ID */
+th:nth-child(2), td:nth-child(2) { width: 40%; } /* Full Name */
+th:nth-child(3), td:nth-child(3) { width: 30%; } /* Date of Birth */
 
 /* Allow full name column to wrap nicely if needed */
 td:nth-child(2) {

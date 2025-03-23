@@ -14,23 +14,23 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (response.ok) {
       // Patient Info
       document.getElementById("patientID").textContent = data.PatientID || "N/A";
-      document.getElementById("fullName").textContent = `${data.FirstName || ""} ${data.MiddleName || ""} ${data.LastName || ""}`.trim().toUpperCase();
-      document.getElementById("gender").textContent = (data.Gender || "N/A").toUpperCase();
+      document.getElementById("fullName").textContent = formatName(`${data.FirstName || ""} ${data.MiddleName || ""} ${data.LastName || ""}`);
+      document.getElementById("gender").textContent = formatWord(data.Gender || "N/A");
       document.getElementById("age").textContent = data.Age || "N/A";
       document.getElementById("dob").textContent = formatDate(data.DateOfBirth) || "N/A";
       document.getElementById("contact").textContent = data.ContactNumber || "N/A";
-      document.getElementById("address").textContent = data.Address ? data.Address.toUpperCase() : "N/A";
+      document.getElementById("address").textContent = formatSentence(data.Address) || "N/A";
 
       // Guardian Info
-      document.getElementById("guardianFullName").textContent = data.GuardianName ? data.GuardianName.toUpperCase() : "N/A";
-      document.getElementById("guardianGender").textContent = (data.GuardianGender || "N/A").toUpperCase();
-      document.getElementById("guardianRelationship").textContent = data.GuardianRelationship ? data.GuardianRelationship.toUpperCase() : "N/A";
+      document.getElementById("guardianFullName").textContent = formatName(data.GuardianName) || "N/A";
+      document.getElementById("guardianGender").textContent = formatWord(data.GuardianGender || "N/A");
+      document.getElementById("guardianRelationship").textContent = formatWord(data.GuardianRelationship || "N/A");
       document.getElementById("guardianContact").textContent = data.GuardianContactNumber || "N/A";
-      document.getElementById("guardianAddress").textContent = data.GuardianAddress ? data.GuardianAddress.toUpperCase() : "N/A";
+      document.getElementById("guardianAddress").textContent = formatSentence(data.GuardianAddress) || "N/A";
 
-      // Placeholder for future medical history logic
+      // Placeholder for medical history
       document.getElementById("medicalHistory").textContent =
-        (data.MedicalHistory || "No medical history available.").toUpperCase();
+        formatSentence(data.MedicalHistory || "No medical history available.");
     } else {
       alert("Error: " + (data.error || "Failed to fetch patient data"));
     }
@@ -40,7 +40,8 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 });
 
-// Format date like "Mar 20, 2025"
+// ========== Helper Functions ==========
+
 function formatDate(dateString) {
   const date = new Date(dateString);
   if (isNaN(date)) return "Invalid Date";
@@ -51,6 +52,28 @@ function formatDate(dateString) {
     day: "numeric"
   });
 }
+
+function formatName(name) {
+  return name
+    .toLowerCase()
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ")
+    .trim();
+}
+
+function formatWord(word) {
+  const lower = word.toLowerCase();
+  return lower.charAt(0).toUpperCase() + lower.slice(1);
+}
+
+function formatSentence(sentence) {
+  return sentence
+    .toLowerCase()
+    .replace(/\b\w/g, c => c.toUpperCase());
+}
+
+// ========== Navigation ==========
 
 function goBack() {
   window.history.back();

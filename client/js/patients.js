@@ -31,9 +31,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     window.addEventListener("message", function (event) {
       if (event.data === "patientAdded") {
-        loadPatients(); 
+        loadPatients();
         document.getElementById("overlay").style.display = "none";
-        iframe.src = ""; 
+        iframe.src = "";
       }
     });
   }
@@ -55,6 +55,20 @@ function loadPatients() {
     .catch((error) => console.error("Error fetching data:", error));
 }
 
+function formatDate(dateString) {
+  const options = { year: 'numeric', month: 'short', day: 'numeric' };
+  const date = new Date(dateString);
+  return isNaN(date) ? "Invalid Date" : date.toLocaleDateString('en-US', options);
+}
+
+function toTitleCase(str) {
+  return str
+    .toLowerCase()
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 function renderTable(data) {
   const tableBody = document.getElementById("patientTableBody");
   tableBody.innerHTML = "";
@@ -68,12 +82,13 @@ function renderTable(data) {
   }
 
   data.forEach((patient) => {
+    const formattedName = toTitleCase(patient.full_name || "");
     const row = `
       <tr>
         <td>${patient.patient_id}</td>
         <td>
           <a href="patientInfo.html?patient_id=${patient.patient_id}" class="patient-link">
-            ${patient.full_name}
+            ${formattedName}
           </a>
         </td>
         <td>${formatDate(patient.date_of_birth)}</td>
