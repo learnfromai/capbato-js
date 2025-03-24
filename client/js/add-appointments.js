@@ -26,7 +26,8 @@ document.getElementById("addAppointmentForm").addEventListener("submit", async f
 
         if (response.ok) {
             console.log("Appointment added successfully!");
-            window.parent.postMessage("appointmentAdded", "*");
+            // ✅ send real appointment_date back to parent
+            window.parent.postMessage({ type: "appointmentAdded", date: appointment_date }, "*");
             window.parent.document.getElementById("addAppointmentOverlay").style.display = "none";
             document.getElementById("addAppointmentForm").reset();
         } else {

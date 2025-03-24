@@ -1,24 +1,36 @@
+let lastViewedDate = null; // ✅ Keep track of last viewed date
+
 document.addEventListener("DOMContentLoaded", function () {
     console.log("Appointments Page Loaded");
 
     document.getElementById("patientbtn").addEventListener("click", () => window.location.href = "patients.html");
     document.getElementById("dashboardbtn").addEventListener("click", () => window.location.href = "index.html");
-    document.getElementById("appointmentbtn").addEventListener("click", () => window.location.href = "appointments.html");
+    document.getElementById("appointmentbtn").addEventListener("click", () => {
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("appointmentDate").value = today;
+        lastViewedDate = today;
+        loadAppointmentsByDate(today); // ✅ Load today's appointments only
+    });
 
     const dateInput = document.getElementById("appointmentDate");
     if (dateInput) {
         const today = new Date().toISOString().split("T")[0];
         dateInput.value = today;
+        lastViewedDate = today; // ✅ Set lastViewedDate to today on load
     }
 
     document.getElementById("filterByDate").addEventListener("click", function () {
         const selectedDate = document.getElementById("appointmentDate").value;
+        lastViewedDate = selectedDate; // ✅ Update lastViewedDate
         loadAppointmentsByDate(selectedDate);
     });
-    
-    document.getElementById("showAllAppointments").addEventListener("click", loadAllAppointments);
 
-    loadAllAppointments();
+    document.getElementById("showAllAppointments").addEventListener("click", () => {
+        lastViewedDate = null; // ✅ Reset the lastViewedDate when showing all
+        loadAllAppointments();
+    });
+
+    loadAppointmentsByDate(lastViewedDate || new Date().toISOString().split("T")[0]); // ✅ Load today's appointments by default
 
     const addAppointmentBtn = document.getElementById("openAddAppointment");
     const overlay = document.getElementById("addAppointmentOverlay");
@@ -35,25 +47,41 @@ document.addEventListener("DOMContentLoaded", function () {
         closeBtn.addEventListener("click", function () {
             console.log("Closing Add Appointment form");
             overlay.style.display = "none";
-            iframe.src = ""; 
+            iframe.src = "";
         });
 
         window.addEventListener("message", function (event) {
-            if (event.data === "appointmentAdded") {
+            if (event.data && event.data.type === "appointmentAdded") {
                 console.log("Appointment added! Refreshing table...");
 
-                const lastViewedDate = document.getElementById("appointmentDate").value;
-
-                if (lastViewedDate) {
+                if (event.data.date) {
+                    lastViewedDate = event.data.date;
+                    document.getElementById("appointmentDate").value = lastViewedDate;
+                    console.log("Reloading appointments for added date:", lastViewedDate);
+                    loadAppointmentsByDate(lastViewedDate);
+                } else if (lastViewedDate) {
                     console.log("Reloading appointments for last viewed date:", lastViewedDate);
                     loadAppointmentsByDate(lastViewedDate);
                 } else {
-                    loadAllAppointments(); 
+                    loadAllAppointments();
                 }
             }
-        });                    
+        });
     }
 });
+
+function formatTo12HourTime(timeString) {
+    const [hour, minute] = timeString.split(":");
+    const h = parseInt(hour, 10);
+    const period = h >= 12 ? "PM" : "AM";
+    const hour12 = h % 12 || 12;
+    return `${hour12}:${minute} ${period}`;
+}
+
+function formatDateToReadable(dateString) {
+    const options = { year: "numeric", month: "short", day: "numeric" };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+}
 
 function loadAllAppointments() {
     console.log("Fetching all appointments from database...");
@@ -71,9 +99,9 @@ function loadAppointmentsByDate(date = null) {
     console.log("Fetching appointments for selected date...");
 
     const selectedDate = date || document.getElementById("appointmentDate").value;
-    
+
     if (!selectedDate) {
-        alert(" Please select a date.");
+        alert("Please select a date.");
         return;
     }
 
@@ -89,7 +117,6 @@ function loadAppointmentsByDate(date = null) {
             console.log("Filtered Appointments:", filteredAppointments);
 
             if (filteredAppointments.length === 0) {
-                console.warn("No appointments found for the selected date.");
                 document.getElementById("appointmentsTableBody").innerHTML = `<tr><td colspan="7" style="text-align:center;">No appointments found.</td></tr>`;
                 return;
             }
@@ -102,10 +129,9 @@ function loadAppointmentsByDate(date = null) {
         });
 }
 
-
 function updateAppointmentsTable(appointments) {
     let tableBody = document.getElementById("appointmentsTableBody");
-    tableBody.innerHTML = ""; 
+    tableBody.innerHTML = "";
 
     if (!appointments || appointments.length === 0) {
         tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No appointments found.</td></tr>`;
@@ -115,17 +141,21 @@ function updateAppointmentsTable(appointments) {
     appointments.sort((a, b) => {
         let dateTimeA = new Date(`${a.appointment_date}T${a.appointment_time}`);
         let dateTimeB = new Date(`${b.appointment_date}T${b.appointment_time}`);
-        return dateTimeA - dateTimeB; 
+        return dateTimeA - dateTimeB;
     });
+
     appointments.forEach((appointment, index) => {
         let statusClass = appointment.status.toLowerCase();
+        let formattedTime = formatTo12HourTime(appointment.appointment_time);
+        let formattedDate = formatDateToReadable(appointment.appointment_date);
+
         let row = `
             <tr>
                 <td>${index + 1}</td>
                 <td>${appointment.patient_name}</td>
                 <td>${appointment.visit_type}</td>
-                <td>${appointment.appointment_date}</td>
-                <td>${appointment.appointment_time}</td>
+                <td>${formattedDate}</td>
+                <td>${formattedTime}</td>
                 <td><span class="status ${statusClass}">${appointment.status}</span></td>
                 <td>
                     <button class="cancel-btn" data-id="${appointment.id}">Cancel</button>
@@ -144,7 +174,6 @@ function updateAppointmentsTable(appointments) {
 
     console.log("Appointments table updated and sorted!");
 }
-
 
 function confirmCancellation(appointmentId) {
     let confirmation = confirm("Are you sure you want to cancel this appointment?");
@@ -166,7 +195,11 @@ async function cancelAppointment(appointmentId) {
 
         if (response.ok) {
             alert("Appointment cancelled successfully!");
-            loadAllAppointments(); 
+            if (lastViewedDate) {
+                loadAppointmentsByDate(lastViewedDate);
+            } else {
+                loadAllAppointments();
+            }
         } else {
             alert("Error: " + data.error);
         }
