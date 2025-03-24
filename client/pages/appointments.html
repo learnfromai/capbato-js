@@ -27,6 +27,7 @@
             <input type="date" id="appointmentDate">
             <button id="filterByDate" class="filter-btn">Show Appointments</button>
             <button id="showAllAppointments" class="filter-btn">Show All</button>
+            <p id="appointmentCount" class="appointment-count">Total Appointments: 0</p>
 
             <div class="appointments-header">
                 <h2 class="title-page">Appointments</h2>
@@ -39,7 +40,7 @@
                         <tr>
                             <th>#</th>
                             <th>Patient Name</th>
-                            <th>Visit Type</th>
+                            <th>Reason for Visit</th>
                             <th>Date</th>
                             <th>Time</th>
                             <th>Status</th>
@@ -61,5 +62,19 @@
     </div>
 
     <script src="../js/appointments.js"></script>
+
+    <div id="confirmationModal" class="modal hidden">
+        <div class="modal-content">
+          <p id="confirmationText">Are you sure?</p>
+          <div class="modal-buttons">
+            <button id="confirmYes" class="modal-btn yes-btn">Yes</button>
+            <button id="confirmNo" class="modal-btn no-btn">No</button>
+          </div>
+        </div>
+    </div>
+
+    <div id="toastNotification" class="toast hidden">
+        <p id="toastMessage"></p>
+    </div>
 </body>
 </html>

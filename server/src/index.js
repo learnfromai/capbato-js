@@ -12,15 +12,15 @@ const PORT = 3000;
 
 // 🔧 Middleware
 app.use(cors());
-app.use(express.json()); // Parses JSON payloads
+app.use(express.json()); // Parses incoming JSON
 
-// ✅ Log each request (optional for debugging)
+// 🛠️ Request Logger (for debugging)
 app.use((req, res, next) => {
   console.log(`[${req.method}] ${req.url}`);
   next();
 });
 
-// ✅ Test DB Connection
+// ✅ Test DB connection
 db.getConnection((err, connection) => {
   if (err) {
     console.error('🔴 Database connection failed:', err);
@@ -30,18 +30,18 @@ db.getConnection((err, connection) => {
   }
 });
 
-// 🔗 Routes
-app.use('/', indexRoutes);
-app.use('/patients', patientRoutes);        // e.g., POST /patients/add-patient
-app.use('/auth', authRoutes);
-app.use('/appointments', appointmentRoutes);
+// 🔗 API Routes
+app.use('/', indexRoutes);                      // Health check or landing routes
+app.use('/patients', patientRoutes);            // e.g., /patients/add-patient
+app.use('/auth', authRoutes);                   // e.g., /auth/login
+app.use('/appointments', appointmentRoutes);    // ✅ /appointments/update/:id
 
-// ✅ Simple API status check
+// ✅ API status check
 app.get('/api', (req, res) => {
-  res.json({ message: "🚀 API is running!" });
+  res.json({ message: '🚀 API is running!' });
 });
 
-// ❌ 404 Handler
+// ❌ 404 Handler (keep after routes)
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
@@ -52,7 +52,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-// 🟢 Start Server
+// ✅ Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running at: http://localhost:${PORT}`);
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });

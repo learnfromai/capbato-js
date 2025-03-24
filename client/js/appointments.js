@@ -1,4 +1,4 @@
-let lastViewedDate = null; // ✅ Keep track of last viewed date
+let lastViewedDate = null;
 
 document.addEventListener("DOMContentLoaded", function () {
     console.log("Appointments Page Loaded");
@@ -9,28 +9,28 @@ document.addEventListener("DOMContentLoaded", function () {
         const today = new Date().toISOString().split("T")[0];
         document.getElementById("appointmentDate").value = today;
         lastViewedDate = today;
-        loadAppointmentsByDate(today); // ✅ Load today's appointments only
+        loadAppointmentsByDate(today);
     });
 
     const dateInput = document.getElementById("appointmentDate");
     if (dateInput) {
         const today = new Date().toISOString().split("T")[0];
         dateInput.value = today;
-        lastViewedDate = today; // ✅ Set lastViewedDate to today on load
+        lastViewedDate = today;
     }
 
     document.getElementById("filterByDate").addEventListener("click", function () {
         const selectedDate = document.getElementById("appointmentDate").value;
-        lastViewedDate = selectedDate; // ✅ Update lastViewedDate
+        lastViewedDate = selectedDate;
         loadAppointmentsByDate(selectedDate);
     });
 
     document.getElementById("showAllAppointments").addEventListener("click", () => {
-        lastViewedDate = null; // ✅ Reset the lastViewedDate when showing all
+        lastViewedDate = null;
         loadAllAppointments();
     });
 
-    loadAppointmentsByDate(lastViewedDate || new Date().toISOString().split("T")[0]); // ✅ Load today's appointments by default
+    loadAppointmentsByDate(lastViewedDate || new Date().toISOString().split("T")[0]);
 
     const addAppointmentBtn = document.getElementById("openAddAppointment");
     const overlay = document.getElementById("addAppointmentOverlay");
@@ -39,32 +39,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (addAppointmentBtn && overlay && iframe && closeBtn) {
         addAppointmentBtn.addEventListener("click", function () {
-            console.log("Opening Add Appointment form");
             overlay.style.display = "flex";
             iframe.src = "add-appointments.html";
         });
 
         closeBtn.addEventListener("click", function () {
-            console.log("Closing Add Appointment form");
             overlay.style.display = "none";
             iframe.src = "";
         });
 
         window.addEventListener("message", function (event) {
             if (event.data && event.data.type === "appointmentAdded") {
-                console.log("Appointment added! Refreshing table...");
-
                 if (event.data.date) {
                     lastViewedDate = event.data.date;
                     document.getElementById("appointmentDate").value = lastViewedDate;
-                    console.log("Reloading appointments for added date:", lastViewedDate);
                     loadAppointmentsByDate(lastViewedDate);
                 } else if (lastViewedDate) {
-                    console.log("Reloading appointments for last viewed date:", lastViewedDate);
                     loadAppointmentsByDate(lastViewedDate);
                 } else {
                     loadAllAppointments();
                 }
+            }
+
+            if (event.data && event.data.type === "showToast" && event.data.message) {
+                showToast(event.data.message);
             }
         });
     }
@@ -84,22 +82,18 @@ function formatDateToReadable(dateString) {
 }
 
 function loadAllAppointments() {
-    console.log("Fetching all appointments from database...");
-
     fetch("http://localhost:3000/appointments")
         .then(response => response.json())
         .then(data => updateAppointmentsTable(data))
         .catch(error => {
             console.error("Error fetching appointments:", error);
             document.getElementById("appointmentsTableBody").innerHTML = `<tr><td colspan="6" style="text-align:center;color:red;">Error loading appointments.</td></tr>`;
+            document.getElementById("appointmentCount").textContent = `Total Appointments: 0`;
         });
 }
 
 function loadAppointmentsByDate(date = null) {
-    console.log("Fetching appointments for selected date...");
-
     const selectedDate = date || document.getElementById("appointmentDate").value;
-
     if (!selectedDate) {
         alert("Please select a date.");
         return;
@@ -108,30 +102,24 @@ function loadAppointmentsByDate(date = null) {
     fetch("http://localhost:3000/appointments")
         .then(response => response.json())
         .then(data => {
-            console.log("All Appointments Fetched:", data);
-
-            let filteredAppointments = data.filter(appointment => {
-                return appointment.appointment_date === selectedDate;
-            });
-
-            console.log("Filtered Appointments:", filteredAppointments);
-
-            if (filteredAppointments.length === 0) {
-                document.getElementById("appointmentsTableBody").innerHTML = `<tr><td colspan="7" style="text-align:center;">No appointments found.</td></tr>`;
-                return;
-            }
-
+            let filteredAppointments = data.filter(appointment => appointment.appointment_date === selectedDate);
             updateAppointmentsTable(filteredAppointments);
         })
         .catch(error => {
             console.error("Error fetching appointments:", error);
             document.getElementById("appointmentsTableBody").innerHTML = `<tr><td colspan="7" style="text-align:center;color:red;">Error loading appointments.</td></tr>`;
+            document.getElementById("appointmentCount").textContent = `Total Appointments: 0`;
         });
 }
 
 function updateAppointmentsTable(appointments) {
-    let tableBody = document.getElementById("appointmentsTableBody");
+    const tableBody = document.getElementById("appointmentsTableBody");
     tableBody.innerHTML = "";
+
+    const confirmed = appointments.filter(a => a.status === "Confirmed").length;
+    const cancelled = appointments.filter(a => a.status === "Cancelled").length;
+    document.getElementById("appointmentCount").textContent =
+        `Total Appointments: ${appointments.length} (${confirmed} Confirmed, ${cancelled} Cancelled)`;
 
     if (!appointments || appointments.length === 0) {
         tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No appointments found.</td></tr>`;
@@ -145,21 +133,26 @@ function updateAppointmentsTable(appointments) {
     });
 
     appointments.forEach((appointment, index) => {
-        let statusClass = appointment.status.toLowerCase();
-        let formattedTime = formatTo12HourTime(appointment.appointment_time);
-        let formattedDate = formatDateToReadable(appointment.appointment_date);
+        const statusClass = appointment.status.toLowerCase();
+        const formattedTime = formatTo12HourTime(appointment.appointment_time);
+        const formattedDate = formatDateToReadable(appointment.appointment_date);
 
-        let row = `
+        let actionButtons = `<button class="modify-btn" data-id="${appointment.id}">Modify</button>`;
+        if (appointment.status === "Cancelled") {
+            actionButtons += `<button class="reconfirm-btn" data-id="${appointment.id}">Reconfirm</button>`;
+        } else {
+            actionButtons += `<button class="cancel-btn" data-id="${appointment.id}">Cancel</button>`;
+        }
+
+        const row = `
             <tr>
                 <td>${index + 1}</td>
                 <td>${appointment.patient_name}</td>
-                <td>${appointment.visit_type}</td>
+                <td>${appointment.reason_for_visit}</td>
                 <td>${formattedDate}</td>
                 <td>${formattedTime}</td>
                 <td><span class="status ${statusClass}">${appointment.status}</span></td>
-                <td>
-                    <button class="cancel-btn" data-id="${appointment.id}">Cancel</button>
-                </td>
+                <td>${actionButtons}</td>
             </tr>
         `;
         tableBody.innerHTML += row;
@@ -167,34 +160,61 @@ function updateAppointmentsTable(appointments) {
 
     document.querySelectorAll(".cancel-btn").forEach(button => {
         button.addEventListener("click", function () {
-            let appointmentId = this.getAttribute("data-id");
+            const appointmentId = this.getAttribute("data-id");
             confirmCancellation(appointmentId);
         });
     });
 
-    console.log("Appointments table updated and sorted!");
+    document.querySelectorAll(".reconfirm-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            const appointmentId = this.getAttribute("data-id");
+            reconfirmAppointment(appointmentId);
+        });
+    });
+
+    document.querySelectorAll(".modify-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            const appointmentId = this.getAttribute("data-id");
+            const appointmentData = appointments.find(app => app.id == appointmentId);
+            const iframe = document.getElementById("addAppointmentIframe");
+            const overlay = document.getElementById("addAppointmentOverlay");
+
+            overlay.style.display = "flex";
+            iframe.src = "add-appointments.html";
+
+            iframe.onload = () => {
+                iframe.contentWindow.postMessage({
+                    type: "editAppointment",
+                    data: appointmentData
+                }, "*");
+            };
+        });
+    });
 }
 
 function confirmCancellation(appointmentId) {
-    let confirmation = confirm("Are you sure you want to cancel this appointment?");
-    if (confirmation) {
-        cancelAppointment(appointmentId);
-    }
+    showConfirmationModal("Are you sure you want to cancel this appointment?", () => {
+        updateAppointmentStatus(appointmentId, "Cancelled");
+    });
 }
 
-async function cancelAppointment(appointmentId) {
+function reconfirmAppointment(appointmentId) {
+    showConfirmationModal("Reconfirm this appointment?", () => {
+        updateAppointmentStatus(appointmentId, "Confirmed");
+    });
+}
+
+async function updateAppointmentStatus(appointmentId, newStatus) {
     try {
         const response = await fetch(`http://localhost:3000/appointments/cancel/${appointmentId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ status: "Cancelled" })
+            body: JSON.stringify({ status: newStatus })
         });
 
         const data = await response.json();
-        console.log("Appointment cancelled:", data);
-
         if (response.ok) {
-            alert("Appointment cancelled successfully!");
+            showToast(`Appointment ${newStatus.toLowerCase()} successfully!`);
             if (lastViewedDate) {
                 loadAppointmentsByDate(lastViewedDate);
             } else {
@@ -204,7 +224,49 @@ async function cancelAppointment(appointmentId) {
             alert("Error: " + data.error);
         }
     } catch (error) {
-        console.error("Error cancelling appointment:", error);
-        alert("Failed to cancel appointment.");
+        console.error("Error updating appointment:", error);
+        alert("Failed to update appointment.");
     }
+}
+
+function showConfirmationModal(message, onConfirm) {
+    const modal = document.getElementById("confirmationModal");
+    const text = document.getElementById("confirmationText");
+    const yesBtn = document.getElementById("confirmYes");
+    const noBtn = document.getElementById("confirmNo");
+
+    text.textContent = message;
+    modal.classList.remove("hidden");
+
+    const cleanUp = () => {
+        modal.classList.add("hidden");
+        yesBtn.removeEventListener("click", handleYes);
+        noBtn.removeEventListener("click", handleNo);
+    };
+
+    const handleYes = () => {
+        onConfirm();
+        cleanUp();
+    };
+
+    const handleNo = () => {
+        cleanUp();
+    };
+
+    yesBtn.addEventListener("click", handleYes);
+    noBtn.addEventListener("click", handleNo);
+}
+
+function showToast(message, duration = 2000) {
+    const toast = document.getElementById("toastNotification");
+    const toastText = document.getElementById("toastMessage");
+
+    toastText.textContent = message;
+    toast.classList.remove("hidden");
+    toast.classList.add("show");
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+        toast.classList.add("hidden");
+    }, duration);
 }
