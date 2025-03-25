@@ -3,7 +3,7 @@ document.getElementById("patientFormFields").addEventListener("submit", function
 
   const lastname = document.getElementById("lastname").value.trim();
   if (!lastname) {
-    alert("⚠️ Last name is required.");
+    alert("Last name is required.");
     return;
   }
 
@@ -17,7 +17,6 @@ document.getElementById("patientFormFields").addEventListener("submit", function
     contact: document.getElementById("contact").value,
     address: document.getElementById("address").value,
 
-    // Updated Guardian Fields
     guardian_name: document.getElementById("guardian_name").value.trim(),
     guardian_gender: document.getElementById("guardian_gender").value,
     guardian_relationship: document.getElementById("guardian_relationship").value.trim(),
@@ -25,7 +24,7 @@ document.getElementById("patientFormFields").addEventListener("submit", function
     guardian_address: document.getElementById("guardian_address").value
   };
 
-  console.log("📤 Sending Data:", patientData);
+  console.log("Sending Data:", patientData);
 
   fetch("http://localhost:3000/patients/add-patient", {
     method: "POST",
@@ -34,18 +33,18 @@ document.getElementById("patientFormFields").addEventListener("submit", function
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log("✅ Server Response:", data);
+      console.log("Server Response:", data);
       if (data.message) {
         window.parent.postMessage("patientAdded", "*");
         const overlay = window.parent.document.getElementById("overlay");
         if (overlay) overlay.style.display = "none";
         document.getElementById("patientFormFields").reset();
       } else {
-        alert(data.error || "❌ Failed to add patient.");
+        alert(data.error || "Failed to add patient.");
       }
     })
     .catch((error) => {
-      console.error("❌ Error:", error);
+      console.error("Error:", error);
       alert("Something went wrong. Please try again.");
     });
 });

@@ -15,7 +15,7 @@ export async function getAppointments(req, res) {
 
   db.query(query, (err, results) => {
     if (err) {
-      console.error('🔴 Error fetching appointments:', err)
+      console.error('Error fetching appointments:', err)
       return res.status(500).json({ error: 'Database error' })
     }
     res.status(200).json(results)
@@ -30,7 +30,6 @@ export async function addAppointment(req, res) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
-  // ✅ Check if there are already 4 appointments at that time and date
   const checkQuery = `
     SELECT COUNT(*) AS count
     FROM appointments
@@ -76,24 +75,45 @@ export async function updateAppointment(req, res) {
   const appointmentId = req.params.id;
   const { patient_name, reason_for_visit, appointment_date, appointment_time } = req.body;
 
-  const sql = `
-    UPDATE appointments 
-    SET patient_name = ?, reason_for_visit = ?, appointment_date = ?, appointment_time = ?
-    WHERE id = ?
+  if (!patient_name || !reason_for_visit || !appointment_date || !appointment_time) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  const checkQuery = `
+    SELECT COUNT(*) AS count
+    FROM appointments
+    WHERE appointment_date = ? AND appointment_time = ? AND id != ?
   `;
 
-  db.query(
-    sql,
-    [patient_name, reason_for_visit, appointment_date, appointment_time, appointmentId],
-    (err, result) => {
-      if (err) {
-        console.error('Error updating appointment:', err);
+  db.query(checkQuery, [appointment_date, appointment_time, appointmentId], (err, results) => {
+    if (err) {
+      console.error('Error checking time availability during update:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    const count = results[0].count;
+
+    if (count >= 4) {
+      return res.status(400).json({ error: 'This time slot is already fully booked.' });
+    }
+
+    const updateQuery = `
+      UPDATE appointments 
+      SET patient_name = ?, reason_for_visit = ?, appointment_date = ?, appointment_time = ?
+      WHERE id = ?
+    `;
+
+    db.query(updateQuery, [patient_name, reason_for_visit, appointment_date, appointment_time, appointmentId], (updateErr, result) => {
+      if (updateErr) {
+        console.error('Error updating appointment:', updateErr);
         return res.status(500).json({ error: 'Failed to update appointment' });
       }
-      res.json({ message: 'Appointment updated successfully!' });
-    }
-  );
+
+      res.status(200).json({ message: 'Appointment updated successfully!' });
+    });
+  });
 }
+
 
 export async function cancelAppointment(req, res) {
   const appointmentId = req.params.id;

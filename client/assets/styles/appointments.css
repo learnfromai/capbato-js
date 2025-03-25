@@ -1,6 +1,6 @@
 .appointment-container {
     width: 90%;
-    margin: 140px auto 20px; /* Adjusted margin to lower the table */
+    margin: 140px auto 20px; 
     padding: 20px;
     background: white;
     border-radius: 10px;
@@ -146,6 +146,7 @@ th {
     padding-left: 10px;
     padding-right: 10px;
     cursor: pointer;
+    font-weight: bold;
 }
 
 .modal {
@@ -228,4 +229,27 @@ th {
     margin-top: 10px;
     font-weight: bold;
     font-size: 1rem;
+}
+
+.reconfirm-btn {
+    height:25px;
+    border: none;
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+    background-color: #6cd9b1;
+    font-weight: bold;
+}
+
+.modify-btn {
+    height:25px;
+    border: none;
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+    background-color: #50bfe4;
+    font-weight: bold;
+    margin-right: 15px;
 }

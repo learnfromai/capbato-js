@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Navigation buttons
   document.getElementById("patientbtn").addEventListener("click", () => {
     window.location.href = "patients.html";
   });
@@ -12,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.href = "appointments.html";
   });
 
-  // Add patient modal open
   const addPatientBtn = document.querySelector(".add-patient-btn");
   const overlay = document.getElementById("overlay");
   const iframe = document.getElementById("addPatientIframe");
@@ -38,7 +36,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Initial data fetch
   loadPatients();
 });
 

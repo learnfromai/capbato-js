@@ -10,49 +10,49 @@ import appointmentRoutes from './routes/appointments.routes.js';
 const app = express();
 const PORT = 3000;
 
-// 🔧 Middleware
+// Middleware
 app.use(cors());
 app.use(express.json()); // Parses incoming JSON
 
-// 🛠️ Request Logger (for debugging)
+// Request Logger (for debugging)
 app.use((req, res, next) => {
   console.log(`[${req.method}] ${req.url}`);
   next();
 });
 
-// ✅ Test DB connection
+// Test DB connection
 db.getConnection((err, connection) => {
   if (err) {
-    console.error('🔴 Database connection failed:', err);
+    console.error('Database connection failed:', err);
   } else {
-    console.log('✅ Connected to MySQL database');
+    console.log('Connected to MySQL database');
     connection.release();
   }
 });
 
-// 🔗 API Routes
+// API Routes
 app.use('/', indexRoutes);                      // Health check or landing routes
 app.use('/patients', patientRoutes);            // e.g., /patients/add-patient
 app.use('/auth', authRoutes);                   // e.g., /auth/login
-app.use('/appointments', appointmentRoutes);    // ✅ /appointments/update/:id
+app.use('/appointments', appointmentRoutes);    // /appointments/update/:id
 
-// ✅ API status check
+// API status check
 app.get('/api', (req, res) => {
-  res.json({ message: '🚀 API is running!' });
+  res.json({ message: 'API is running!' });
 });
 
-// ❌ 404 Handler (keep after routes)
+// 404 Handler (keep after routes)
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// 🔴 Global Error Handler
+// Global Error Handler
 app.use((err, req, res, next) => {
-  console.error('❌ Server Error:', err);
+  console.error('Server Error:', err);
   res.status(500).json({ error: 'Internal server error' });
 });
 
-// ✅ Start server
+// Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });

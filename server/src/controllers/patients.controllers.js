@@ -23,7 +23,6 @@ export function getPatientById(req, res) {
 
     const patient = result[0];
 
-    // Optional: make strings uppercase
     for (const key in patient) {
       if (typeof patient[key] === 'string') {
         patient[key] = patient[key].toUpperCase();

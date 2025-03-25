@@ -1,9 +1,10 @@
 const timeSelect = document.getElementById("time");
 const dateInput = document.getElementById("date");
 const timeNotice = document.getElementById("timeNotice");
+const formError = document.getElementById("formError");
 
-const HOURS = Array.from({ length: 10 }, (_, i) => i + 8); // 8 AM to 5 PM
-let latestAppointments = []; // 🆕 store fetched appointments
+const HOURS = Array.from({ length: 10 }, (_, i) => i + 8);
+let latestAppointments = [];
 
 document.addEventListener("DOMContentLoaded", () => {
   populateTimeOptions();
@@ -37,7 +38,7 @@ async function fetchTimeAvailability(date) {
   try {
     const response = await fetch("http://localhost:3000/appointments");
     const appointments = await response.json();
-    latestAppointments = appointments; // 🆕 store appointments globally
+    latestAppointments = appointments;
 
     const timeCounts = {};
     appointments
@@ -66,8 +67,19 @@ async function fetchTimeAvailability(date) {
   }
 }
 
+function showInlineError(msg) {
+  formError.textContent = msg;
+  formError.style.display = "block";
+}
+
+function clearInlineError() {
+  formError.textContent = "";
+  formError.style.display = "none";
+}
+
 document.getElementById("addAppointmentForm").addEventListener("submit", async function (e) {
   e.preventDefault();
+  clearInlineError();
 
   const patient_name = document.getElementById("patientName").value.trim();
   const reason_for_visit = document.getElementById("visitType").value.trim();
@@ -77,30 +89,29 @@ document.getElementById("addAppointmentForm").addEventListener("submit", async f
   const editId = this.dataset.editId;
 
   if (!patient_name || !reason_for_visit || !appointment_date || !appointment_time) {
-    alert("Please fill in all fields.");
+    showInlineError("Please fill in all fields.");
     return;
   }
-
-  const timeCounts = {};
-  latestAppointments
-    .filter((app) => app.appointment_date === appointment_date)
-    .forEach((app) => {
-      timeCounts[app.appointment_time] = (timeCounts[app.appointment_time] || 0) + 1;
-    });
 
   const isEditing = !!editId;
   const originalApp = latestAppointments.find(app => app.id == editId);
-  const isSameTime = isEditing && originalApp?.appointment_time === appointment_time && originalApp?.appointment_date === appointment_date;
 
-  if (timeCounts[appointment_time] >= 4 && !isSameTime) {
-    alert("That time is already fully booked. Please choose another.");
+  const timeCounts = {};
+  latestAppointments
+    .filter(app => app.appointment_date === appointment_date && (!isEditing || app.id != editId))
+    .forEach(app => {
+      timeCounts[app.appointment_time] = (timeCounts[app.appointment_time] || 0) + 1;
+    });
+
+  if (timeCounts[appointment_time] >= 4) {
+    showInlineError("That time is already fully booked. Please choose another.");
     return;
   }
 
-  const url = editId
+  const url = isEditing
     ? `http://localhost:3000/appointments/update/${editId}`
     : "http://localhost:3000/appointments/add";
-  const method = editId ? "PUT" : "POST";
+  const method = isEditing ? "PUT" : "POST";
 
   try {
     const response = await fetch(url, {
@@ -123,16 +134,16 @@ document.getElementById("addAppointmentForm").addEventListener("submit", async f
       this.reset();
       delete this.dataset.editId;
 
-      const message = editId
+      const message = isEditing
         ? "Appointment updated successfully!"
         : "Appointment added successfully!";
       window.parent.postMessage({ type: "showToast", message }, "*");
     } else {
-      alert("Error: " + data.error);
+      showInlineError(data.error || "An error occurred while submitting the appointment.");
     }
   } catch (error) {
     console.error("Error submitting appointment:", error);
-    alert("Failed to submit appointment.");
+    showInlineError("Failed to submit appointment.");
   }
 });
 
