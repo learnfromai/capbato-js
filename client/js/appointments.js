@@ -11,6 +11,14 @@ document.addEventListener("DOMContentLoaded", function () {
         lastViewedDate = today;
         loadAppointmentsByDate(today);
     });
+    document.getElementById("laboratorybtn").addEventListener("click", function () {
+        window.location.href = "laboratory.html";
+      });
+      
+      document.getElementById("prescriptionbtn").addEventListener("click", function () {
+        window.location.href = "prescriptions.html";
+      });
+      
 
     const dateInput = document.getElementById("appointmentDate");
     if (dateInput) {

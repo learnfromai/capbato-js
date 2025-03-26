@@ -11,6 +11,15 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.href = "appointments.html";
   });
 
+  document.getElementById("laboratorybtn").addEventListener("click", function () {
+    window.location.href = "laboratory.html";
+  });
+  
+  document.getElementById("prescriptionbtn").addEventListener("click", function () {
+    window.location.href = "prescriptions.html";
+  });
+  
+
   const addPatientBtn = document.querySelector(".add-patient-btn");
   const overlay = document.getElementById("overlay");
   const iframe = document.getElementById("addPatientIframe");
