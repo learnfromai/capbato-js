@@ -42,7 +42,7 @@ async function fetchTimeAvailability(date) {
 
     const timeCounts = {};
     appointments
-      .filter((app) => app.appointment_date === date)
+      .filter((app) => app.appointment_date === date && app.status === "Confirmed")
       .forEach((app) => {
         timeCounts[app.appointment_time] = (timeCounts[app.appointment_time] || 0) + 1;
       });
@@ -85,20 +85,25 @@ document.getElementById("addAppointmentForm").addEventListener("submit", async f
   const reason_for_visit = document.getElementById("visitType").value.trim();
   const appointment_date = document.getElementById("date").value;
   const appointment_time = document.getElementById("time").value;
-  const status = "Confirmed";
   const editId = this.dataset.editId;
+  const isEditing = !!editId;
+  const originalApp = latestAppointments.find(app => app.id == editId);
 
   if (!patient_name || !reason_for_visit || !appointment_date || !appointment_time) {
     showInlineError("Please fill in all fields.");
     return;
   }
 
-  const isEditing = !!editId;
-  const originalApp = latestAppointments.find(app => app.id == editId);
+  let status = "Confirmed";
+  if (isEditing && originalApp?.status === "Cancelled") {
+    status = "Confirmed";
+  } else if (isEditing) {
+    status = originalApp.status;
+  }
 
   const timeCounts = {};
   latestAppointments
-    .filter(app => app.appointment_date === appointment_date && (!isEditing || app.id != editId))
+    .filter(app => app.appointment_date === appointment_date && app.status === "Confirmed" && (!isEditing || app.id != editId))
     .forEach(app => {
       timeCounts[app.appointment_time] = (timeCounts[app.appointment_time] || 0) + 1;
     });

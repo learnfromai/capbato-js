@@ -137,10 +137,11 @@ function updateAppointmentsTable(appointments) {
         const formattedTime = formatTo12HourTime(appointment.appointment_time);
         const formattedDate = formatDateToReadable(appointment.appointment_date);
 
-        let actionButtons = `<button class="modify-btn" data-id="${appointment.id}">Modify</button>`;
+        let actionButtons = "";
         if (appointment.status === "Cancelled") {
             actionButtons += `<button class="reconfirm-btn" data-id="${appointment.id}">Reconfirm</button>`;
         } else {
+            actionButtons += `<button class="modify-btn" data-id="${appointment.id}">Modify</button>`;
             actionButtons += `<button class="cancel-btn" data-id="${appointment.id}">Cancel</button>`;
         }
 
@@ -168,7 +169,36 @@ function updateAppointmentsTable(appointments) {
     document.querySelectorAll(".reconfirm-btn").forEach(button => {
         button.addEventListener("click", function () {
             const appointmentId = this.getAttribute("data-id");
-            reconfirmAppointment(appointmentId);
+            const appointment = appointments.find(app => app.id == appointmentId);
+            if (!appointment) return alert("Appointment not found.");
+
+            const confirmedCount = appointments.filter(app =>
+                app.appointment_date === appointment.appointment_date &&
+                app.appointment_time === appointment.appointment_time &&
+                app.status === "Confirmed"
+            ).length;
+
+            if (confirmedCount >= 4) {
+                const iframe = document.getElementById("addAppointmentIframe");
+                const overlay = document.getElementById("addAppointmentOverlay");
+
+                overlay.style.display = "flex";
+                iframe.src = "add-appointments.html";
+
+                iframe.onload = () => {
+                    iframe.contentWindow.postMessage({
+                        type: "editAppointment",
+                        data: {
+                            ...appointment,
+                            status: "Confirmed"
+                        }
+                    }, "*");
+                };
+            } else {
+                showConfirmationModal("Reconfirm this appointment?", () => {
+                    updateAppointmentStatus(appointmentId, "Confirmed");
+                });
+            }
         });
     });
 
@@ -198,12 +228,6 @@ function confirmCancellation(appointmentId) {
     });
 }
 
-function reconfirmAppointment(appointmentId) {
-    showConfirmationModal("Reconfirm this appointment?", () => {
-        updateAppointmentStatus(appointmentId, "Confirmed");
-    });
-}
-
 async function updateAppointmentStatus(appointmentId, newStatus) {
     try {
         const response = await fetch(`http://localhost:3000/appointments/cancel/${appointmentId}`, {
@@ -221,7 +245,7 @@ async function updateAppointmentStatus(appointmentId, newStatus) {
                 loadAllAppointments();
             }
         } else {
-            alert("Error: " + data.error);
+            showToast(data.error || "An error occurred.");
         }
     } catch (error) {
         console.error("Error updating appointment:", error);
