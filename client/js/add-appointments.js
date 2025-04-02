@@ -2,15 +2,28 @@ const timeSelect = document.getElementById("time");
 const dateInput = document.getElementById("date");
 const timeNotice = document.getElementById("timeNotice");
 const formError = document.getElementById("formError");
+const patientInput = document.getElementById("patientName");
+const suggestionsBox = document.getElementById("autocompleteSuggestions");
+const patientIdDisplay = document.getElementById("patientIdDisplay");
+const patientIdWrapper = document.getElementById("patientIdWrapper");
+
+// ✅ Add hidden input for patient_id
+const hiddenPatientIdInput = document.createElement("input");
+hiddenPatientIdInput.type = "hidden";
+hiddenPatientIdInput.id = "selectedPatientId";
+hiddenPatientIdInput.name = "patient_id";
+document.getElementById("addAppointmentForm").appendChild(hiddenPatientIdInput);
 
 const HOURS = Array.from({ length: 10 }, (_, i) => i + 8);
 let latestAppointments = [];
+let patientsList = [];
 
 document.addEventListener("DOMContentLoaded", () => {
   populateTimeOptions();
   const today = new Date().toISOString().split("T")[0];
   dateInput.value = today;
   fetchTimeAvailability(today);
+  loadPatients();
 });
 
 dateInput.addEventListener("change", (e) => {
@@ -77,11 +90,61 @@ function clearInlineError() {
   formError.style.display = "none";
 }
 
+function loadPatients() {
+  fetch("http://localhost:3001/patients")
+    .then((res) => res.json())
+    .then((data) => {
+      patientsList = data;
+
+      patientInput.addEventListener("input", () => {
+        const query = patientInput.value.toLowerCase();
+        suggestionsBox.innerHTML = "";
+        suggestionsBox.style.display = "none";
+        patientIdDisplay.textContent = "";
+        patientIdWrapper.style.display = "none";
+        hiddenPatientIdInput.value = "";
+
+        if (!query) return;
+
+        const matches = patientsList.filter((p) =>
+          p.full_name.toLowerCase().includes(query)
+        );
+
+        if (matches.length > 0) {
+          suggestionsBox.style.display = "block";
+        }
+
+        matches.forEach((p) => {
+          const item = document.createElement("div");
+          item.classList.add("suggestion-item");
+          item.textContent = p.full_name;
+          item.addEventListener("click", () => {
+            patientInput.value = p.full_name;
+            patientIdDisplay.textContent = `Patient ID: ${p.patient_id}`;
+            patientIdWrapper.style.display = "block";
+            hiddenPatientIdInput.value = p.patient_id;
+            suggestionsBox.innerHTML = "";
+            suggestionsBox.style.display = "none";
+          });
+          suggestionsBox.appendChild(item);
+        });
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!suggestionsBox.contains(e.target) && e.target !== patientInput) {
+          suggestionsBox.innerHTML = "";
+          suggestionsBox.style.display = "none";
+        }
+      });
+    });
+}
+
 document.getElementById("addAppointmentForm").addEventListener("submit", async function (e) {
   e.preventDefault();
   clearInlineError();
 
-  const patient_name = document.getElementById("patientName").value.trim();
+  const patient_name = patientInput.value.trim();
+  const patient_id = hiddenPatientIdInput.value.trim();
   const reason_for_visit = document.getElementById("visitType").value.trim();
   const appointment_date = document.getElementById("date").value;
   const appointment_time = document.getElementById("time").value;
@@ -103,7 +166,10 @@ document.getElementById("addAppointmentForm").addEventListener("submit", async f
 
   const timeCounts = {};
   latestAppointments
-    .filter(app => app.appointment_date === appointment_date && app.status === "Confirmed" && (!isEditing || app.id != editId))
+    .filter(app =>
+      app.appointment_date === appointment_date &&
+      app.status === "Confirmed" &&
+      (!isEditing || app.id != editId))
     .forEach(app => {
       timeCounts[app.appointment_time] = (timeCounts[app.appointment_time] || 0) + 1;
     });
@@ -124,6 +190,7 @@ document.getElementById("addAppointmentForm").addEventListener("submit", async f
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         patient_name,
+        patient_id,
         reason_for_visit,
         appointment_date,
         appointment_time,
@@ -138,6 +205,10 @@ document.getElementById("addAppointmentForm").addEventListener("submit", async f
       window.parent.document.getElementById("addAppointmentOverlay").style.display = "none";
       this.reset();
       delete this.dataset.editId;
+
+      patientIdDisplay.textContent = "";
+      hiddenPatientIdInput.value = "";
+      patientIdWrapper.style.display = "none";
 
       const message = isEditing
         ? "Appointment updated successfully!"
@@ -155,7 +226,7 @@ document.getElementById("addAppointmentForm").addEventListener("submit", async f
 window.addEventListener("message", function (event) {
   if (event.data && event.data.type === "editAppointment") {
     const app = event.data.data;
-    document.getElementById("patientName").value = app.patient_name;
+    patientInput.value = app.patient_name;
     document.getElementById("visitType").value = app.reason_for_visit;
     document.getElementById("date").value = app.appointment_date;
 

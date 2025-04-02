@@ -1,29 +1,57 @@
-import db from '../config/db.js'
+import db from '../config/db.js';
 
 export async function getAppointments(req, res) {
   const query = `
     SELECT 
-    id,
-    patient_name,
-    reason_for_visit,
-    DATE_FORMAT(appointment_date, '%Y-%m-%d') AS appointment_date,
-    appointment_time,
-    status,
-    created_at
+      id,
+      patient_id,
+      patient_name,
+      reason_for_visit,
+      DATE_FORMAT(appointment_date, '%Y-%m-%d') AS appointment_date,
+      appointment_time,
+      status,
+      created_at
     FROM appointments;
-  `
+  `;
 
   db.query(query, (err, results) => {
     if (err) {
-      console.error('Error fetching appointments:', err)
-      return res.status(500).json({ error: 'Database error' })
+      console.error('Error fetching appointments:', err);
+      return res.status(500).json({ error: 'Database error' });
     }
-    res.status(200).json(results)
-  })
+    console.log("Fetched appointments:", results);
+    res.status(200).json(results);
+  });
+}
+
+export function getAppointmentsByPatientId(req, res) {
+  const patientId = req.params.id;
+  const sql = `
+    SELECT 
+      id, reason_for_visit, appointment_date, appointment_time, status
+    FROM appointments
+    WHERE patient_id = ?
+    ORDER BY appointment_date DESC, appointment_time DESC
+  `;
+
+  db.query(sql, [patientId], (err, result) => {
+    if (err) {
+      console.error('Error fetching appointments by patient ID:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    res.json(result);
+  });
 }
 
 export async function addAppointment(req, res) {
-  const { patient_name, reason_for_visit, appointment_date, appointment_time } = req.body;
+  const {
+    patient_id = '',
+    patient_name,
+    reason_for_visit,
+    appointment_date,
+    appointment_time
+  } = req.body;
   const status = 'Confirmed';
 
   if (!patient_name || !reason_for_visit || !appointment_date || !appointment_time) {
@@ -48,13 +76,13 @@ export async function addAppointment(req, res) {
     }
 
     const insertQuery = `
-      INSERT INTO appointments (patient_name, reason_for_visit, appointment_date, appointment_time, status)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO appointments (patient_id, patient_name, reason_for_visit, appointment_date, appointment_time, status)
+      VALUES (?, ?, ?, ?, ?, ?)
     `;
 
     db.query(
       insertQuery,
-      [patient_name, reason_for_visit, appointment_date, appointment_time, status],
+      [patient_id, patient_name, reason_for_visit, appointment_date, appointment_time, status],
       (insertErr, result) => {
         if (insertErr) {
           console.error('Error adding appointment:', insertErr);
@@ -72,7 +100,14 @@ export async function addAppointment(req, res) {
 
 export async function updateAppointment(req, res) {
   const appointmentId = req.params.id;
-  const { patient_name, reason_for_visit, appointment_date, appointment_time, status } = req.body;
+  const {
+    patient_id = '',
+    patient_name,
+    reason_for_visit,
+    appointment_date,
+    appointment_time,
+    status
+  } = req.body;
 
   if (!patient_name || !reason_for_visit || !appointment_date || !appointment_time) {
     return res.status(400).json({ error: 'All fields are required' });
@@ -98,11 +133,11 @@ export async function updateAppointment(req, res) {
 
     const updateQuery = `
       UPDATE appointments 
-      SET patient_name = ?, reason_for_visit = ?, appointment_date = ?, appointment_time = ?, status = ?
+      SET patient_id = ?, patient_name = ?, reason_for_visit = ?, appointment_date = ?, appointment_time = ?, status = ?
       WHERE id = ?
     `;
 
-    db.query(updateQuery, [patient_name, reason_for_visit, appointment_date, appointment_time, status, appointmentId], (updateErr, result) => {
+    db.query(updateQuery, [patient_id, patient_name, reason_for_visit, appointment_date, appointment_time, status, appointmentId], (updateErr) => {
       if (updateErr) {
         console.error('Error updating appointment:', updateErr);
         return res.status(500).json({ error: 'Failed to update appointment' });
@@ -148,7 +183,7 @@ export async function cancelAppointment(req, res) {
         }
 
         const updateQuery = 'UPDATE appointments SET status = ? WHERE id = ?';
-        db.query(updateQuery, [status, appointmentId], (updateErr, result) => {
+        db.query(updateQuery, [status, appointmentId], (updateErr) => {
           if (updateErr) {
             console.error('Error updating appointment status:', updateErr);
             return res.status(500).json({ error: 'Failed to update appointment status.' });
@@ -160,7 +195,7 @@ export async function cancelAppointment(req, res) {
     });
   } else {
     const updateQuery = 'UPDATE appointments SET status = ? WHERE id = ?';
-    db.query(updateQuery, [status, appointmentId], (err, result) => {
+    db.query(updateQuery, [status, appointmentId], (err) => {
       if (err) {
         console.error('Error updating appointment status:', err);
         return res.status(500).json({ error: 'Failed to update appointment status.' });
@@ -203,5 +238,3 @@ export function getTodayAppointments(req, res) {
     res.json(result);
   });
 }
-
-
