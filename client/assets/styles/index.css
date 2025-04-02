@@ -1,0 +1,117 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f8f9fc;
+  padding: 20px;
+  margin: 0;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.topbar h2 {
+  font-size: 24px;
+  color: #2e3b55;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.icon {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.search {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background: #eef2fb;
+}
+
+.summary-cards {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.card {
+  flex: 1 1 250px;
+  background: #eef2fb;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  margin-top: 130px;
+}
+
+.card-icon {
+  font-size: 36px;
+  color: #0047ab;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-weight: 600;
+  color: #333;
+}
+
+.value {
+  font-size: 24px;
+  color: #0047ab;
+  font-weight: bold;
+}
+
+.date {
+  font-size: 12px;
+  color: #666;
+}
+
+.today-appointments {
+  background: #eef2fb;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 40px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+.today-appointments h3 {
+  color: #0047ab;
+  margin-bottom: 16px;
+}
+
+.appointment-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.appointment-table th,
+.appointment-table td {
+  text-align: left;
+  padding: 8px 12px;
+}
+
+.appointment-table th {
+  background-color: #dbe5ff;
+  color: #0047ab;
+}
+
+.see-all-link {
+  display: block;
+  margin-top: 12px;
+  color: #0047ab;
+  font-weight: bold;
+  text-decoration: none;
+}

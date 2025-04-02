@@ -169,3 +169,39 @@ export async function cancelAppointment(req, res) {
     });
   }
 }
+
+export function getTodayConfirmedAppointments(req, res) {
+  const sql = `
+    SELECT COUNT(*) AS total 
+    FROM appointments 
+    WHERE DATE(appointment_date) = CURDATE() AND status = 'Confirmed'
+  `;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error', details: err });
+    }
+
+    res.json({ total: result[0].total });
+  });
+}
+
+export function getTodayAppointments(req, res) {
+  const sql = `
+    SELECT patient_name, reason_for_visit, appointment_time, status
+    FROM appointments
+    WHERE DATE(appointment_date) = CURDATE() AND status = 'Confirmed'
+    ORDER BY appointment_time ASC
+  `;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error("Error fetching today's appointments:", err);
+      return res.status(500).json({ error: 'Database error', details: err });
+    }
+
+    res.json(result);
+  });
+}
+
+

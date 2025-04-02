@@ -127,3 +127,17 @@ export function addPatient(req, res) {
     });
   });
 }
+
+
+export function getTotalPatients(req, res) {
+  const sql = `SELECT COUNT(*) AS total FROM patients`;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error', details: err });
+    }
+
+    res.json({ total: result[0].total });
+  });
+}
+

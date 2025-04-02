@@ -8,7 +8,7 @@ import authRoutes from './routes/auth.routes.js';
 import appointmentRoutes from './routes/appointments.routes.js';
 
 const app = express();
-const PORT = 3000;
+const PORT = 3001;
 
 // Middleware
 app.use(cors());

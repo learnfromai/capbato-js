@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
 let patientsData = [];
 
 function loadPatients() {
-  fetch("http://localhost:3000/patients")
+  fetch("http://localhost:3001/patients")
     .then((response) => response.json())
     .then((data) => {
       console.log("API Response:", data);

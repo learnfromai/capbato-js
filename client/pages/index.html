@@ -1,32 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M.G. Amores Medical Clinic</title>
-    <link rel="stylesheet" href="../assets/styles/dashboard.css">
-    <link rel="stylesheet" href="../assets/styles/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>M.G. Amores Medical Clinic</title>
+  <link rel="stylesheet" href="../assets/styles/index.css" />
+  <link rel="stylesheet" href="../assets/styles/style.css" />
 </head>
 <body>
-    <!-- Header -->
-    <div class="container">
-        <img src="../assets/images/logo.png" alt="" class="logo">
-        <h2 class="title">M.G. AMORES MEDICAL CLINIC</h2>
+  <!-- Header -->
+  <div class="container">
+    <img src="../assets/images/logo.png" alt="" class="logo">
+    <h2 class="title">M.G. AMORES MEDICAL CLINIC</h2>
+  </div>
+
+  <div class="hover-area"></div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <button type="button" class="dashboardbtn" id="dashboardbtn">Dashboard</button>
+    <button id="appointmentbtn" type="button" class="appointmentbtn">Appointments</button>
+    <button id="patientbtn" type="button" class="patientbtn">Patients</button>
+    <button id="laboratorybtn" type="button" class="laboratorybtn">Laboratory</button>
+    <button id="prescriptionbtn" type="button" class="prescriptionbtn">Prescriptions</button>
+  </div>
+    <!-- Dashboard Summary Cards -->
+  <div class="summary-cards">
+    <div class="card">
+      <div class="card-icon">👤</div>
+        <div class="card-content">
+          <div class="label">Total Patients</div>
+          <div class="value" id="total-patients">Loading...</div>
+          <div class="date">Till Today</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">⏰</div>
+        <div class="card-content">
+          <div class="label">Today Appointments</div>
+          <div class="value" id="todayAppointmentsCount">0</div>
+          <div class="date">31 Mar 2025</div>
+        </div>
+      </div>    
     </div>
+  </div>
 
-    <div class="hover-area"></div>
+  <div class="today-appointments">
+    <h3>Today Appointments</h3>
+    <table class="appointment-table">
+      <thead>
+        <tr>
+          <th>Patient</th>
+          <th>Diagnosis</th>
+          <th>Contact</th>
+          <th>Time</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="todayAppointmentsBody">
+        <!-- Populated by JS -->
+      </tbody>
+    </table>
+    <a href="appointments.html" class="see-all-link">See All</a>
+  </div>
+  
 
-    <div class="sidebar">
-        <button type="button" class="dashboardbtn" id="dashboardbtn">Dashboard</button>
-        <button id="appointmentbtn" type="button" class="appointmentbtn">Appointments</button>
-        <button id="patientbtn" type="button" class="patientbtn">Patients</button>
-        <button id="laboratorybtn" type="button" class="laboratorybtn">Laboratory</button>
-        <button id="prescriptionbtn" type="button" class="prescriptionbtn">Prescriptions</button>
-    </div>
-    
-
-
-    <script src="../js/dashboard.js"></script>
-
+  <script src="../js/index.js"></script>
 </body>
 </html>

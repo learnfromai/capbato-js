@@ -36,7 +36,7 @@ function formatOptionLabel(value) {
 
 async function fetchTimeAvailability(date) {
   try {
-    const response = await fetch("http://localhost:3000/appointments");
+    const response = await fetch("http://localhost:3001/appointments");
     const appointments = await response.json();
     latestAppointments = appointments;
 
@@ -114,8 +114,8 @@ document.getElementById("addAppointmentForm").addEventListener("submit", async f
   }
 
   const url = isEditing
-    ? `http://localhost:3000/appointments/update/${editId}`
-    : "http://localhost:3000/appointments/add";
+    ? `http://localhost:3001/appointments/update/${editId}`
+    : "http://localhost:3001/appointments/add";
   const method = isEditing ? "PUT" : "POST";
 
   try {
