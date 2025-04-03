@@ -19,6 +19,18 @@ document.getElementById("prescriptionbtn").addEventListener("click", function ()
   window.location.href = "prescriptions.html";
 });
 
+// Set today's date in the summary card
+function updateTodayDate() {
+  const today = new Date();
+  const options = { day: '2-digit', month: 'short', year: 'numeric' };
+  const formatted = today.toLocaleDateString('en-GB', options).replace(/ /g, ' ');
+  const dateElement = document.getElementById('today-date');
+  if (dateElement) {
+    dateElement.textContent = formatted;
+  }
+}
+updateTodayDate();
+
 // Fetch total patient count
 fetch('http://localhost:3001/patients/total/count')
   .then(response => response.json())
@@ -38,7 +50,6 @@ fetch('http://localhost:3001/patients/total/count')
 
 console.log("Dashboard Summary Loaded");
 
-
 fetch('http://localhost:3001/appointments/today/confirmed')
   .then(res => res.json())
   .then(data => {
@@ -46,8 +57,7 @@ fetch('http://localhost:3001/appointments/today/confirmed')
   })
   .catch(err => console.error("Error fetching today's appointments:", err));
 
-
-  fetch('http://localhost:3001/appointments/today')
+fetch('http://localhost:3001/appointments/today')
   .then(res => res.json())
   .then(data => {
     const tbody = document.getElementById('todayAppointmentsBody');

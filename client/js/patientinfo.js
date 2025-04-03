@@ -25,11 +25,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       document.getElementById("guardianRelationship").textContent = formatWord(data.GuardianRelationship || "N/A");
       document.getElementById("guardianContact").textContent = data.GuardianContactNumber || "N/A";
       document.getElementById("guardianAddress").textContent = formatSentence(data.GuardianAddress) || "N/A";
-
-      document.getElementById("medicalHistory").textContent =
-        formatSentence(data.MedicalHistory || "No medical history available.");
-
-      await loadAppointments(patientId);
     } else {
       alert("Error: " + (data.error || "Failed to fetch patient data"));
     }
@@ -38,36 +33,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     alert("An error occurred while retrieving patient details.");
   }
 });
-
-async function loadAppointments(patientId) {
-  try {
-    const res = await fetch(`http://localhost:3001/appointments/patient/${patientId}`);
-    const appointments = await res.json();
-
-    const tbody = document.getElementById("appointmentsTableBody");
-    tbody.innerHTML = "";
-
-    if (!appointments.length) {
-      tbody.innerHTML = `<tr><td colspan="4">No appointments found.</td></tr>`;
-      return;
-    }
-
-    appointments.forEach(app => {
-      const row = `
-        <tr>
-          <td>${formatDate(app.date)}</td>
-          <td>${app.time}</td>
-          <td>${formatName(app.doctor)}</td>
-          <td>${formatWord(app.status)}</td>
-        </tr>
-      `;
-      tbody.innerHTML += row;
-    });
-
-  } catch (err) {
-    console.error("Error loading appointments:", err);
-  }
-}
 
 function formatDate(dateString) {
   const date = new Date(dateString);

@@ -26,7 +26,7 @@ document.getElementById("patientFormFields").addEventListener("submit", function
 
   console.log("Sending Data:", patientData);
 
-  fetch("http://localhost:3000/patients/add-patient", {
+  fetch("http://localhost:3001/patients/add-patient", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(patientData),
