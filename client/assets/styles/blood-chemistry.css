@@ -1,0 +1,147 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 30px;
+  background: #f4f4f4;
+}
+
+.form-container {
+  background: white;
+  padding: 30px;
+  max-width: 1000px;
+  margin: auto;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+header h1 {
+  font-size: 20px;
+  margin: 0;
+}
+
+header h2 {
+  margin-top: 20px;
+  color: #cc0000;
+  letter-spacing: 3px;
+}
+
+.patient-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  position: relative;
+}
+
+.autocomplete-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 105px; 
+  width: 300px;
+  background: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  z-index: 100;
+  max-height: 180px;
+  overflow-y: auto;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.autocomplete-suggestions div {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  font-weight: normal;
+}
+
+.autocomplete-suggestions div:hover {
+  background-color: #f0f0f0;
+}
+
+
+
+.left-group,
+.right-group {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: bold;
+}
+
+.field-group input[type="text"],
+.field-group input[type="date"] {
+  padding: 5px;
+  border: none;
+  border-bottom: 1px solid #000;
+  outline: none;
+  width: 250px;
+}
+
+#patientName {
+  width: 300px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#patientId {
+  display: none;
+}
+
+#patientSuggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 300px;
+  z-index: 10;
+}
+
+
+.results {
+  display: flex;
+  gap: 40px;
+  margin-top: 20px;
+}
+
+.column {
+  flex: 1;
+}
+
+.column label {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  gap: 10px;
+}
+
+.column input {
+  width: 100px;
+  padding: 3px;
+  text-align: center;
+}
+
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+}

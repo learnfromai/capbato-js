@@ -32,6 +32,64 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.error("Error fetching patient data:", error);
     alert("An error occurred while retrieving patient details.");
   }
+
+  const prescriptionTab = document.getElementById("prescriptionTab");
+  const laboratoryTab = document.getElementById("laboratoryTab");
+  const appointmentTab = document.getElementById("appointmentTab");
+  const appointmentContent = document.getElementById("appointmentContent");
+
+  prescriptionTab.addEventListener("click", () => {
+    hideTabs();
+    prescriptionTab.classList.add("active");
+  });
+
+  laboratoryTab.addEventListener("click", () => {
+    hideTabs();
+    laboratoryTab.classList.add("active");
+  });
+
+  appointmentTab.addEventListener("click", () => {
+    hideTabs();
+    appointmentTab.classList.add("active");
+    appointmentContent.style.display = "block";
+    loadAppointmentsForPatient();
+  });
+
+  function hideTabs() {
+    document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+    appointmentContent.style.display = "none";
+  }
+
+  function loadAppointmentsForPatient() {
+    const tbody = document.getElementById("appointmentListBody");
+    tbody.innerHTML = `<tr><td colspan="4">Loading...</td></tr>`;
+
+    fetch(`http://localhost:3001/appointments/patient/${patientId}`)
+      .then(res => res.json())
+      .then(data => {
+        tbody.innerHTML = "";
+
+        if (!data.length) {
+          tbody.innerHTML = `<tr><td colspan="4">No appointments found.</td></tr>`;
+          return;
+        }
+
+        data.forEach(app => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${formatDate(app.appointment_date)}</td>
+            <td>${formatTime(app.appointment_time)}</td>
+            <td>${app.reason_for_visit}</td>
+            <td>${app.status}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      })
+      .catch(err => {
+        console.error("Failed to fetch appointments:", err);
+        tbody.innerHTML = `<tr><td colspan="4" style="color:red;">Error loading data</td></tr>`;
+      });
+  }
 });
 
 function formatDate(dateString) {
@@ -62,6 +120,14 @@ function formatSentence(sentence) {
   return sentence
     .toLowerCase()
     .replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function formatTime(timeStr) {
+  const [hour, minute] = timeStr.split(':');
+  const h = parseInt(hour, 10);
+  const suffix = h >= 12 ? 'PM' : 'AM';
+  const hour12 = ((h + 11) % 12 + 1);
+  return `${hour12}:${minute} ${suffix}`;
 }
 
 function goBack() {

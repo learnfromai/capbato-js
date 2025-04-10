@@ -7,7 +7,6 @@ const suggestionsBox = document.getElementById("autocompleteSuggestions");
 const patientIdDisplay = document.getElementById("patientIdDisplay");
 const patientIdWrapper = document.getElementById("patientIdWrapper");
 
-// ✅ Add hidden input for patient_id
 const hiddenPatientIdInput = document.createElement("input");
 hiddenPatientIdInput.type = "hidden";
 hiddenPatientIdInput.id = "selectedPatientId";

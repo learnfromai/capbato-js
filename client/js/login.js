@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     let role;
   
-    // Try to get role from URL or hidden input
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has("role")) {
       role = urlParams.get("role");
@@ -11,8 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
         role = roleInput.value;
       }
     }
-  
-    // If role is still missing, show error and stop
+
     if (!role) {
       const messageEl = document.getElementById("message");
       if (messageEl) {

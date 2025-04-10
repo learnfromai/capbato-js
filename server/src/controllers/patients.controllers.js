@@ -67,7 +67,6 @@ export function addPatient(req, res) {
     gender,
     contact,
     address,
-
     guardian_name,
     guardian_gender,
     guardian_relationship,
@@ -128,7 +127,6 @@ export function addPatient(req, res) {
   });
 }
 
-
 export function getTotalPatients(req, res) {
   const sql = `SELECT COUNT(*) AS total FROM patients`;
 
@@ -141,3 +139,24 @@ export function getTotalPatients(req, res) {
   });
 }
 
+// ✅ FIXED: Search patients by name from actual columns
+export function searchPatients(req, res) {
+  const name = req.query.name;
+  if (!name) return res.status(400).json({ error: "Name query required" });
+
+  const sql = `
+    SELECT 
+      PatientID AS id,
+      CONCAT(FirstName, ' ', IFNULL(MiddleName, ''), ' ', LastName) AS name
+    FROM patients
+    WHERE FirstName LIKE ? OR MiddleName LIKE ? OR LastName LIKE ?
+    LIMIT 10
+  `;
+
+  const wildcard = `%${name}%`;
+
+  db.query(sql, [wildcard, wildcard, wildcard], (err, results) => {
+    if (err) return res.status(500).json({ error: "DB error", details: err });
+    res.json(results);
+  });
+}

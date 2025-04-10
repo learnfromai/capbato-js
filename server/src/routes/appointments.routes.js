@@ -21,5 +21,7 @@ router.put('/cancel/:id', cancelAppointment);
 router.put('/update/:id', updateAppointment);
 router.get('/today/confirmed', getTodayConfirmedAppointments);
 router.get('/today', getTodayAppointments);
+router.get('/patient/:id', getAppointmentsByPatientId);
+
 
 export default router;

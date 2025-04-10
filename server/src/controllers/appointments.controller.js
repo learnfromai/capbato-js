@@ -19,7 +19,6 @@ export async function getAppointments(req, res) {
       console.error('Error fetching appointments:', err);
       return res.status(500).json({ error: 'Database error' });
     }
-    console.log("Fetched appointments:", results);
     res.status(200).json(results);
   });
 }
@@ -58,43 +57,60 @@ export async function addAppointment(req, res) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
-  const checkQuery = `
-    SELECT COUNT(*) AS count
-    FROM appointments
-    WHERE appointment_date = ? AND appointment_time = ? AND status = 'Confirmed'
+  // Updated safe query
+  const getPatientQuery = `
+    SELECT ContactNumber
+    FROM patients
+    WHERE TRIM(LOWER(CONCAT_WS(' ', FirstName, NULLIF(MiddleName, ''), LastName))) = TRIM(LOWER(?))
+    LIMIT 1;
   `;
 
-  db.query(checkQuery, [appointment_date, appointment_time], (err, results) => {
+  db.query(getPatientQuery, [patient_name], (err, patientResult) => {
     if (err) {
-      console.error('Error checking time availability:', err);
-      return res.status(500).json({ error: 'Database error' });
+      console.error('Error fetching patient contact:', err);
+      return res.status(500).json({ error: 'Database error while fetching contact' });
     }
 
-    const count = results[0].count;
-    if (count >= 4) {
-      return res.status(400).json({ error: 'This time slot is already fully booked.' });
-    }
+    const contact_number = patientResult.length > 0 ? patientResult[0].ContactNumber : '';
 
-    const insertQuery = `
-      INSERT INTO appointments (patient_id, patient_name, reason_for_visit, appointment_date, appointment_time, status)
-      VALUES (?, ?, ?, ?, ?, ?)
+    const checkQuery = `
+      SELECT COUNT(*) AS count
+      FROM appointments
+      WHERE appointment_date = ? AND appointment_time = ? AND status = 'Confirmed'
     `;
 
-    db.query(
-      insertQuery,
-      [patient_id, patient_name, reason_for_visit, appointment_date, appointment_time, status],
-      (insertErr, result) => {
-        if (insertErr) {
-          console.error('Error adding appointment:', insertErr);
-          return res.status(500).json({ error: 'Failed to insert appointment' });
-        }
-
-        res.status(201).json({
-          message: 'Appointment added successfully!',
-          id: result.insertId,
-        });
+    db.query(checkQuery, [appointment_date, appointment_time], (err, results) => {
+      if (err) {
+        console.error('Error checking time availability:', err);
+        return res.status(500).json({ error: 'Database error' });
       }
-    );
+
+      const count = results[0].count;
+      if (count >= 4) {
+        return res.status(400).json({ error: 'This time slot is already fully booked.' });
+      }
+
+      const insertQuery = `
+        INSERT INTO appointments (patient_id, patient_name, reason_for_visit, appointment_date, appointment_time, status, contact_number)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `;
+
+      db.query(
+        insertQuery,
+        [patient_id, patient_name, reason_for_visit, appointment_date, appointment_time, status, contact_number],
+        (insertErr, result) => {
+          if (insertErr) {
+            console.error('Error adding appointment:', insertErr);
+            return res.status(500).json({ error: 'Failed to insert appointment' });
+          }
+
+          res.status(201).json({
+            message: 'Appointment added successfully!',
+            id: result.insertId,
+          });
+        }
+      );
+    });
   });
 }
 
@@ -113,37 +129,62 @@ export async function updateAppointment(req, res) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
-  const checkQuery = `
-    SELECT COUNT(*) AS count
-    FROM appointments
-    WHERE appointment_date = ? AND appointment_time = ? AND id != ? AND status = 'Confirmed'
+  const getPatientQuery = `
+    SELECT contact_number
+    FROM patients
+    WHERE LOWER(CONCAT_WS(' ', FirstName, MiddleName, LastName)) = LOWER(?)
+    LIMIT 1
   `;
 
-  db.query(checkQuery, [appointment_date, appointment_time, appointmentId], (err, results) => {
+  db.query(getPatientQuery, [patient_name], (err, patientResult) => {
     if (err) {
-      console.error('Error checking time availability during update:', err);
-      return res.status(500).json({ error: 'Database error' });
+      console.error('Error fetching patient contact (update):', err);
+      return res.status(500).json({ error: 'Database error while fetching contact' });
     }
 
-    const count = results[0].count;
+    const contact_number = patientResult.length > 0 ? patientResult[0].contact_number : '';
 
-    if (count >= 4) {
-      return res.status(400).json({ error: 'This time slot is already fully booked.' });
-    }
-
-    const updateQuery = `
-      UPDATE appointments 
-      SET patient_id = ?, patient_name = ?, reason_for_visit = ?, appointment_date = ?, appointment_time = ?, status = ?
-      WHERE id = ?
+    const checkQuery = `
+      SELECT COUNT(*) AS count
+      FROM appointments
+      WHERE appointment_date = ? AND appointment_time = ? AND id != ? AND status = 'Confirmed'
     `;
 
-    db.query(updateQuery, [patient_id, patient_name, reason_for_visit, appointment_date, appointment_time, status, appointmentId], (updateErr) => {
-      if (updateErr) {
-        console.error('Error updating appointment:', updateErr);
-        return res.status(500).json({ error: 'Failed to update appointment' });
+    db.query(checkQuery, [appointment_date, appointment_time, appointmentId], (err, results) => {
+      if (err) {
+        console.error('Error checking time availability during update:', err);
+        return res.status(500).json({ error: 'Database error' });
       }
 
-      res.status(200).json({ message: 'Appointment updated successfully!' });
+      const count = results[0].count;
+
+      if (count >= 4) {
+        return res.status(400).json({ error: 'This time slot is already fully booked.' });
+      }
+
+      const updateQuery = `
+        UPDATE appointments 
+        SET patient_id = ?, patient_name = ?, reason_for_visit = ?, appointment_date = ?, appointment_time = ?, status = ?, contact_number = ?
+        WHERE id = ?
+      `;
+
+      db.query(updateQuery, [
+        patient_id,
+        patient_name,
+        reason_for_visit,
+        appointment_date,
+        appointment_time,
+        status,
+        contact_number,
+        appointmentId,
+      ], (updateErr) => {
+        if (updateErr) {
+          console.error('Error updating appointment:', updateErr);
+          return res.status(500).json({ error: 'Failed to update appointment' });
+        }
+
+        res.status(200).json({ message: 'Appointment updated successfully!' });
+      });
     });
   });
 }
@@ -223,11 +264,12 @@ export function getTodayConfirmedAppointments(req, res) {
 
 export function getTodayAppointments(req, res) {
   const sql = `
-    SELECT patient_name, reason_for_visit, appointment_time, status
+    SELECT patient_id, patient_name, reason_for_visit, contact_number, appointment_time, status
     FROM appointments
     WHERE DATE(appointment_date) = CURDATE() AND status = 'Confirmed'
     ORDER BY appointment_time ASC
   `;
+
 
   db.query(sql, (err, result) => {
     if (err) {

@@ -1,31 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Laboratory</title>
-    <link rel="stylesheet" href="../assets/styles/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laboratory Page</title>
+  <link rel="stylesheet" href="../assets/styles/style.css" />
+  <link rel="stylesheet" href="../assets/styles/laboratory.css" />
 </head>
 <body>
-    <div class="container">
-        <img src="../assets/images/logo.png" alt="" class="logo">
-        <h2 class="title">M.G. AMORES MEDICAL CLINIC</h2>
+  <!-- Header -->
+  <div class="container">
+    <img src="../assets/images/logo.png" alt="Clinic Logo" class="logo">
+    <h2 class="title">M.G. Amores Medical Clinic</h2>
+  </div>
+
+  <div class="hover-area"></div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <button type="button" id="dashboardbtn">Dashboard</button>
+    <button type="button" id="appointmentbtn">Appointments</button>
+    <button type="button" id="patientbtn">Patients</button>
+    <button type="button" id="laboratorybtn">Laboratory</button>
+    <button type="button" id="prescriptionbtn">Prescriptions</button>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h2>Laboratory Forms</h2>
+    <div class="lab-buttons">
+      <button id="openBloodChemBtn">Open Blood Chemistry Form</button>
+      <button id="openLabChecklistBtn">Open Lab Checklist</button>
     </div>
+  </div>
 
-    <div class="hover-area"></div>
+  <table>
+    <thead>
+      <tr>
+        <th>Patient ID</th>
+        <th>Full Name</th>
+        <th>Date</th>
+        <th>Lab Test</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="labResultsBody">
+    </tbody>
+  </table>
+  
 
-    <div class="sidebar">
-        <button id="dashboardbtn">Dashboard</button>
-        <button id="appointmentbtn">Appointments</button>
-        <button id="patientbtn">Patients</button>
-        <button id="laboratorybtn">Laboratory</button>
-        <button id="prescriptionbtn">Prescriptions</button>
+  <div class="overlay" id="labOverlay">
+    <div class="modal-container">
+      <button class="close-btn" id="closeOverlayBtn">X</button>
+      <iframe id="labIframe" src=""></iframe>
     </div>
+  </div>
 
-    <div style="margin-left:220px; padding: 30px;">
-        <h2>Laboratory Page</h2>
-        <p>Coming soon...</p>
-    </div>
-
-    <script src="../js/laboratory.js"></script>
+  <script src="../js/laboratory.js"></script>
 </body>
 </html>

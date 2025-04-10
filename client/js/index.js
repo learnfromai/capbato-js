@@ -1,4 +1,3 @@
-// Navigation
 document.getElementById("patientbtn").addEventListener("click", function () {
   window.location.href = "patients.html";
 });
@@ -19,7 +18,6 @@ document.getElementById("prescriptionbtn").addEventListener("click", function ()
   window.location.href = "prescriptions.html";
 });
 
-// Set today's date in the summary card
 function updateTodayDate() {
   const today = new Date();
   const options = { day: '2-digit', month: 'short', year: 'numeric' };
@@ -31,8 +29,7 @@ function updateTodayDate() {
 }
 updateTodayDate();
 
-// Fetch total patient count
-fetch('http://localhost:3001/patients/total/count')
+fetch('http://localhost:3001/patients/total')
   .then(response => response.json())
   .then(data => {
     const countElement = document.getElementById('total-patients');
@@ -50,35 +47,6 @@ fetch('http://localhost:3001/patients/total/count')
 
 console.log("Dashboard Summary Loaded");
 
-fetch('http://localhost:3001/appointments/today/confirmed')
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById('todayAppointmentsCount').textContent = data.total;
-  })
-  .catch(err => console.error("Error fetching today's appointments:", err));
-
-fetch('http://localhost:3001/appointments/today')
-  .then(res => res.json())
-  .then(data => {
-    const tbody = document.getElementById('todayAppointmentsBody');
-    if (!tbody) return;
-
-    tbody.innerHTML = '';
-
-    data.forEach(appointment => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${appointment.patient_name}</td>
-        <td>${appointment.reason_for_visit}</td>
-        <td>${appointment.contact_number}</td>
-        <td>${formatTime(appointment.appointment_time)}</td>
-        <td>${appointment.status}</td>
-      `;
-      tbody.appendChild(row);
-    });
-  })
-  .catch(err => console.error("Error loading today's appointments:", err));
-
 function formatTime(timeStr) {
   const [hour, minute] = timeStr.split(':');
   const h = parseInt(hour, 10);
@@ -86,3 +54,47 @@ function formatTime(timeStr) {
   const hour12 = ((h + 11) % 12 + 1);
   return `${hour12}:${minute} ${suffix}`;
 }
+
+function refreshDashboardData() {
+  console.log("Refreshing dashboard data...");
+
+  fetch('http://localhost:3001/appointments/today/confirmed')
+    .then(res => res.json())
+    .then(data => {
+      const count = document.getElementById('todayAppointmentsCount');
+      if (count) count.textContent = data.total;
+    })
+    .catch(err => console.error("Error fetching today's total confirmed appointments:", err));
+
+  fetch('http://localhost:3001/appointments/today')
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.getElementById('todayAppointmentsBody');
+      if (!tbody) return;
+
+      tbody.innerHTML = '';
+
+      data.forEach(appointment => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${appointment.patient_id || 'N/A'}</td>
+          <td>
+            <a href="patientinfo.html?patient_id=${appointment.patient_id}" class="patient-link">
+              ${appointment.patient_name}
+            </a>
+          </td>
+          <td>${appointment.reason_for_visit}</td>
+          <td>${appointment.contact_number}</td>
+          <td>${formatTime(appointment.appointment_time)}</td>
+          <td>${appointment.status}</td>
+        `;
+
+        tbody.appendChild(row);
+      });
+    })
+    .catch(err => console.error("Error loading today's appointments:", err));
+}
+
+refreshDashboardData();
+
+setInterval(refreshDashboardData, 10000);
