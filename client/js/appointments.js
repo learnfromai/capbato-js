@@ -302,3 +302,14 @@ function showToast(message, duration = 2000) {
         toast.classList.add("hidden");
     }, duration);
 }
+
+// === Show role on navbar ===
+document.addEventListener("DOMContentLoaded", function () {
+    const role = localStorage.getItem("loggedInRole");
+    const roleDisplay = document.getElementById("roleDisplay");
+    if (role && roleDisplay) {
+      roleDisplay.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+    }
+  });
+  
+

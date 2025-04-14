@@ -1,57 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patients</title>
-    <link rel="stylesheet" href="../assets/styles/style.css">
-    <link rel="stylesheet" href="../assets/styles/patients.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Patients</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/styles/patients.css" />
 </head>
 <body>
-    <div class="container">
-        <img src="../assets/images/logo.png" alt="" class="logo">
-        <h2 class="title">M.G. Amores Medical Clinic</h2>
-    </div>
+  <!-- Header -->
+  <nav class="navbar">
+    <a class="navbar-brand" href="#">
+      <img src="../assets/images/logo.png" alt="Logo" />
+      <h1>M.G. Amores Medical Clinic</h1>
+    </a>
+    <span id="roleDisplay" class="ms-auto text-muted fw-bold"></span>
+  </nav>
 
-    <div class="hover-area"></div>
+  <!-- Hover Area -->
+  <div class="hover-area"></div>
 
-    <div class="sidebar">
-        <button type="button" class="dashboardbtn" id="dashboardbtn">Dashboard</button>
-        <button id="appointmentbtn" type="button" class="appointmentbtn">Appointments</button>
-        <button id="patientbtn" type="button" class="patientbtn">Patients</button>
-        <button id="laboratorybtn" type="button" class="laboratorybtn">Laboratory</button>
-        <button id="prescriptionbtn" type="button" class="prescriptionbtn">Prescriptions</button>
-    </div>
-    
-    
-    <div class="table-container">
-        <div class="table-header">
-            <h2 class="table-title">Patient Records</h2>
-            <button class="add-patient-btn">ADD NEW PATIENT</button>
-        </div>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <button type="button" id="dashboardbtn">Dashboard</button>
+    <button type="button" id="appointmentbtn">Appointments</button>
+    <button type="button" id="patientbtn">Patients</button>
+    <button type="button" id="laboratorybtn">Laboratory</button>
+    <button type="button" id="prescriptionbtn">Prescriptions</button>
+  </div>
 
-        <input type="text" id="searchInput" class="search-bar" placeholder="Search patients...">
-        
+  <!-- Main Content -->
+  <div class="appointments-table">
+    <div class="appointment-container">
+      <div class="appointments-header">
+        <h2 class="title-page">Patient Records</h2>
+        <button id="addPatientBtn" class="add-new-patient-btn">+ Add New Patient</button>
+      </div>
+
+      <input type="text" id="searchInput" class="search-bar" placeholder="Search patients...">
+
+      <div class="appointments-table">
         <table>
-            <thead>
-                <tr>
-                    <th>Patient ID</th>
-                    <th>Full Name</th>
-                    <th>Date of Birth</th>
-                </tr>
-            </thead>            
-            <tbody id="patientTableBody">
-            </tbody>
-        </table>        
+          <thead>
+            <tr>
+              <th>Patient ID</th>
+              <th>Full Name</th>
+            </tr>
+          </thead>
+          <tbody id="patientTableBody">
+            <!-- Dynamic rows go here -->
+          </tbody>
+        </table>
+      </div>
     </div>
-    
-    <div class="overlay" id="overlay">
-        <div class="iframe-container">
-            <button class="close-btn" id="closeBtn">X</button>
-            <iframe id="addPatientIframe"></iframe>
-        </div>
-    </div>
+  </div>
 
-    <script src="../js/patients.js"></script>
+  <!-- Overlay for Add/Edit -->
+  <div class="overlay" id="overlay">
+    <div class="iframe-container">
+      <button class="close-btn" id="closeBtn">×</button>
+      <iframe id="addPatientIframe"></iframe>
+    </div>
+  </div>
+
+  <script src="../js/patients.js"></script>
 </body>
 </html>

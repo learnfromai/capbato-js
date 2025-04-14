@@ -11,16 +11,15 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.href = "appointments.html";
   });
 
-  document.getElementById("laboratorybtn").addEventListener("click", function () {
+  document.getElementById("laboratorybtn").addEventListener("click", () => {
     window.location.href = "laboratory.html";
   });
-  
-  document.getElementById("prescriptionbtn").addEventListener("click", function () {
+
+  document.getElementById("prescriptionbtn").addEventListener("click", () => {
     window.location.href = "prescriptions.html";
   });
-  
 
-  const addPatientBtn = document.querySelector(".add-patient-btn");
+  const addPatientBtn = document.querySelector(".add-new-patient-btn");
   const overlay = document.getElementById("overlay");
   const iframe = document.getElementById("addPatientIframe");
   const closeBtn = document.getElementById("closeBtn");
@@ -39,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener("message", function (event) {
       if (event.data === "patientAdded") {
         loadPatients();
-        document.getElementById("overlay").style.display = "none";
+        overlay.style.display = "none";
         iframe.src = "";
       }
     });
@@ -61,12 +60,6 @@ function loadPatients() {
     .catch((error) => console.error("Error fetching data:", error));
 }
 
-function formatDate(dateString) {
-  const options = { year: 'numeric', month: 'short', day: 'numeric' };
-  const date = new Date(dateString);
-  return isNaN(date) ? "Invalid Date" : date.toLocaleDateString('en-US', options);
-}
-
 function toTitleCase(str) {
   return str
     .toLowerCase()
@@ -82,7 +75,7 @@ function renderTable(data) {
   if (!data || data.length === 0) {
     tableBody.innerHTML = `
       <tr>
-        <td colspan="3" style="text-align:center;">No patients found.</td>
+        <td colspan="2" style="text-align:center;">No patients found.</td>
       </tr>`;
     return;
   }
@@ -97,7 +90,6 @@ function renderTable(data) {
             ${formattedName}
           </a>
         </td>
-        <td>${formatDate(patient.date_of_birth)}</td>
       </tr>`;
     tableBody.innerHTML += row;
   });
@@ -111,3 +103,12 @@ document.getElementById("searchInput").addEventListener("input", function () {
   );
   renderTable(filteredData);
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const role = localStorage.getItem("loggedInRole");
+  const display = document.getElementById("roleDisplay");
+  if (display && role) {
+    display.textContent = role.toUpperCase();
+  }
+});
+

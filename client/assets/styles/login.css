@@ -1,123 +1,93 @@
 body {
-    position: relative;
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: auto;
     min-height: 100vh;
-    padding-top: 60px;
-    background: none;
     margin: 0;
-}
-
-body::before {
+    padding-top: 100px;
+    background: linear-gradient(to bottom right, rgb(109, 174, 218), #4db6ac);
+  }
+  
+  body::before {
     content: "";
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
-    /* background: url('bg.jpg') no-repeat center center; */
     background-size: cover;
-    filter: blur(10px); 
+    filter: blur(10px);
     z-index: -1;
-}
-
-h1{
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: white;
-}
-
-.navbar {
+  }
+  
+  .navbar {
     width: 100%;
-    position: absolute;
-    top: 10%;
+    position: fixed;
+    top: 0;
     left: 0;
-    display: flex;
-    background-color: rgb(109, 174, 218);
-    justify-content: center;
-    padding: 15px 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    padding: 10px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-}
-
-.navbar-brand img {
-    width: 100px;
-    height: 100px;
-    border-radius: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+  }
+  
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+  }
+  
+  .navbar-brand img {
+    width: 70px;
+    height: 70px;
     object-fit: cover;
-}
-
-
-.container-fluid {
-    display: flex;
-    align-items: center;
-}
-
-.navbar-brand {
-    display: flex;
-    align-items: center;
-}
-
-.navbar-brand img {
-    margin-right: 10px;
-}
-
-.card {
-    background-color: transparent;
-    border: none; 
-    box-shadow: none;
-}
-
-
-
-.login-container {
-    background: white;
+    border-radius: 10px; /* Square logo */
+  }
+  
+  .navbar-brand h1 {
+    font-size: 22px;
+    color: #0b4f6c;
+    margin: 0;
+  }
+  
+  .container {
+    margin-top: 130px;
+    padding: 0 20px;
+  }
+  
+  .card {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    border: none;
+    padding: 10px;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: scale(1.02);
+  }
+  
+  .card-body {
     padding: 20px;
+  }
+  
+  .btn-primary {
+    background-color: #4db6ac;
+    border: none;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
     border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-
-.role-selection {
-    margin: 20px 0;
-}
-
-.role-btn {
-    margin: 5px;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007BFF;
-    color: white;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.role-btn:hover {
-    background-color: #0056b3;
-}
-
-input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-button {
-    width: 100%;
-    padding: 10px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-button:hover {
-    background-color: #218838;
-}
+  }
+  
+  .btn-primary:hover {
+    background-color: #3ba69c;
+  }
+  

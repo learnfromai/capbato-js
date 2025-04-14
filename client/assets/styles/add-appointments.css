@@ -1,3 +1,5 @@
+/* === EXISTING STYLES PRESERVED === */
+
 #addAppointmentOverlay {
   display: none;
   position: fixed;
@@ -62,6 +64,8 @@ html, body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to bottom right, rgb(109, 174, 218), #4db6ac);
 }
 
 .form-container {
@@ -74,11 +78,16 @@ html, body {
   justify-content: flex-start;
   box-sizing: border-box;
   overflow-y: auto;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
   margin-bottom: 20px;
   text-align: center;
+  color: #0b4f6c;
+  font-weight: bold;
+  font-size: 24px;
 }
 
 .form-group {
@@ -91,15 +100,24 @@ h2 {
 label {
   display: block;
   font-weight: bold;
+  margin-bottom: 6px;
+  color: #333;
 }
 
 input, select, textarea {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 16px;
-  margin-bottom: 12px;
+  padding: 12px 14px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 15px;
+  background-color: #f9f9f9;
+  transition: border 0.2s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #4db6ac;
+  outline: none;
+  background-color: #fff;
 }
 
 textarea {
@@ -109,8 +127,6 @@ textarea {
   resize: none;
   overflow-y: auto;
   padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
   font-size: 14px;
   box-sizing: border-box;
   line-height: 1.5;
@@ -118,18 +134,21 @@ textarea {
 
 .submit-btn {
   width: 100%;
-  background-color: #28a745;
+  background-color: #4db6ac;
   color: white;
   padding: 12px;
   border: none;
-  border-radius: 5px;
+  border-radius: 12px;
   cursor: pointer;
   font-size: 16px;
   font-weight: bold;
+  box-shadow: 0 4px 10px rgba(77, 182, 172, 0.3);
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .submit-btn:hover {
-  background-color: #218838;
+  background-color: #3ba69c;
+  transform: scale(1.02);
 }
 
 .patient-id-display {
@@ -158,13 +177,31 @@ textarea {
   overflow-y: auto;
   top: 100%;
   left: 0;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .suggestion-item {
-  padding: 8px;
+  padding: 10px;
   cursor: pointer;
+  font-size: 14px;
 }
 
 .suggestion-item:hover {
   background-color: #f0f0f0;
+}
+
+/* === Error & Notices === */
+#formError {
+  color: red;
+  display: none;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+#timeNotice {
+  color: red;
+  display: none;
+  font-size: 14px;
+  margin-top: -8px;
 }

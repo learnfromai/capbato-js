@@ -7,6 +7,16 @@ const suggestionsBox = document.getElementById("autocompleteSuggestions");
 const patientIdDisplay = document.getElementById("patientIdDisplay");
 const patientIdWrapper = document.getElementById("patientIdWrapper");
 
+// Add second notice element for slot-specific warning
+let timeSlotNotice = document.getElementById("timeSlotNotice");
+if (!timeSlotNotice) {
+  timeSlotNotice = document.createElement("small");
+  timeSlotNotice.id = "timeSlotNotice";
+  timeSlotNotice.className = "text-danger d-block mt-1";
+  timeSlotNotice.style.display = "none";
+  timeSelect.parentNode.appendChild(timeSlotNotice);
+}
+
 const hiddenPatientIdInput = document.createElement("input");
 hiddenPatientIdInput.type = "hidden";
 hiddenPatientIdInput.id = "selectedPatientId";
@@ -27,6 +37,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 dateInput.addEventListener("change", (e) => {
   fetchTimeAvailability(e.target.value);
+});
+
+timeSelect.addEventListener("change", () => {
+  checkTimeSlotAvailability();
 });
 
 function populateTimeOptions() {
@@ -74,9 +88,25 @@ async function fetchTimeAvailability(date) {
     });
 
     timeNotice.style.display = allDisabled ? "block" : "none";
+    timeSlotNotice.style.display = "none";
   } catch (error) {
     console.error("Error loading time availability:", error);
   }
+}
+
+function checkTimeSlotAvailability() {
+  const selectedTime = timeSelect.value;
+  const selectedDate = dateInput.value;
+
+  const count = latestAppointments.filter(
+    (app) =>
+      app.appointment_date === selectedDate &&
+      app.appointment_time === selectedTime &&
+      app.status === "Confirmed"
+  ).length;
+
+  timeSlotNotice.textContent = "This timeslot is already full.";
+  timeSlotNotice.style.display = count >= 4 ? "block" : "none";
 }
 
 function showInlineError(msg) {
@@ -231,6 +261,8 @@ window.addEventListener("message", function (event) {
 
     fetchTimeAvailability(app.appointment_date).then(() => {
       document.getElementById("time").value = app.appointment_time;
+      timeNotice.style.display = "none";
+      timeSlotNotice.style.display = "none";
     });
 
     document.getElementById("addAppointmentForm").dataset.editId = app.id;

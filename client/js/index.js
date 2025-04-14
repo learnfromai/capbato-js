@@ -1,21 +1,34 @@
-document.getElementById("patientbtn").addEventListener("click", function () {
-  window.location.href = "patients.html";
-});
+document.addEventListener("DOMContentLoaded", () => {
+  const role = localStorage.getItem("loggedInRole");
+  const roleDisplay = document.getElementById("roleDisplay");
+  if (role && roleDisplay) {
+    roleDisplay.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+    roleDisplay.classList.add("ms-auto");
+  }
 
-document.getElementById("dashboardbtn").addEventListener("click", function () {
-  window.location.href = "index.html";
-});
+  document.getElementById("patientbtn").addEventListener("click", () => {
+    window.location.href = "patients.html";
+  });
 
-document.getElementById("appointmentbtn").addEventListener("click", function () {
-  window.location.href = "appointments.html";
-});
+  document.getElementById("dashboardbtn").addEventListener("click", () => {
+    window.location.href = "index.html";
+  });
 
-document.getElementById("laboratorybtn").addEventListener("click", function () {
-  window.location.href = "laboratory.html";
-});
+  document.getElementById("appointmentbtn").addEventListener("click", () => {
+    window.location.href = "appointments.html";
+  });
 
-document.getElementById("prescriptionbtn").addEventListener("click", function () {
-  window.location.href = "prescriptions.html";
+  document.getElementById("laboratorybtn").addEventListener("click", () => {
+    window.location.href = "laboratory.html";
+  });
+
+  document.getElementById("prescriptionbtn").addEventListener("click", () => {
+    window.location.href = "prescriptions.html";
+  });
+
+  updateTodayDate();
+  refreshDashboardData();
+  setInterval(refreshDashboardData, 10000);
 });
 
 function updateTodayDate() {
@@ -27,7 +40,6 @@ function updateTodayDate() {
     dateElement.textContent = formatted;
   }
 }
-updateTodayDate();
 
 fetch('http://localhost:3001/patients/total')
   .then(response => response.json())
@@ -45,8 +57,6 @@ fetch('http://localhost:3001/patients/total')
     }
   });
 
-console.log("Dashboard Summary Loaded");
-
 function formatTime(timeStr) {
   const [hour, minute] = timeStr.split(':');
   const h = parseInt(hour, 10);
@@ -56,8 +66,6 @@ function formatTime(timeStr) {
 }
 
 function refreshDashboardData() {
-  console.log("Refreshing dashboard data...");
-
   fetch('http://localhost:3001/appointments/today/confirmed')
     .then(res => res.json())
     .then(data => {
@@ -88,13 +96,9 @@ function refreshDashboardData() {
           <td>${formatTime(appointment.appointment_time)}</td>
           <td>${appointment.status}</td>
         `;
-
         tbody.appendChild(row);
       });
     })
     .catch(err => console.error("Error loading today's appointments:", err));
 }
 
-refreshDashboardData();
-
-setInterval(refreshDashboardData, 10000);

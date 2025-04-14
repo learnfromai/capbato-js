@@ -48,3 +48,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+
+document.addEventListener("DOMContentLoaded", () => {
+  const role = localStorage.getItem("loggedInRole");
+  const display = document.getElementById("roleDisplay");
+  if (display && role) {
+    display.textContent = role.toUpperCase();
+  }
+});
+
+

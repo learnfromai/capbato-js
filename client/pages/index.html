@@ -4,46 +4,46 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>M.G. Amores Medical Clinic</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../assets/styles/index.css" />
-  <link rel="stylesheet" href="../assets/styles/style.css" />
 </head>
 <body>
   <!-- Header -->
-  <div class="container">
-    <img src="../assets/images/logo.png" alt="" class="logo">
-    <h2 class="title">M.G. AMORES MEDICAL CLINIC</h2>
-  </div>
+  <nav class="navbar">
+    <a class="navbar-brand" href="#">
+      <img src="../assets/images/logo.png" alt="Logo" width="100" height="100">
+      <h1 class="mb-0">M.G. Amores Medical Clinic</h1>
+    </a>
+    <span id="roleDisplay" class="text-muted fw-bold ms-auto"></span>
+  </nav>
 
   <div class="hover-area"></div>
 
-  <!-- Sidebar -->
   <div class="sidebar">
-    <button type="button" class="dashboardbtn" id="dashboardbtn">Dashboard</button>
-    <button id="appointmentbtn" type="button" class="appointmentbtn">Appointments</button>
-    <button id="patientbtn" type="button" class="patientbtn">Patients</button>
-    <button id="laboratorybtn" type="button" class="laboratorybtn">Laboratory</button>
-    <button id="prescriptionbtn" type="button" class="prescriptionbtn">Prescriptions</button>
+    <button type="button" id="dashboardbtn">Dashboard</button>
+    <button type="button" id="appointmentbtn">Appointments</button>
+    <button type="button" id="patientbtn">Patients</button>
+    <button type="button" id="laboratorybtn">Laboratory</button>
+    <button type="button" id="prescriptionbtn">Prescriptions</button>
   </div>
-    <!-- Dashboard Summary Cards -->
+
   <div class="summary-cards">
     <div class="card">
       <div class="card-icon">👤</div>
-        <div class="card-content">
-          <div class="label">Total Patients</div>
-          <div class="value" id="total-patients">Loading...</div>
-          <div class="date">Till Today</div>
-        </div>
+      <div class="card-content">
+        <div class="label">Total Patients</div>
+        <div class="value" id="total-patients">Loading...</div>
+        <div class="date">Till Today</div>
       </div>
-
-      <div class="card">
-        <div class="card-icon">⏰</div>
-        <div class="card-content">
-          <div class="label">Today Appointments</div>
-          <div class="value" id="todayAppointmentsCount">0</div>
-          <div class="date" id="today-date"></div>
-        </div>
-      </div>    
     </div>
+    <div class="card">
+      <div class="card-icon">⏰</div>
+      <div class="card-content">
+        <div class="label">Today Appointments</div>
+        <div class="value" id="todayAppointmentsCount">0</div>
+        <div class="date" id="today-date"></div>
+      </div>
+    </div>    
   </div>
 
   <div class="today-appointments">
@@ -59,13 +59,10 @@
           <th>Status</th>
         </tr>
       </thead>    
-      <tbody id="todayAppointmentsBody">
-        
-      </tbody>
+      <tbody id="todayAppointmentsBody"></tbody>
     </table>
     <a href="appointments.html" class="see-all-link">See All</a>
   </div>
-  
 
   <script src="../js/index.js"></script>
 </body>

@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const labOverlay = document.getElementById("labOverlay");
   const labIframe = document.getElementById("labIframe");
   const closeOverlayBtn = document.getElementById("closeOverlayBtn");
+  const submitBtn = document.getElementById("submitBtn");
 
   if (openBloodChemBtn && labOverlay && labIframe) {
     openBloodChemBtn.addEventListener("click", () => {
@@ -99,3 +100,43 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+if (submitBtn) {
+  submitBtn.addEventListener("click", () => {
+    const patientId = document.getElementById("patientId").value;
+    const date = document.getElementById("dateField").value;
+
+    const inputs = document.querySelectorAll(".results input");
+    const results = {};
+
+    inputs.forEach((input, index) => {
+      const label = input.parentElement.textContent.trim().split(" ")[0];
+      results[label] = input.value;
+    });
+
+    const dataToSend = {
+      patient_id: patientId,
+      date,
+      test_type: "Blood Chemistry",
+      results: JSON.stringify(results)
+    };
+
+    fetch("http://localhost:3001/laboratory_results", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(dataToSend)
+    })
+    .then(response => {
+      if (!response.ok) throw new Error("Failed to save data");
+      return response.json();
+    })
+    .then(result => {
+      alert("Blood chemistry results submitted successfully!");
+    })
+    .catch(error => {
+      console.error("Error submitting data:", error);
+      alert("There was a problem submitting the form.");
+    });
+  });
+}

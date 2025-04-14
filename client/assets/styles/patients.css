@@ -1,48 +1,136 @@
-.table-container {
-    width: 70%;
-    margin: 160px auto 20px; 
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    position: relative;
-    overflow-x: auto;
-}
-
-
-.table-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    margin-bottom: 15px;
-}
-
-.table-title {
-    font-size: 24px;
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to bottom right, rgb(109, 174, 218), #4db6ac);
+    padding-top: 100px;
     margin: 0;
-    text-align: center;
-    flex-grow: 1;
-}
-
-.add-patient-btn {
-    background: #28a745;
-    color: white;
+  }
+  
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-size: cover;
+    filter: blur(10px);
+    z-index: -1;
+  }
+  
+  .navbar {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: white;
     padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+  }
+  
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+  }
+  
+  .navbar-brand img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  
+  .navbar-brand h1 {
+    font-size: 22px;
+    color: #0b4f6c;
+    margin: 0;
+  }
+  
+  .hover-area {
+    position: fixed;
+    top: 100px;
+    left: 0;
+    width: 20px;
+    height: 100%;
+    z-index: 1000;
     cursor: pointer;
-    font-size: 16px;
-    position: absolute;
-    right: 0;
-}
-
-.add-patient-btn:hover {
-    background: #218838;
-}
-
-.search-bar {
+  }
+  
+  .sidebar {
+    position: fixed;
+    top: 100px;
+    left: -160px;
+    width: 160px;
+    height: 100%;
+    background: white;
+    padding: 20px 10px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: left 0.3s ease;
+    z-index: 999;
+  }
+  
+  .hover-area:hover + .sidebar,
+  .sidebar:hover {
+    left: 0;
+  }
+  
+  .sidebar button {
+    background-color: #4db6ac;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .sidebar button:hover {
+    background-color: #3ba69c;
+  }
+  
+  .appointments-table {
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .appointment-container {
+    width: 90%;
+    margin: 30px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .appointments-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  
+  .title-page {
+    flex-grow: 1;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #004f6e;
+    margin: 0;
+  }
+  
+  .search-bar {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
@@ -50,104 +138,111 @@
     font-size: 16px;
     margin-bottom: 15px;
     box-sizing: border-box;
-}
-
-table {
+  }
+  
+  /* ✅ Updated Add Patient Button (no border) */
+  .add-new-patient-btn {
+    background-color: #4db6ac;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(77, 182, 172, 0.3);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .add-new-patient-btn:hover {
+    background-color: #3ba69c;
+    transform: scale(1.05);
+  }
+  
+  table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
     table-layout: fixed;
-}
-
-th, td {
-    padding: 10px;
-    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  th, td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-th {
-    background: #007bff;
-    color: white;
-    font-weight: bold;
-    text-align: center;
-}
-
-/* FIXED WIDTHS FOR COLUMNS */
-th:nth-child(1), td:nth-child(1) { width: 30%; } /* Patient ID */
-th:nth-child(2), td:nth-child(2) { width: 40%; } /* Full Name */
-th:nth-child(3), td:nth-child(3) { width: 30%; } /* Date of Birth */
-
-
-td:nth-child(2) {
+  }
+  
+  th {
+    background: #dbeeff;
+    color: #0047ab;
+    font-weight: 600;
+  }
+  
+  /* Column widths */
+  th:nth-child(1), td:nth-child(1) { width: 30%; }
+  th:nth-child(2), td:nth-child(2) { width: 70%; }
+  
+  td:nth-child(2) {
     white-space: normal;
     word-wrap: break-word;
-}
-
-.overlay {
+  }
+  
+  /* Overlay */
+  .overlay {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    display: none;
     justify-content: center;
     align-items: center;
     z-index: 1000;
-}
-
-.iframe-container {
-    width: 60%;
-    height: 80%;
+  }
+  
+  .iframe-container {
     background: white;
+    padding: 20px;
     border-radius: 10px;
+    width: 50%;
+    max-width: 600px;
+    height: 80vh;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     position: relative;
-    padding: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
-
-.close-btn {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .iframe-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+  
+  .close-btn {
     position: absolute;
-    top: 15px;
-    right: 25px;
+    top: 10px;
+    right: 10px;
     background: red;
     color: white;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-}
-
-.close-btn:hover {
+    border-radius: 50%;
+  }
+  
+  .close-btn:hover {
     background: darkred;
-}
-
-iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-}
-
-.submit-btn {
-    background: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.submit-btn:hover {
-    background: #0056b3;
-}
-
-.patient-link {
+  }
+  
+  .patient-link {
     color: black;
-    text-decoration: none; 
+    text-decoration: none;
   }
   
   .patient-link:hover {

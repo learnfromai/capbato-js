@@ -157,3 +157,13 @@ document.getElementById("laboratorybtn").addEventListener("click", () => {
 document.getElementById("prescriptionbtn").addEventListener("click", () => {
   window.location.href = "prescriptions.html";
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const role = localStorage.getItem("loggedInRole");
+  const display = document.getElementById("roleDisplay");
+  if (display && role) {
+    display.textContent = role.toUpperCase();
+  }
+});
+
+
