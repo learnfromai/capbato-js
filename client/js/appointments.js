@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     document.getElementById("laboratorybtn").addEventListener("click", () => window.location.href = "laboratory.html");
     document.getElementById("prescriptionbtn").addEventListener("click", () => window.location.href = "prescriptions.html");
+    document.getElementById("schedulebtn").addEventListener("click", () => window.location.href = "doctor-schedule.html");
 
 
 
