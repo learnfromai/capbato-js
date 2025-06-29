@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fecalysis Form</title>
+  <link rel="stylesheet" href="../assets/styles/fecalysis.css">
+</head>
+<body>
+  <div class="form-container">
+    <header>
+      <h1>DMYM DIAGNOSTIC & LABORATORY CENTER</h1>
+      <p>696 Commonwealth Ave., Litex Rd. Quezon City</p>
+      <p>Tel. No. 263-1036</p>
+      <p><strong>LICENSE NUMBER 1-3-CL-592-06-P</strong></p>
+      <h2>FECALYSIS</h2>
+    </header>
+
+    <div class="patient-info">
+      <div class="left-group">
+        <div class="field-group">
+          <label for="patientName">Patient Name:</label>
+          <input type="text" id="patientName" name="patient_name" autocomplete="off" required />
+          <input type="hidden" id="patientId" name="patient_id" />
+        </div>
+        <div class="field-group">
+          <label for="dateField">Date:</label>
+          <input type="text" id="dateField" />
+        </div>
+      </div>
+
+      <div class="right-group">
+        <div class="field-group">
+          <label for="age">Age:</label>
+          <input type="text" id="age" />
+        </div>
+        <div class="field-group">
+          <label for="sex">Sex:</label>
+          <input type="text" id="sex" />
+        </div>
+      </div>
+    </div>
+
+    <h3>MACROSCOPIC EXAMINATION:</h3>
+
+    <div class="results">
+      <div class="column">
+        <label>Color <input type="text" id="color" /></label>
+        <label>Consistency <input type="text" id="consistency" /></label>
+        <label>RBC <input type="text" id="rbc" /> 0–2/HPF</label>
+        <label>WBC <input type="text" id="wbc" /> 0–2/HPF</label>
+        <label>Occult Blood <input type="text" id="occult_blood" /></label>
+        <label>Urobilinogen <input type="text" id="urobilinogen" /></label>
+        <label>Others <input type="text" id="others" /></label>
+      </div>
+    </div>
+
+    <footer>
+      <p><strong>Mark C. Madriaga, RMT</strong><br>License No. 42977<br>Medical Technologist</p>
+      <p><strong>Frederick R. Llanera, MD FPSP</strong><br>License No. 86353<br>Pathologist</p>
+    </footer>
+
+    <div class="form-actions">
+      <button id="submitBtn" class="modern-submit-btn">Submit</button>
+    </div>
+
+    <div id="toastNotification" class="hidden toast">
+      <span id="toastMessage"></span>
+    </div>
+
+    <script src="../js/fecalysis.js"></script>
+  </div>
+</body>
+</html>

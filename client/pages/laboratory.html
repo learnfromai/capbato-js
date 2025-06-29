@@ -14,11 +14,11 @@
       <img src="../assets/images/logo.png" alt="Logo" />
       <h1>M.G. Amores Medical Clinic</h1>
     </a>
-    <span id="roleDisplay" class="ms-auto text-muted fw-bold"></span>
+    <div class="ms-auto text-end">
+      <div id="roleDisplay" class="fw-bold text-primary"></div>
+      <div id="usernameDisplay" class="text-muted small"></div>
+    </div>
   </nav>
-
-  <!-- Hover Area -->
-  <div class="hover-area"></div>
 
   <!-- Sidebar -->
   <div class="sidebar">
@@ -27,32 +27,59 @@
     <button type="button" id="patientbtn">Patients</button>
     <button type="button" id="laboratorybtn">Laboratory</button>
     <button type="button" id="prescriptionbtn">Prescriptions</button>
+    <button type="button" id="schedulebtn">Doctor's Schedule</button> <!-- ✅ NEW -->
   </div>
 
   <!-- Main Content -->
   <div class="main-content">
-    <h2>Laboratory Forms</h2>
-    <div class="lab-buttons">
-      <button id="openBloodChemBtn">Open Blood Chemistry Form</button>
-      <button id="openLabChecklistBtn">Open Lab Checklist</button>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="title-page m-0">Laboratory</h2>
+      <button id="addLabTestBtn" class="add-appointment-btn">+ Add Lab Test</button>
+    </div>
+
+    <!-- ✅ Updated Class Name & Moved Up -->
+    <div class="lab-table-container">
+      <table class="table table-bordered text-center shadow-sm" style="border-radius: 12px; overflow: hidden; width: 100%;">
+        <thead style="background-color: #dbeeff; color: #0047ab;">
+          <tr>
+            <th style="width: 20%;">Patient ID</th>
+            <th style="width: 40%;">Full Name</th>
+            <th style="width: 20%;">Status</th>
+            <th style="width: 20%;">Results</th>
+          </tr>
+        </thead>
+        <tbody id="labResultsBody">
+          <!-- Data will be inserted dynamically -->
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <!-- Lab Results Table -->
-  <table>
-    <thead>
-      <tr>
-        <th>Patient ID</th>
-        <th>Full Name</th>
-        <th>Date</th>
-        <th>Lab Test</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody id="labResultsBody">
-      <!-- Data will be inserted dynamically -->
-    </tbody>
-  </table>
+  <!-- Floating Lab Test Table Modal -->
+  <div id="labTestModal" class="lab-modal hidden">
+    <div class="modal-content wide-modal">
+      <button class="close-btn top-right" id="closeLabTestModal">X</button>
+      <h3>Lab Tests</h3>
+      <div class="lab-header-info mb-3">
+        <p><strong>Patient ID:</strong> <span id="labHeaderPatientId"></span></p>
+        <p><strong>Full Name:</strong> <span id="labHeaderPatientName"></span></p>
+      </div>
+
+      <table class="lab-test-table">
+        <thead>
+          <tr>
+            <th>Lab Test</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Results</th>
+          </tr>
+        </thead>
+        <tbody id="labTestModalBody">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
 
   <!-- Overlay Modal -->
   <div class="overlay" id="labOverlay">
@@ -61,6 +88,19 @@
       <iframe id="labIframe" src=""></iframe>
     </div>
   </div>
+
+  <!-- Cancel Confirmation Modal -->
+  <div id="cancelConfirmationModal" class="modal hidden">
+    <div class="modal-content">
+      <p id="cancelConfirmationText">Are you sure you want to cancel this lab test?</p>
+      <div class="modal-buttons">
+        <button id="confirmCancelYes" class="modal-btn yes-btn">Yes</button>
+        <button id="confirmCancelNo" class="modal-btn no-btn">No</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="labToast" class="lab-toast hidden"></div>
 
   <script src="../js/laboratory.js"></script>
 </body>

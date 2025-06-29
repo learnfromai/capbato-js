@@ -1,7 +1,20 @@
-const express = require('express');
+import express from 'express';
+import {
+  saveBloodChemResults,  // ✅ This is the correct function name
+  saveLabRequestForm,
+  getLabRequests,
+  updateLabRequestResults,
+  getLabRequestById
+} from '../controllers/laboratory.controller.js';
+
 const router = express.Router();
-const laboratoryController = require('../controllers/laboratory.controller');
 
-router.post('/laboratory_results', laboratoryController.saveBloodChemistry);
+router.post('/blood_chem', saveBloodChemResults);        // ✅ updated route
+router.post('/lab_requests', saveLabRequestForm);
+router.get('/lab_requests', getLabRequests);
+router.put('/lab_requests/:patientId/:requestDate', updateLabRequestResults);
+router.get("/lab_requests/:patientId", getLabRequestById);
 
-module.exports = router;
+
+export default router;
+

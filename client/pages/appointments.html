@@ -14,52 +14,51 @@
       <img src="../assets/images/logo.png" alt="Logo" />
       <h1>M.G. Amores Medical Clinic</h1>
     </a>
-    <span id="roleDisplay" class="ms-auto text-muted fw-bold"></span>
+    <div class="ms-auto text-end">
+      <div id="roleDisplay" class="fw-bold text-primary"></div>
+      <div id="usernameDisplay" class="text-muted small"></div>
+    </div>
   </nav>
-
-  <div class="hover-area"></div>
 
   <!-- Sidebar -->
   <div class="sidebar">
-    <button type="button" class="dashboardbtn" id="dashboardbtn">Dashboard</button>
-    <button id="appointmentbtn" type="button" class="appointmentbtn">Appointments</button>
-    <button id="patientbtn" type="button" class="patientbtn">Patients</button>
-    <button id="laboratorybtn" type="button" class="laboratorybtn">Laboratory</button>
-    <button id="prescriptionbtn" type="button" class="prescriptionbtn">Prescriptions</button>
+    <button type="button" id="dashboardbtn">Dashboard</button>
+    <button type="button" id="appointmentbtn">Appointments</button>
+    <button type="button" id="patientbtn">Patients</button>
+    <button type="button" id="laboratorybtn">Laboratory</button>
+    <button type="button" id="prescriptionbtn">Prescriptions</button>
+    <button type="button" id="schedulebtn">Doctor's Schedule</button>
   </div>
 
   <!-- Main Content -->
   <div class="appointments-table">
     <div class="appointment-container">
+      <div class="appointments-header">
+        <h2 class="title-page">Appointments</h2>
+        <button id="openAddAppointment" class="add-appointment-btn">+ Add Appointment</button>
+      </div>
+
       <label for="appointmentDate">Select Date:</label>
       <input type="date" id="appointmentDate">
       <button id="filterByDate" class="filter-btn">Show Appointments</button>
       <button id="showAllAppointments" class="filter-btn">Show All</button>
       <p id="appointmentCount" class="appointment-count">Total Appointments: 0</p>
 
-      <div class="appointments-header">
-        <h2 class="title-page">Appointments</h2>
-        <button id="openAddAppointment" class="add-appointment-btn">Add Appointment</button>
-      </div>
-
-      <div class="appointments-table">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Patient Name</th>
-              <th>Reason for Visit</th>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="appointmentsTableBody">
-            <!-- Filled dynamically -->
-          </tbody>
-        </table>
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Patient Name</th>
+            <th>Reason for Visit</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Doctor</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="appointmentsTableBody"></tbody>
+      </table>
     </div>
   </div>
 

@@ -105,3 +105,72 @@ body {
     }
   }
   
+  .submit-btn {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.submit-btn button {
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: bold;
+  background-color: #6A5ACD;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.submit-btn button:hover {
+  background-color: #5a4ac0;
+}
+
+.autocomplete-suggestions {
+  border: 1px solid #ccc;
+  background-color: white;
+  max-height: 150px;
+  overflow-y: auto;
+  position: absolute;
+  z-index: 1000;
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.autocomplete-suggestions div {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.autocomplete-suggestions div:hover {
+  background-color: #f0f0f0;
+}
+
+.lab-toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 14px;
+  z-index: 9999;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 2px solid #fff; /* ✅ Add white border for visibility */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.lab-toast.show {
+  opacity: 1;
+}
+
+.lab-toast.hidden {
+  display: none;
+  opacity: 0;
+}
+

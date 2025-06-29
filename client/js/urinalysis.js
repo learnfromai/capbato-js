@@ -30,7 +30,7 @@ function getLocalToday() {
 
 window.addEventListener("message", (event) => {
   if (event.data?.type === "openLabForm") {
-    const { patient_id, patient_name, date, selectedTests = [], readOnly = false } = event.data;
+    const { patient_id, patient_name, date, selectedTests = [] } = event.data;
 
     document.getElementById("patientId").value = patient_id;
     document.getElementById("patientName").value = patient_name;
@@ -44,25 +44,10 @@ window.addEventListener("message", (event) => {
     selectedTests.forEach(testId => {
       const field = document.getElementById(testId);
       if (field) {
-        field.disabled = readOnly;
-        field.style.backgroundColor = readOnly ? "#e9ecef" : "";
-
-        // Clear the value unless in view mode (readOnly = true)
-        if (!readOnly) {
-          field.value = "";
-        }
+        field.disabled = false;
+        field.style.backgroundColor = "";
       }
     });
-
-    const submitBtn = document.getElementById("submitBtn");
-    const printBtn = document.getElementById("printBtn");
-
-    if (submitBtn) {
-      submitBtn.style.display = readOnly ? "none" : "inline-block";
-    }
-    if (printBtn) {
-      printBtn.style.display = readOnly ? "inline-block" : "none";
-    }
 
     fetch(`http://localhost:3001/patients/${patient_id}`)
       .then(res => res.json())
@@ -71,30 +56,6 @@ window.addEventListener("message", (event) => {
         document.getElementById("sex").value = data.Gender || data.gender || "";
       })
       .catch(err => console.error("Error fetching patient info:", err));
-
-    fetch(`http://localhost:3001/api/lab_requests/${patient_id}`)
-      .then(res => res.json())
-      .then(results => {
-        selectedTests.forEach(testId => {
-          const input = document.getElementById(testId);
-          if (!input) return;
-
-          const value = results[testId];
-
-          if (readOnly) {
-            if (value && value.toLowerCase() !== "no") {
-              input.value = value;
-            }
-          } else {
-            if (value && value.toLowerCase() !== "no" && value.toLowerCase() !== "yes") {
-              input.value = value;
-            } else {
-              input.value = ""; // hide "no"/"yes" when adding
-            }
-          }
-        });
-      })
-      .catch(err => console.error("Error loading previous results:", err));
   }
 });
 
@@ -104,41 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (appointmentBtn) appointmentBtn.addEventListener("click", () => window.location.href = "appointments.html");
   if (laboratoryBtn) laboratoryBtn.addEventListener("click", () => window.location.href = "laboratory.html");
   if (prescriptionBtn) prescriptionBtn.addEventListener("click", () => window.location.href = "prescriptions.html");
-
-  const openBloodChemBtn = document.getElementById("openBloodChemBtn");
-  const openLabChecklistBtn = document.getElementById("openLabChecklistBtn");
-  const labOverlay = document.getElementById("labOverlay");
-  const labIframe = document.getElementById("labIframe");
-  const closeOverlayBtn = document.getElementById("closeOverlayBtn");
-  const submitBtn = document.getElementById("submitBtn");
-  const printBtn = document.getElementById("printBtn");
-
-  if (openBloodChemBtn && labOverlay && labIframe) {
-    openBloodChemBtn.addEventListener("click", () => {
-      labIframe.src = "forms/blood-chemistry.html";
-      labOverlay.classList.add("show");
-    });
-  }
-
-  if (openLabChecklistBtn && labOverlay && labIframe) {
-    openLabChecklistBtn.addEventListener("click", () => {
-      labIframe.src = "forms/lab-checklist.html";
-      labOverlay.classList.add("show");
-    });
-  }
-
-  if (closeOverlayBtn && labOverlay && labIframe) {
-    closeOverlayBtn.addEventListener("click", () => {
-      labOverlay.classList.remove("show");
-      labIframe.src = "";
-    });
-  }
-
-  if (printBtn) {
-    printBtn.addEventListener("click", () => {
-      window.print();
-    });
-  }
 
   const patientInput = document.getElementById("patientName");
   const patientIdInput = document.getElementById("patientId");
@@ -169,18 +95,14 @@ document.addEventListener("DOMContentLoaded", () => {
               fetch(`http://localhost:3001/patients/${patient.id}`)
                 .then(res => res.json())
                 .then(data => {
-                  const ageInput = document.getElementById("age");
-                  const sexInput = document.getElementById("sex");
-                  if (ageInput && data.Age) ageInput.value = data.Age;
-                  if (sexInput && data.Gender) sexInput.value = data.Gender;
+                  document.getElementById("age").value = data.Age || "";
+                  document.getElementById("sex").value = data.Gender || "";
                 })
                 .catch(err => console.error("Error fetching patient info:", err));
             });
           });
         })
-        .catch(err => {
-          console.error("Autocomplete fetch error:", err);
-        });
+        .catch(err => console.error("Autocomplete fetch error:", err));
     });
 
     document.addEventListener("click", (e) => {
@@ -192,20 +114,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const dateField = document.getElementById("dateField");
   if (dateField) {
-    const today = getLocalToday();
-    dateField.value = today;
+    dateField.value = getLocalToday();
   }
 
+  const submitBtn = document.getElementById("submitBtn");
   if (submitBtn) {
     submitBtn.addEventListener("click", () => {
-      const patientId = document.getElementById("patientId").value.trim();
-      const patientName = document.getElementById("patientName").value.trim();
-      const rawDate = document.getElementById("dateField").value.trim();
-      const age = document.getElementById("age").value.trim();
-      const sex = document.getElementById("sex").value.trim();
-
-      // Sanitize date to YYYY-MM-DD only
-      const date = rawDate.split("T")[0];
+      const patientId = document.getElementById("patientId").value;
+      const patientName = document.getElementById("patientName").value;
+      const date = document.getElementById("dateField").value;
+      const age = document.getElementById("age").value;
+      const sex = document.getElementById("sex").value;
 
       const selectedTestIds = Array.from(document.querySelectorAll(".results input"))
         .filter(input => !input.disabled)
@@ -238,9 +157,8 @@ document.addEventListener("DOMContentLoaded", () => {
         ...results
       };
 
-      // ✅ Use patientId and date in the URL to match Express route
-      fetch(`http://localhost:3001/api/lab_requests/${encodeURIComponent(patientId)}/${encodeURIComponent(date)}`, {
-        method: "PUT",
+      fetch("http://localhost:3001/api/lab_requests", {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dataToSend)
       })
@@ -251,35 +169,23 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(result => {
           window.parent.postMessage({
             action: "closeLabOverlay",
-            toastMessage: "Blood chemistry results submitted successfully!",
-            actionType: "updateLabTable"  // <-- this line is new
+            toastMessage: "Urinalysis results submitted successfully!"
           }, "*");
         })
         .catch(error => {
           console.error("Error submitting data:", error);
           alert("There was a problem submitting the form.");
         });
+
+      fetch(`http://localhost:3001/api/lab_requests/${patientId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...results,
+          status: "Complete",
+          date_taken: date
+        })
+      });
     });
   }
-});
-
-function showToast(message, duration = 2000) {
-  const toast = document.getElementById("toastNotification");
-  const toastText = document.getElementById("toastMessage");
-
-  toastText.textContent = message;
-  toast.classList.remove("hidden");
-  toast.classList.add("show");
-
-  toast.style.top = "20px";
-  toast.style.bottom = "";
-
-  setTimeout(() => {
-    toast.classList.remove("show");
-    toast.classList.add("hidden");
-  }, duration);
-}
-
-document.getElementById("printBtn").addEventListener("click", () => {
-  window.print();
 });

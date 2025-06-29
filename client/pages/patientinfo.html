@@ -14,18 +14,21 @@
       <img src="../assets/images/logo.png" alt="Logo" />
       <h1>M.G. Amores Medical Clinic</h1>
     </a>
-    <span id="roleDisplay" class="ms-auto text-muted fw-bold"></span>
-  </nav>
+    <div class="ms-auto text-end">
+  <div id="roleDisplay" class="fw-bold text-primary"></div>
+  <div id="usernameDisplay" class="text-muted small"></div>
+</div>
 
-  <div class="hover-area"></div>
+  </nav>
 
   <!-- Sidebar -->
   <div class="sidebar">
-    <button id="dashboardbtn">Dashboard</button>
-    <button id="appointmentbtn">Appointments</button>
-    <button id="patientbtn">Patients</button>
-    <button id="laboratorybtn">Laboratory</button>
-    <button id="prescriptionbtn">Prescriptions</button>
+    <button type="button" id="dashboardbtn">Dashboard</button>
+    <button type="button" id="appointmentbtn">Appointments</button>
+    <button type="button" id="patientbtn">Patients</button>
+    <button type="button" id="laboratorybtn">Laboratory</button>
+    <button type="button" id="prescriptionbtn">Prescriptions</button>
+    <button type="button" id="schedulebtn">Doctor's Schedule</button> <!-- ✅ NEW -->
   </div>
 
   <!-- Main Content -->
@@ -56,10 +59,16 @@
     <!-- Right Column: Tabs -->
     <div class="right-actions-container">
       <div class="tab-buttons">
-        <button class="tab active" id="prescriptionTab">Prescriptions</button>
-        <button class="tab" id="laboratoryTab">Laboratories</button>
+        <button class="tab active" id="medicalTab">Medical Records</button>
         <button class="tab" id="appointmentTab">Appointments</button>
+        <button class="tab" id="prescriptionTab">Prescriptions</button>
+        <button class="tab" id="laboratoryTab">Laboratories</button>
       </div>
+
+      <div class="tab-content" id="medicalContent" style="display: block;">
+        <h3>Medical Records</h3>
+      </div>
+
 
       <div class="tab-content" id="appointmentContent" style="display: none;">
         <h3>Appointments</h3>
@@ -77,6 +86,23 @@
           </tbody>
         </table>
       </div>
+
+      <div class="tab-content" id="laboratoryContent" style="display: none;">
+        <h3>Laboratory Requests</h3>
+        <table class="appointment-table">
+          <thead>
+            <tr>
+              <th>Test</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="laboratoryListBody">
+            <tr><td colspan="3">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
     </div>
   </div>
 

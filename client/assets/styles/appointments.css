@@ -1,5 +1,7 @@
 /* === GLOBAL STYLES (match dashboard & login) === */
 body {
+  min-height: 100vh;
+  position: relative;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(to bottom right, rgb(109, 174, 218), #4db6ac);
   padding-top: 100px;
@@ -8,16 +10,19 @@ body {
 
 body::before {
   content: "";
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
+  min-height: 100%;
+  background: inherit;
   background-size: cover;
   filter: blur(10px);
   z-index: -1;
 }
 
+/* === HEADER === */
 .navbar {
   width: 100%;
   position: fixed;
@@ -53,20 +58,12 @@ body::before {
   margin: 0;
 }
 
-.hover-area {
-  position: fixed;
-  top: 100px;
-  left: 0;
-  width: 20px;
-  height: 100%;
-  z-index: 1000;
-  cursor: pointer;
-}
 
+/* === Sidebar === */
 .sidebar {
   position: fixed;
   top: 100px;
-  left: -160px;
+  left: 0;
   width: 160px;
   height: 100%;
   background: white;
@@ -75,13 +72,7 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  transition: left 0.3s ease;
   z-index: 999;
-}
-
-.hover-area:hover + .sidebar,
-.sidebar:hover {
-  left: 0;
 }
 
 .sidebar button {
@@ -102,8 +93,11 @@ body::before {
 
 /* === Appointment Page === */
 .appointment-container {
-  width: 90%;
-  margin: 30px auto 20px;
+  width: calc(100% - 200px);
+  margin-left: 180px;
+  margin-right: 20px;
+  margin-top: 30px;
+  margin-bottom: 20px;
   padding: 20px;
   background: white;
   border-radius: 16px;
@@ -118,7 +112,6 @@ body::before {
   margin-bottom: 10px;
 }
 
-/* ⬇ Centered Title */
 .appointments-header .title-page {
   flex-grow: 1;
   text-align: center;
@@ -128,7 +121,6 @@ body::before {
   margin: 0;
 }
 
-/* ⬇ Smaller filter buttons */
 .filter-btn {
   background-color: #4db6ac;
   color: white;
@@ -155,24 +147,31 @@ body::before {
 table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 10px;
+  table-layout: fixed;
   border-radius: 10px;
   overflow: hidden;
 }
 
 th, td {
   padding: 14px;
-  text-align: left;
+  text-align: center;
   border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+th:last-child,
+td:last-child {
+  border-right: none;
 }
 
 th {
   background: #dbeeff;
   color: #0047ab;
   font-weight: 600;
-}
-
-tr:nth-child(even) {
-  background-color: #f9f9f9;
 }
 
 .status {
@@ -225,8 +224,6 @@ button {
   background-color: #3ba69c;
   transform: scale(1.05);
 }
-
-
 
 .modify-btn {
   background-color: #17a2b8;

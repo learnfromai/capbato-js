@@ -7,7 +7,6 @@ const suggestionsBox = document.getElementById("autocompleteSuggestions");
 const patientIdDisplay = document.getElementById("patientIdDisplay");
 const patientIdWrapper = document.getElementById("patientIdWrapper");
 
-// Add second notice element for slot-specific warning
 let timeSlotNotice = document.getElementById("timeSlotNotice");
 if (!timeSlotNotice) {
   timeSlotNotice = document.createElement("small");
@@ -28,36 +27,95 @@ let latestAppointments = [];
 let patientsList = [];
 
 document.addEventListener("DOMContentLoaded", () => {
-  populateTimeOptions();
   const today = new Date().toISOString().split("T")[0];
   dateInput.value = today;
-  fetchTimeAvailability(today);
+  populateTimeOptions();  // This already includes availability check
   loadPatients();
+  loadDoctors();
 });
 
-dateInput.addEventListener("change", (e) => {
-  fetchTimeAvailability(e.target.value);
+dateInput.addEventListener("change", () => {
+  populateTimeOptions();  // Re-check time availability on date change
 });
+
+
 
 timeSelect.addEventListener("change", () => {
   checkTimeSlotAvailability();
 });
 
-function populateTimeOptions() {
-  timeSelect.innerHTML = "";
-  HOURS.forEach((hour) => {
-    const option = document.createElement("option");
-    option.value = `${String(hour).padStart(2, "0")}:00`;
-    option.text = formatOptionLabel(option.value);
-    timeSelect.appendChild(option);
-  });
+async function populateTimeOptions() {
+  const selectedDate = dateInput.value;
+  const now = new Date();
+  now.setSeconds(0, 0);
+  const isToday = selectedDate === now.toISOString().split("T")[0];
+
+  try {
+    const response = await fetch("http://localhost:3001/appointments");
+    const appointments = await response.json();
+    latestAppointments = appointments;
+
+    // Get all confirmed booked times for selected date
+    const takenTimes = new Set(
+      appointments
+        .filter(app => app.appointment_date === selectedDate && app.status === "Confirmed")
+        .map(app => app.appointment_time)
+    );
+
+    timeSelect.innerHTML = "";
+
+    const placeholder = document.createElement("option");
+    placeholder.text = "Select Time";
+    placeholder.value = "";
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    timeSelect.appendChild(placeholder);
+
+    let availableFound = false;
+
+    for (let hour = 8; hour <= 17; hour++) {
+      for (let minute of [0, 15, 30, 45]) {
+        const timeStr = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+        const optionTime = new Date(`${selectedDate}T${timeStr}`);
+        optionTime.setSeconds(0, 0);
+
+        const isPast = isToday && optionTime <= now;
+        const isTaken = takenTimes.has(timeStr);
+
+        if (isPast || isTaken) continue;  // Skip past or booked slots
+
+        const option = document.createElement("option");
+        option.value = timeStr;
+        option.text = formatOptionLabel(timeStr);
+        timeSelect.appendChild(option);
+        availableFound = true;
+      }
+    }
+
+    timeNotice.style.display = availableFound ? "none" : "block";
+    timeSlotNotice.style.display = "none";
+  } catch (error) {
+    console.error("Error loading time availability:", error);
+  }
 }
 
+
 function formatOptionLabel(value) {
-  const hour = parseInt(value.split(":")[0], 10);
+  const [hourStr, minuteStr] = value.split(":");
+  let hour = parseInt(hourStr, 10);
+  const minute = minuteStr;
   const ampm = hour >= 12 ? "PM" : "AM";
-  const labelHour = hour % 12 === 0 ? 12 : hour % 12;
-  return `${labelHour}:00 ${ampm}`;
+  hour = hour % 12 === 0 ? 12 : hour % 12;
+  return `${hour}:${minute} ${ampm}`;
+}
+
+function formatTimeLabel(timeStr) {
+  const [hourStr, minuteStr] = timeStr.split(":");
+  const hour = parseInt(hourStr, 10);
+  const minute = parseInt(minuteStr, 10);
+  const ampm = hour >= 12 ? "PM" : "AM";
+  const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+  return `${displayHour}:${minuteStr} ${ampm}`;
 }
 
 async function fetchTimeAvailability(date) {
@@ -66,22 +124,30 @@ async function fetchTimeAvailability(date) {
     const appointments = await response.json();
     latestAppointments = appointments;
 
-    const timeCounts = {};
-    appointments
-      .filter((app) => app.appointment_date === date && app.status === "Confirmed")
-      .forEach((app) => {
-        timeCounts[app.appointment_time] = (timeCounts[app.appointment_time] || 0) + 1;
-      });
+    const takenTimes = new Set(
+      appointments
+        .filter(app => app.appointment_date === date && app.status === "Confirmed")
+        .map(app => app.appointment_time)
+    );
 
+    const now = new Date();
+    const isToday = date === now.toISOString().split("T")[0];
     let allDisabled = true;
 
-    Array.from(timeSelect.options).forEach((option) => {
-      const count = timeCounts[option.value] || 0;
-      if (count >= 4) {
+    Array.from(timeSelect.options).forEach(option => {
+      if (!option.value) return; // skip placeholder
+
+      const slotTime = new Date(`${date}T${option.value}`);
+      const isPast = isToday && slotTime <= now;
+      const isTaken = takenTimes.has(option.value);
+
+      if (isPast || isTaken) {
         option.disabled = true;
-        option.text = `${formatOptionLabel(option.value)} (Full)`;
+        option.style.color = "#999";
+        option.text = `${formatOptionLabel(option.value)} (${isPast ? "Past" : "Taken"})`;
       } else {
         option.disabled = false;
+        option.style.color = "#000";
         option.text = formatOptionLabel(option.value);
         allDisabled = false;
       }
@@ -89,12 +155,15 @@ async function fetchTimeAvailability(date) {
 
     timeNotice.style.display = allDisabled ? "block" : "none";
     timeSlotNotice.style.display = "none";
+
   } catch (error) {
     console.error("Error loading time availability:", error);
   }
 }
 
+
 function checkTimeSlotAvailability() {
+  const selectedOption = timeSelect.options[timeSelect.selectedIndex];
   const selectedTime = timeSelect.value;
   const selectedDate = dateInput.value;
 
@@ -105,9 +174,29 @@ function checkTimeSlotAvailability() {
       app.status === "Confirmed"
   ).length;
 
-  timeSlotNotice.textContent = "This timeslot is already full.";
-  timeSlotNotice.style.display = count >= 4 ? "block" : "none";
+  const now = new Date();
+  const selectedDateTime = new Date(`${selectedDate}T${selectedTime}`);
+
+  // Check if the selected option is disabled (past or full)
+  if (selectedOption.disabled) {
+    timeSlotNotice.textContent = "That time is no longer available. Please choose another.";
+    timeSlotNotice.style.display = "block";
+    timeSelect.selectedIndex = 0; // Reset selection
+    return;
+  }
+
+  // Validation feedback
+  if (selectedDateTime <= now) {
+    timeSlotNotice.textContent = "You cannot select a time in the past.";
+    timeSlotNotice.style.display = "block";
+  } else if (count >= 4) {
+    timeSlotNotice.textContent = "This timeslot is already full.";
+    timeSlotNotice.style.display = "block";
+  } else {
+    timeSlotNotice.style.display = "none";
+  }
 }
+
 
 function showInlineError(msg) {
   formError.textContent = msg;
@@ -120,52 +209,67 @@ function clearInlineError() {
 }
 
 function loadPatients() {
-  fetch("http://localhost:3001/patients")
-    .then((res) => res.json())
-    .then((data) => {
-      patientsList = data;
+  patientInput.addEventListener("input", async () => {
+    const query = patientInput.value.trim();
+    suggestionsBox.innerHTML = "";
+    suggestionsBox.style.display = "none";
+    patientIdDisplay.textContent = "";
+    patientIdWrapper.style.display = "none";
+    hiddenPatientIdInput.value = "";
 
-      patientInput.addEventListener("input", () => {
-        const query = patientInput.value.toLowerCase();
-        suggestionsBox.innerHTML = "";
-        suggestionsBox.style.display = "none";
-        patientIdDisplay.textContent = "";
-        patientIdWrapper.style.display = "none";
-        hiddenPatientIdInput.value = "";
+    if (query.length < 2) return;
 
-        if (!query) return;
+    try {
+      const res = await fetch(`http://localhost:3001/patients/search?name=${encodeURIComponent(query)}`);
+      const matches = await res.json();
 
-        const matches = patientsList.filter((p) =>
-          p.full_name.toLowerCase().includes(query)
-        );
+      if (!Array.isArray(matches)) return;
 
-        if (matches.length > 0) {
-          suggestionsBox.style.display = "block";
-        }
+      if (matches.length > 0) {
+        suggestionsBox.style.display = "block";
+      }
 
-        matches.forEach((p) => {
-          const item = document.createElement("div");
-          item.classList.add("suggestion-item");
-          item.textContent = p.full_name;
-          item.addEventListener("click", () => {
-            patientInput.value = p.full_name;
-            patientIdDisplay.textContent = `Patient ID: ${p.patient_id}`;
-            patientIdWrapper.style.display = "block";
-            hiddenPatientIdInput.value = p.patient_id;
-            suggestionsBox.innerHTML = "";
-            suggestionsBox.style.display = "none";
-          });
-          suggestionsBox.appendChild(item);
-        });
-      });
-
-      document.addEventListener("click", (e) => {
-        if (!suggestionsBox.contains(e.target) && e.target !== patientInput) {
+      matches.forEach((p) => {
+        const item = document.createElement("div");
+        item.classList.add("suggestion-item");
+        item.textContent = p.name;
+        item.addEventListener("click", () => {
+          patientInput.value = p.name;
+          patientIdDisplay.textContent = `Patient ID: ${p.patient_id || p.id}`;
+          patientIdWrapper.style.display = "block";
+          hiddenPatientIdInput.value = p.patient_id || p.id;
           suggestionsBox.innerHTML = "";
           suggestionsBox.style.display = "none";
-        }
+        });
+        suggestionsBox.appendChild(item);
       });
-    });
+    } catch (err) {
+      console.error("Autocomplete error:", err);
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!suggestionsBox.contains(e.target) && e.target !== patientInput) {
+      suggestionsBox.innerHTML = "";
+      suggestionsBox.style.display = "none";
+    }
+  });
+}
+
+function loadDoctors() {
+  fetch("http://localhost:3001/doctors")
+    .then((res) => res.json())
+    .then((doctors) => {
+      const select = document.getElementById("doctorSelect");
+      select.innerHTML = '<option value="">Select Doctor</option>';
+      doctors.forEach(doc => {
+        const option = document.createElement("option");
+        option.value = doc.DoctorID;
+        option.text = `${doc.LastName}, ${doc.FirstName} (${doc.Specialization})`;
+        select.appendChild(option);
+      });
+    })
+    .catch((err) => console.error("Failed to load doctors:", err));
 }
 
 document.getElementById("addAppointmentForm").addEventListener("submit", async function (e) {
@@ -177,14 +281,24 @@ document.getElementById("addAppointmentForm").addEventListener("submit", async f
   const reason_for_visit = document.getElementById("visitType").value.trim();
   const appointment_date = document.getElementById("date").value;
   const appointment_time = document.getElementById("time").value;
-  const editId = this.dataset.editId;
-  const isEditing = !!editId;
-  const originalApp = latestAppointments.find(app => app.id == editId);
+  const doctorSelect = document.getElementById("doctorSelect");
+  const doctor_name = doctorSelect.options[doctorSelect.selectedIndex].text;
 
-  if (!patient_name || !reason_for_visit || !appointment_date || !appointment_time) {
+
+  if (!patient_id) {
+    showInlineError("Please select a patient from the suggestions.");
+    return;
+  }
+
+  if (!patient_name || !reason_for_visit || !appointment_date || !appointment_time || !doctor_name) {
     showInlineError("Please fill in all fields.");
     return;
   }
+
+
+  const editId = this.dataset.editId;
+  const isEditing = !!editId;
+  const originalApp = latestAppointments.find(app => app.id == editId);
 
   let status = "Confirmed";
   if (isEditing && originalApp?.status === "Cancelled") {
@@ -218,13 +332,14 @@ document.getElementById("addAppointmentForm").addEventListener("submit", async f
       method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        patient_name,
-        patient_id,
-        reason_for_visit,
-        appointment_date,
-        appointment_time,
-        status,
-      }),
+      patient_name,
+      patient_id,
+      reason_for_visit,
+      appointment_date,
+      appointment_time,
+      status,
+      doctor_name
+    })
     });
 
     const data = await response.json();
@@ -244,8 +359,10 @@ document.getElementById("addAppointmentForm").addEventListener("submit", async f
         : "Appointment added successfully!";
       window.parent.postMessage({ type: "showToast", message }, "*");
     } else {
+      console.error("Backend error:", data);
       showInlineError(data.error || "An error occurred while submitting the appointment.");
     }
+
   } catch (error) {
     console.error("Error submitting appointment:", error);
     showInlineError("Failed to submit appointment.");
@@ -265,6 +382,27 @@ window.addEventListener("message", function (event) {
       timeSlotNotice.style.display = "none";
     });
 
+    hiddenPatientIdInput.value = app.patient_id;
+    patientIdDisplay.textContent = `Patient ID: ${app.patient_id}`;
+    patientIdWrapper.style.display = "block";
     document.getElementById("addAppointmentForm").dataset.editId = app.id;
+  }
+});
+
+window.addEventListener("message", function (event) {
+  if (event.data && event.data.type === "resetForm") {
+    const form = document.getElementById("addAppointmentForm");
+    form.reset();
+    delete form.dataset.editId;
+
+    hiddenPatientIdInput.value = "";
+    patientIdDisplay.textContent = "";
+    patientIdWrapper.style.display = "none";
+
+    const today = new Date().toISOString().split("T")[0];
+    dateInput.value = today;
+    fetchTimeAvailability(today);
+    timeNotice.style.display = "none";
+    timeSlotNotice.style.display = "none";
   }
 });

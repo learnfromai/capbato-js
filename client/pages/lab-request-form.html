@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Laboratory Request Form</title>
-  <link rel="stylesheet" href="lab-request-form.css" />
+  <link rel="stylesheet" href="../assets/styles/lab-request-form.css" />
 </head>
 <body>
   <div class="lab-form">
@@ -14,78 +14,84 @@
       <p>Contact No: (02) 263-1036 / 0927-254-6213</p>
     </header>
 
-    <section class="patient-info">
-      <div>
-        <label>Patient:</label>
-        <input type="text" placeholder="Full Name" />
+    <form id="labRequestForm">
+      <section class="patient-info">
+        <div>
+          <label>Patient:</label>
+          <input type="text" placeholder="Full Name" id="patientName" autocomplete="off"/>
+          <div id="patientSuggestions" class="autocomplete-suggestions"></div>
+          <input type="hidden" id="patientId" />
+        </div>
+        <div>
+          <label>Age/Gender:</label>
+          <input type="text" placeholder="Age / Gender" id="ageGender" />
+        </div>
+        <div>
+          <label>Date:</label>
+          <input type="date" id="request_date" />
+        </div>
+      </section>
+
+      <section class="tests">
+        <div class="column">
+          <h3>ROUTINE</h3>
+          <label><input type="checkbox" /> CBC with Platelet (210)</label>
+          <label><input type="checkbox" /> Pregnancy Test (250)</label>
+          <label><input type="checkbox" /> Urinalysis (80)</label>
+          <label><input type="checkbox" /> Fecalysis (80)</label>
+          <label><input type="checkbox" /> Occult Blood Test (150)</label>
+
+          <h3>SEROLOGY & IMMUNOLOGY</h3>
+          <label><input type="checkbox" /> Hepa B Screening (250)</label>
+          <label><input type="checkbox" /> Hepa A Screening (450)</label>
+          <label><input type="checkbox" /> Hepatitis Profile (1100)</label>
+          <label><input type="checkbox" /> VDRL/RPR (250)</label>
+          <label><input type="checkbox" /> Dengue NS1 (1200)</label>
+          <label><input type="checkbox" /> CA 125 / CEA / PSA (1300)</label>
+        </div>
+
+        <div class="column">
+          <h3>BLOOD CHEMISTRY</h3>
+          <label><input type="checkbox" /> FBS (110)</label>
+          <label><input type="checkbox" /> BUN (120)</label>
+          <label><input type="checkbox" /> Creatinine (150)</label>
+          <label><input type="checkbox" /> Blood Uric Acid (120)</label>
+          <label><input type="checkbox" /> Lipid Profile (700)</label>
+          <label><input type="checkbox" /> SGOT (200)</label>
+          <label><input type="checkbox" /> SGPT (200)</label>
+          <label><input type="checkbox" /> ALP (300)</label>
+          <label><input type="checkbox" /> Sodium Na (700)</label>
+          <label><input type="checkbox" /> Potassium K+ (200)</label>
+          <label><input type="checkbox" /> HBA1C (550)</label>
+
+          <h3>MISCELLANEOUS TEST</h3>
+          <label><input type="checkbox" /> ECG (250)</label>
+
+          <h3>THYROID FUNCTION TEST</h3>
+          <label><input type="checkbox" /> T3 (500)</label>
+          <label><input type="checkbox" /> T4 (500)</label>
+          <label><input type="checkbox" /> FT3 (1000)</label>
+          <label><input type="checkbox" /> FT4 (600)</label>
+          <label><input type="checkbox" /> TSH (600)</label>
+        </div>
+      </section>
+
+      <section class="others">
+        <label>OTHERS (Specify):</label>
+        <input type="text" placeholder="Write here..." />
+      </section>
+
+      <div class="submit-btn">
+        <button type="submit">➕ Submit Request</button>
       </div>
-      <div>
-        <label>Age/Gender:</label>
-        <input type="text" placeholder="Age / Gender" />
-      </div>
-      <div>
-        <label>Date:</label>
-        <input type="date" />
-      </div>
-    </section>
-
-    <section class="tests">
-      <div class="column">
-        <h3>ROUTINE</h3>
-        <label><input type="checkbox" /> CBC with Platelet (210)</label>
-        <label><input type="checkbox" /> Pregnancy Test (250)</label>
-        <label><input type="checkbox" /> Urinalysis (80)</label>
-        <label><input type="checkbox" /> Fecalysis (80)</label>
-        <label><input type="checkbox" /> Occult Blood Test (150)</label>
-
-        <h3>SEROLOGY & IMMUNOLOGY</h3>
-        <label><input type="checkbox" /> Hepa B Screening (250)</label>
-        <label><input type="checkbox" /> Hepa A Screening (450)</label>
-        <label><input type="checkbox" /> Hepa C Screening</label>
-        <label><input type="checkbox" /> Hepatitis Profile (1100)</label>
-        <label><input type="checkbox" /> VDRL/RPR (250)</label>
-        <label><input type="checkbox" /> CRP</label>
-        <label><input type="checkbox" /> Dengue NS1 (1200)</label>
-        <label><input type="checkbox" /> ASO / C3 / RA-RF</label>
-        <label><input type="checkbox" /> Tumor Markers</label>
-        <label><input type="checkbox" /> CA 125 / CEA / PSA (1300)</label>
-        <label><input type="checkbox" /> Beta HCG</label>
-      </div>
-
-      <div class="column">
-        <h3>BLOOD CHEMISTRY</h3>
-        <label><input type="checkbox" /> FBS (110)</label>
-        <label><input type="checkbox" /> BUN (120)</label>
-        <label><input type="checkbox" /> Creatinine (150)</label>
-        <label><input type="checkbox" /> Blood Uric Acid (120)</label>
-        <label><input type="checkbox" /> Lipid Profile (700)</label>
-        <label><input type="checkbox" /> SGOT (200)</label>
-        <label><input type="checkbox" /> SGPT (200)</label>
-        <label><input type="checkbox" /> ALP (300)</label>
-        <label><input type="checkbox" /> Sodium Na (700)</label>
-        <label><input type="checkbox" /> Potassium K+ (200)</label>
-        <label><input type="checkbox" /> HBA1C (550)</label>
-
-        <h3>MISCELLANEOUS TEST</h3>
-        <label><input type="checkbox" /> ECG (250)</label>
-
-        <h3>THYROID FUNCTION TEST</h3>
-        <label><input type="checkbox" /> T3 (500)</label>
-        <label><input type="checkbox" /> T4 (500)</label>
-        <label><input type="checkbox" /> FT3 (1000)</label>
-        <label><input type="checkbox" /> FT4 (600)</label>
-        <label><input type="checkbox" /> TSH (600)</label>
-      </div>
-    </section>
-
-    <section class="others">
-      <label>OTHERS (Specify):</label>
-      <input type="text" placeholder="Write here...">
-    </section>
-
-    <div class="print-btn">
-      <button onclick="window.print()">🖨️ Print Form</button>
-    </div>
+    </form>
   </div>
+
+  <div id="labToast" class="lab-toast hidden"></div>
+
+
+  <script src="../js/lab-request-form.js"></script>
 </body>
+
+
 </html>

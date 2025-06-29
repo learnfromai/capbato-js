@@ -11,14 +11,10 @@ document.addEventListener("DOMContentLoaded", function () {
         lastViewedDate = today;
         loadAppointmentsByDate(today);
     });
-    document.getElementById("laboratorybtn").addEventListener("click", function () {
-        window.location.href = "laboratory.html";
-      });
-      
-      document.getElementById("prescriptionbtn").addEventListener("click", function () {
-        window.location.href = "prescriptions.html";
-      });
-      
+    document.getElementById("laboratorybtn").addEventListener("click", () => window.location.href = "laboratory.html");
+    document.getElementById("prescriptionbtn").addEventListener("click", () => window.location.href = "prescriptions.html");
+
+
 
     const dateInput = document.getElementById("appointmentDate");
     if (dateInput) {
@@ -49,7 +45,13 @@ document.addEventListener("DOMContentLoaded", function () {
         addAppointmentBtn.addEventListener("click", function () {
             overlay.style.display = "flex";
             iframe.src = "add-appointments.html";
-        });
+          
+            iframe.onload = () => {
+              // Reset the form and clear previous data
+              iframe.contentWindow.postMessage({ type: "resetForm" }, "*");
+            };
+          });
+          
 
         closeBtn.addEventListener("click", function () {
             overlay.style.display = "none";
@@ -75,6 +77,14 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+
+function formatNameProperCase(name) {
+  return name
+    .toLowerCase()
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
 
 function formatTo12HourTime(timeString) {
     const [hour, minute] = timeString.split(":");
@@ -156,10 +166,11 @@ function updateAppointmentsTable(appointments) {
         const row = `
             <tr>
                 <td>${index + 1}</td>
-                <td>${appointment.patient_name}</td>
+                <td>${formatNameProperCase(appointment.patient_name)}</td>
                 <td>${appointment.reason_for_visit}</td>
                 <td>${formattedDate}</td>
                 <td>${formattedTime}</td>
+                <td>${appointment.doctor_name || 'N/A'}</td>
                 <td><span class="status ${statusClass}">${appointment.status}</span></td>
                 <td>${actionButtons}</td>
             </tr>
@@ -304,12 +315,19 @@ function showToast(message, duration = 2000) {
 }
 
 // === Show role on navbar ===
-document.addEventListener("DOMContentLoaded", function () {
-    const role = localStorage.getItem("loggedInRole");
-    const roleDisplay = document.getElementById("roleDisplay");
-    if (role && roleDisplay) {
-      roleDisplay.textContent = role.charAt(0).toUpperCase() + role.slice(1);
-    }
-  });
-  
+document.addEventListener("DOMContentLoaded", () => {
+  const role = localStorage.getItem("loggedInRole");
+  const username = localStorage.getItem("loggedInUsername");
+
+  const roleDisplay = document.getElementById("roleDisplay");
+  const usernameDisplay = document.getElementById("usernameDisplay");
+
+  if (role && roleDisplay) {
+    roleDisplay.textContent = role.toUpperCase();
+  }
+
+  if (username && usernameDisplay) {
+    usernameDisplay.textContent = username;
+  }
+});
 

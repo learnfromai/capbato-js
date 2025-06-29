@@ -15,4 +15,5 @@ router.get('/', getPatients);
 router.get('/:id', getPatientById);        // 🔻 Keep this last
 router.post('/add-patient', addPatient);
 
+
 export default router;

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hematology Form</title>
+  <link rel="stylesheet" href="../assets/styles/hematology.css">
+</head>
+<body>
+  <div class="form-container">
+    <header>
+      <h1>DMYM DIAGNOSTIC & LABORATORY CENTER</h1>
+      <p>696 Commonwealth Ave., Litex Rd. Quezon City</p>
+      <p>Tel. No. 263-1036</p>
+      <p><strong>LICENSE NUMBER 1-3-CL-592-06-P</strong></p>
+      <h2>HEMATOLOGY</h2>
+    </header>
+
+    <div class="patient-info">
+      <div class="left-group">
+        <div class="field-group">
+          <label for="patientName">Patient Name:</label>
+          <input type="text" id="patientName" name="patient_name" autocomplete="off" required />
+          <input type="hidden" id="patientId" name="patient_id" />
+        </div>
+        <div class="field-group">
+          <label for="examination">Examination:</label>
+          <input type="text" id="examination" />
+        </div>
+      </div>
+
+      <div class="right-group">
+        <div class="field-group">
+          <label for="age">Age:</label>
+          <input type="text" id="age" />
+        </div>
+        <div class="field-group">
+          <label for="sex">Sex:</label>
+          <input type="text" id="sex" />
+        </div>
+        <div class="field-group">
+          <label for="dateField">Date:</label>
+          <input type="text" id="dateField" />
+        </div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>TEST</th>
+          <th>RESULT</th>
+          <th>REFERENCE RANGE</th>
+        </tr>
+      </thead>
+      <tbody class="results">
+        <tr>
+          <td>HEMATOCRIT</td>
+          <td><input type="text" id="hematocrit" /></td>
+          <td>
+            MALE: 0.40 - 0.51<br>
+            FEMALE: 0.37 - 0.48<br>
+            CHILD: 0.32 - 0.42<br>
+            NEWBORN: 0.49 - 0.54
+          </td>
+        </tr>
+        <tr>
+          <td>HEMOGLOBIN</td>
+          <td><input type="text" id="hemoglobin" /></td>
+          <td>
+            MALE: 140 - 170 gm/L<br>
+            FEMALE: 120 - 160 gm/L<br>
+            CHILD: 120 - 140 gm/L<br>
+            NEWBORN: 165 - 195 gm/L<br>
+            PREGNANT: 120 - 140 gm/L
+          </td>
+        </tr>
+        <tr>
+          <td>RBC</td>
+          <td><input type="text" id="rbc" /></td>
+          <td>
+            MALE: 4.6 - 6.2 x 10^12/L<br>
+            FEMALE: 4.2 - 5.4 x 10^12/L<br>
+            CHILD: 4.5 - 5.1 x 10^12/L
+          </td>
+        </tr>
+        <tr>
+          <td>WBC</td>
+          <td><input type="text" id="wbc" /></td>
+          <td>4.5 - 11.0 x 10^9/L</td>
+        </tr>
+        <tr>
+          <td>SEGMENTERS</td>
+          <td><input type="text" id="segmenters" /></td>
+          <td>0.50 - 0.60</td>
+        </tr>
+        <tr>
+          <td>LYMPHOCYTE</td>
+          <td><input type="text" id="lymphocyte" /></td>
+          <td>0.20 - 0.50</td>
+        </tr>
+        <tr>
+          <td>MONOCYTE</td>
+          <td><input type="text" id="monocyte" /></td>
+          <td>0.05 - 0.08</td>
+        </tr>
+        <tr>
+          <td>BASOPHILS</td>
+          <td><input type="text" id="basophils" /></td>
+          <td>0.01 - 0.03</td>
+        </tr>
+        <tr>
+          <td>EOSINOPHILS</td>
+          <td><input type="text" id="eosinophils" /></td>
+          <td>0.0 - 0.04</td>
+        </tr>
+        <tr>
+          <td>PLATELET</td>
+          <td><input type="text" id="platelet" /></td>
+          <td>150 - 400 g x 10^9/L</td>
+        </tr>
+        <tr>
+          <td>OTHERS</td>
+          <td colspan="2"><input type="text" id="others" style="width: 100%;" /></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <footer>
+      <p><strong>Mark C. Madriaga, RMT</strong><br>License No. 42977<br>Medical Technologist</p>
+      <p><strong>Frederick R. Llanera, MD FPSP</strong><br>License No. 86353<br>Pathologist</p>
+    </footer>
+
+    <div class="form-actions">
+      <button id="submitBtn" class="modern-submit-btn">Submit</button>
+    </div>
+
+    <div id="toastNotification" class="hidden toast">
+      <span id="toastMessage"></span>
+    </div>
+
+    <script src="../js/hematology.js"></script>
+  </div>
+</body>
+</html>

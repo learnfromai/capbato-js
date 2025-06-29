@@ -1,24 +1,39 @@
+const buttons = {
+  patientbtn: "patients.html",
+  dashboardbtn: "index.html",
+  appointmentbtn: "appointments.html",
+  laboratorybtn: "laboratory.html",
+  prescriptionbtn: "prescriptions.html",
+  schedulebtn: "doctor-schedule.html"
+};
+
 document.addEventListener("DOMContentLoaded", function () {
-  document.getElementById("patientbtn").addEventListener("click", () => {
-    window.location.href = "patients.html";
+  // Role & Username Display
+  const role = localStorage.getItem("loggedInRole");
+  const username = localStorage.getItem("loggedInUsername");
+
+  const roleDisplay = document.getElementById("roleDisplay");
+  const usernameDisplay = document.getElementById("usernameDisplay");
+
+  if (role && roleDisplay) {
+    roleDisplay.textContent = role.toUpperCase();
+  }
+
+  if (username && usernameDisplay) {
+    usernameDisplay.textContent = username;
+  }
+
+  // Navigation Setup
+  Object.entries(buttons).forEach(([id, url]) => {
+    const btn = document.getElementById(id);
+    if (btn) {
+      btn.addEventListener("click", () => {
+        window.location.href = url;
+      });
+    }
   });
 
-  document.getElementById("dashboardbtn").addEventListener("click", () => {
-    window.location.href = "index.html";
-  });
-
-  document.getElementById("appointmentbtn").addEventListener("click", () => {
-    window.location.href = "appointments.html";
-  });
-
-  document.getElementById("laboratorybtn").addEventListener("click", () => {
-    window.location.href = "laboratory.html";
-  });
-
-  document.getElementById("prescriptionbtn").addEventListener("click", () => {
-    window.location.href = "prescriptions.html";
-  });
-
+  // Overlay logic
   const addPatientBtn = document.querySelector(".add-new-patient-btn");
   const overlay = document.getElementById("overlay");
   const iframe = document.getElementById("addPatientIframe");
@@ -81,13 +96,18 @@ function renderTable(data) {
   }
 
   data.forEach((patient) => {
-    const formattedName = toTitleCase(patient.full_name || "");
+    const last = toTitleCase(patient.LastName || "");
+    const first = toTitleCase(patient.FirstName || "");
+    const middle = toTitleCase(patient.MiddleName || "");
+
+    const fullName = `${last}, ${first}${middle ? " " + middle : ""}`;
+
     const row = `
       <tr>
-        <td>${patient.patient_id}</td>
+        <td>${patient.PatientID}</td>
         <td>
-          <a href="patientInfo.html?patient_id=${patient.patient_id}" class="patient-link">
-            ${formattedName}
+          <a href="patientInfo.html?patient_id=${patient.PatientID}" class="patient-link">
+            ${fullName}
           </a>
         </td>
       </tr>`;
@@ -97,18 +117,12 @@ function renderTable(data) {
 
 document.getElementById("searchInput").addEventListener("input", function () {
   const searchText = this.value.toLowerCase();
-  const filteredData = patientsData.filter((patient) =>
-    patient.patient_id.toLowerCase().includes(searchText) ||
-    patient.full_name.toLowerCase().includes(searchText)
-  );
+  const filteredData = patientsData.filter((patient) => {
+    const fullName = `${patient.LastName} ${patient.FirstName} ${patient.MiddleName}`.toLowerCase();
+    return (
+      patient.PatientID.toLowerCase().includes(searchText) ||
+      fullName.includes(searchText)
+    );
+  });
   renderTable(filteredData);
 });
-
-document.addEventListener("DOMContentLoaded", () => {
-  const role = localStorage.getItem("loggedInRole");
-  const display = document.getElementById("roleDisplay");
-  if (display && role) {
-    display.textContent = role.toUpperCase();
-  }
-});
-

@@ -43,55 +43,68 @@
       </div>
     </div>
 
+    <!-- Only the relevant <label><input> sections are shown for brevity. Replace your .results section with this one. -->
     <div class="results">
       <div class="column">
-        <label>FBS <input type="text" /> 3.3-6.10 mmol/L</label>
-        <label>BUN <input type="text" /> 2.86-8.20 mmol/L</label>
-        <label>CREATININE <input type="text" /> 53-115 umol/L</label>
-        <label>URIC ACID <input type="text" /> 0.15-0.41 mmol/L</label>
-        <label>CHOLESTEROL <input type="text" /> 3.35-7.37 mmol/L</label>
-        <label>TRIGLYCERIDES <input type="text" /> 0.56-1.69 mmol/L</label>
-        <label>HDL <input type="text" /> 1.04-1.55 mmol/L</label>
-        <label>LDL <input type="text" /> 1.7-4.5 mmol/L</label>
-        <label>VLDL <input type="text" /> 0.0-1.04 mmol/L</label>
-        <label>SODIUM <input type="text" /> 135-145 mmol/L</label>
-        <label>POTASSIUM <input type="text" /> 3.50-5.50 mmol/L</label>
-        <label>CHLORIDE <input type="text" /> 95-107 mmol/L</label>
-        <label>CALCIUM <input type="text" /> 2.02-2.60 mEq/L</label>
-        <label>SGOT <input type="text" /> 0-38 U/L</label>
-        <label>SGPT <input type="text" /> 0-40 U/L</label>
-        <label>RBS <input type="text" /> 7.1-11.1 mmol/L</label>
+        <label>FBS <input type="text" id="fbs" /> 3.3-6.10 mmol/L</label>
+        <label>BUN <input type="text" id="bun" /> 2.86-8.20 mmol/L</label>
+        <label>CREATININE <input type="text" id="creatinine" /> 53-115 umol/L</label>
+        <label>URIC ACID <input type="text" id="blood_uric_acid" /> 0.15-0.41 mmol/L</label>
+        <label>CHOLESTEROL <input type="text" id="cholesterol" /> 3.35-7.37 mmol/L</label>
+        <label>TRIGLYCERIDES <input type="text" id="triglycerides" /> 0.56-1.69 mmol/L</label>
+        <label>HDL <input type="text" id="hdl" /> 1.04-1.55 mmol/L</label>
+        <label>LDL <input type="text" id="ldl" /> 1.7-4.5 mmol/L</label>
+        <label>VLDL <input type="text" id="vldl" /> 0.0-1.04 mmol/L</label>
+        <label>SODIUM <input type="text" id="sodium_na" /> 135-145 mmol/L</label>
+        <label>POTASSIUM <input type="text" id="potassium_k" /> 3.50-5.50 mmol/L</label>
+        <label>CHLORIDE <input type="text" id="chloride" /> 95-107 mmol/L</label>
+        <label>CALCIUM <input type="text" id="calcium" /> 2.02-2.60 mEq/L</label>
+        <label>SGOT <input type="text" id="sgot" /> 0-38 U/L</label>
+        <label>SGPT <input type="text" id="sgpt" /> 0-40 U/L</label>
+        <label>RBS <input type="text" id="rbs" /> 7.1-11.1 mmol/L</label>
       </div>
 
       <div class="column">
-        <label>Alk. Phosphatase <input type="text" /> 53 - 90 U/L</label>
-        <label>Total Protein <input type="text" /> 66 - 88 g/L</label>
-        <label>Albumin <input type="text" /> 35-52 g/L</label>
-        <label>Globulin <input type="text" /> 31-36 g/L</label>
-        <label>A/G Ratio <input type="text" /> 1.13-2.10:1</label>
-        <label>Total Bilirubin <input type="text" /> up to 20.40 µmol/L</label>
-        <label>Direct Bilirubin <input type="text" /> up to 6.80 µmol/L</label>
-        <label>Indirect Bilirubin <input type="text" /> up to 13.60 µmol/L</label>
-        <label>Ionised Calcium <input type="text" /> 1.13-1.32 mmol/L</label>
-        <label>Magnesium <input type="text" /> 0.65-1.05 mmol/L</label>
-        <label>HBalc <input type="text" /> 4.0 - 6.0 %</label>
-        <label>OGTT 30mins <input type="text" /> 0-10.48 mmol/L</label>
-        <label>1st Hour <input type="text" /> 0-6.70 mmol/L</label>
-        <label>2nd Hour <input type="text" /> 0-6.10 mmol/L</label>
-        <label>2 Hours PPBS <input type="text" /> 2.3-7.1 mmol/L</label>
-        <label>Inor. Phosphorus <input type="text" /> 0.83-1.45 mmol/L</label>
+        <label>Alk. Phosphatase <input type="text" id="alp" /> 53 - 90 U/L</label>
+        <label>Total Protein <input type="text" id="total_protein" /> 66 - 88 g/L</label>
+        <label>Albumin <input type="text" id="albumin" /> 35-52 g/L</label>
+        <label>Globulin <input type="text" id="globulin" /> 31-36 g/L</label>
+        <label>A/G Ratio <input type="text" id="a_g_ratio" /> 1.13-2.10:1</label>
+        <label>Total Bilirubin <input type="text" id="total_bilirubin" /> up to 20.40 µmol/L</label>
+        <label>Direct Bilirubin <input type="text" id="direct_bilirubin" /> up to 6.80 µmol/L</label>
+        <label>Indirect Bilirubin <input type="text" id="indirect_bilirubin" /> up to 13.60 µmol/L</label>
+        <label>Ionised Calcium <input type="text" id="ionised_calcium" /> 1.13-1.32 mmol/L</label>
+        <label>Magnesium <input type="text" id="magnesium" /> 0.65-1.05 mmol/L</label>
+        <label>HBalc <input type="text" id="hbalc" /> 4.0 - 6.0 %</label>
+        <label>OGTT 30mins <input type="text" id="ogtt_30mins" /> 0-10.48 mmol/L</label>
+        <label>1st Hour <input type="text" id="ogtt_1hr" /> 0-6.70 mmol/L</label>
+        <label>2nd Hour <input type="text" id="ogtt_2hr" /> 0-6.10 mmol/L</label>
+        <label>2 Hours PPBS <input type="text" id="ppbs_2hr" /> 2.3-7.1 mmol/L</label>
+        <label>Inor. Phosphorus <input type="text" id="inorg_phosphorus" /> 0.83-1.45 mmol/L</label>
       </div>
     </div>
+
     
-    <div class="form-actions" style="text-align: center; margin: 20px 0;">
-      <button id="submitBtn">Submit</button>
-    </div>    
+    <div class="form-actions">
+      <button id="submitBtn" class="modern-submit-btn">Submit</button>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+      <button id="printBtn" class="btn btn-secondary print-btn hidden">Print</button>
+    </div>
+
+
 
     <footer>
       <p><strong>MARK C. MADRIAGA, RMT LIC. 42977</strong><br/>Medical Technologist</p>
       <p><strong>FREDERICK R. LLANERA, MD, FPSP LIC. #86353</strong><br/>Pathologist</p>
     </footer>
   </div>
+
+  <div id="toastNotification" class="hidden toast">
+    <span id="toastMessage"></span>
+  </div>
+
 
   <script src="../js/blood-chemistry.js"></script>
 </body>

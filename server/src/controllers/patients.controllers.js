@@ -36,24 +36,32 @@ export function getPatientById(req, res) {
 export function getPatients(req, res) {
   const sql = `
     SELECT 
-      PatientID AS patient_id, 
-      CONCAT(UPPER(FirstName), ' ', 
-             IFNULL(CONCAT(UPPER(MiddleName), ' '), ''), 
-             UPPER(LastName)) AS full_name,
-      UPPER(LastName) AS last_name,
+      PatientID,
+      FirstName,
+      MiddleName,
+      LastName,
       DATE_FORMAT(DateOfBirth, '%Y-%m-%d') AS date_of_birth 
     FROM patients
-    ORDER BY last_name ASC;
+    ORDER BY LastName ASC;
   `;
 
   db.query(sql, (err, result) => {
     if (err) {
       res.status(500).json({ error: err.message });
     } else {
-      res.json(result);
+      // Optionally capitalize names here if not done in DB
+      const formatted = result.map((p) => ({
+        ...p,
+        FirstName: (p.FirstName || "").toUpperCase(),
+        MiddleName: (p.MiddleName || "").toUpperCase(),
+        LastName: (p.LastName || "").toUpperCase(),
+      }));
+
+      res.json(formatted);
     }
   });
 }
+
 
 export function addPatient(req, res) {
   console.log("🟡 Backend Received Data:", req.body);
@@ -139,7 +147,6 @@ export function getTotalPatients(req, res) {
   });
 }
 
-// ✅ FIXED: Search patients by name from actual columns
 export function searchPatients(req, res) {
   const name = req.query.name;
   if (!name) return res.status(400).json({ error: "Name query required" });
@@ -147,7 +154,9 @@ export function searchPatients(req, res) {
   const sql = `
     SELECT 
       PatientID AS id,
-      CONCAT(FirstName, ' ', IFNULL(MiddleName, ''), ' ', LastName) AS name
+      CONCAT(FirstName, ' ', IFNULL(MiddleName, ''), ' ', LastName) AS name,
+      Age AS age,
+      Gender AS gender
     FROM patients
     WHERE FirstName LIKE ? OR MiddleName LIKE ? OR LastName LIKE ?
     LIMIT 10
@@ -157,6 +166,13 @@ export function searchPatients(req, res) {
 
   db.query(sql, [wildcard, wildcard, wildcard], (err, results) => {
     if (err) return res.status(500).json({ error: "DB error", details: err });
-    res.json(results);
+
+    const formatted = results.map(p => ({
+      ...p,
+      name: p.name.trim(),
+      gender: (p.gender || '').toUpperCase()
+    }));
+
+    res.json(formatted);
   });
 }

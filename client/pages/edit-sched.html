@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edit Schedule</title>
+  <link rel="stylesheet" href="../assets/styles/edit-sched.css" />
+</head>
+<body>
+  <div class="form-container">
+    <h2 class="form-title">Doctor Schedule</h2>
+    <form id="editScheduleForm">
+      <div class="form-group">
+        <label for="doctorName">Doctor Name</label>
+        <input type="text" id="doctorName" required />
+      </div>
+
+      <div class="form-group">
+        <label for="date">Date</label>
+        <input type="date" id="date" required />
+      </div>
+
+      <div class="form-group">
+        <label for="time">Time</label>
+        <input type="text" id="time" placeholder="e.g. 9AM - 5PM" required />
+      </div>
+
+      <button type="submit" class="submit-btn">Save</button>
+    </form>
+  </div>
+
+  <script src="../js/edit-sched.js"></script>
+</body>
+</html>

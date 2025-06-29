@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Serology & Immunology Form</title>
+  <link rel="stylesheet" href="../assets/styles/serology-immunology.css">
+</head>
+<body>
+  <div class="form-container">
+    <header>
+      <h1>DMYM DIAGNOSTIC & LABORATORY CENTER</h1>
+      <p>696 Commonwealth Ave., Litex Rd. Quezon City</p>
+      <p>Tel. No. 263-1036</p>
+      <p><strong>LICENSE NUMBER 13-CL-592-06-P</strong></p>
+      <h2>SEROLOGY & IMMUNOLOGY</h2>
+    </header>
+
+    <div class="patient-info">
+      <div class="left-group">
+        <div class="field-group">
+          <label for="patientName">Name:</label>
+          <input type="text" id="patientName" name="patient_name" autocomplete="off" required />
+          <input type="hidden" id="patientId" name="patient_id" />
+        </div>
+
+        <div class="field-group">
+          <label for="age">Age:</label>
+          <input type="text" id="age" />
+        </div>
+      </div>
+
+      <div class="right-group">
+        <div class="field-group">
+          <label for="sex">Sex:</label>
+          <input type="text" id="sex" />
+        </div>
+
+        <div class="field-group">
+          <label for="doctor">Doctor:</label>
+          <input type="text" id="doctor" />
+        </div>
+
+        <div class="field-group">
+          <label for="dateField">Date:</label>
+          <input type="text" id="dateField" />
+        </div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>TEST</th>
+          <th>RESULT</th>
+          <th>REFERENCE RANGE</th>
+        </tr>
+      </thead>
+      <tbody class="results">
+        <tr>
+          <td>FREE TRIIODOTHYRONINE, FT3</td>
+          <td><input type="text" id="ft3" /></td>
+          <td>2.80 - 7.10 pmol/L</td>
+        </tr>
+        <tr>
+          <td>FREE THYROXINE, FT4</td>
+          <td><input type="text" id="ft4" /></td>
+          <td>12 - 22 pmol/L</td>
+        </tr>
+        <tr>
+          <td>THYROID STIMULATING HORMONE, TSH</td>
+          <td><input type="text" id="tsh" /></td>
+          <td>0.30 - 4.2 mIU/L</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="margin-top: 30px; font-weight: bold; text-align: center;">" PLEASE FORWARD RESULT IMMEDIATELY TO YOUR PHYSICIAN "</p>
+
+    <footer>
+      <p><strong>Mark C. Madriaga, RMT</strong><br>License No. 42977<br>Medical Technologist</p>
+      <p><strong>Frederick R. Llanera, MD FPSP</strong><br>License No. 86353<br>Pathologist</p>
+    </footer>
+
+    <div class="form-actions">
+      <button id="submitBtn" class="modern-submit-btn">Submit</button>
+    </div>
+
+    <p><strong>REMARKS:</strong> ELISA METHOD</p>
+  </div>
+
+  <div id="toastNotification" class="hidden toast">
+    <span id="toastMessage"></span>
+  </div>
+
+  <script src="../js/serology-immunology.js"></script>
+</body>
+</html>

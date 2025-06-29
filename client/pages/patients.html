@@ -14,11 +14,11 @@
       <img src="../assets/images/logo.png" alt="Logo" />
       <h1>M.G. Amores Medical Clinic</h1>
     </a>
-    <span id="roleDisplay" class="ms-auto text-muted fw-bold"></span>
+    <div class="ms-auto text-end">
+      <div id="roleDisplay" class="fw-bold text-primary"></div>
+      <div id="usernameDisplay" class="text-muted small"></div>
+    </div>
   </nav>
-
-  <!-- Hover Area -->
-  <div class="hover-area"></div>
 
   <!-- Sidebar -->
   <div class="sidebar">
@@ -27,31 +27,30 @@
     <button type="button" id="patientbtn">Patients</button>
     <button type="button" id="laboratorybtn">Laboratory</button>
     <button type="button" id="prescriptionbtn">Prescriptions</button>
+    <button type="button" id="schedulebtn">Doctor's Schedule</button> <!-- ✅ NEW -->
   </div>
 
   <!-- Main Content -->
-  <div class="appointments-table">
-    <div class="appointment-container">
-      <div class="appointments-header">
+  <div class="patients-table">
+    <div class="patient-container">
+      <div class="patients-header">
         <h2 class="title-page">Patient Records</h2>
         <button id="addPatientBtn" class="add-new-patient-btn">+ Add New Patient</button>
       </div>
 
       <input type="text" id="searchInput" class="search-bar" placeholder="Search patients...">
 
-      <div class="appointments-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Patient ID</th>
-              <th>Full Name</th>
-            </tr>
-          </thead>
-          <tbody id="patientTableBody">
-            <!-- Dynamic rows go here -->
-          </tbody>
-        </table>
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Patient ID</th>
+            <th>Full Name</th>
+          </tr>
+        </thead>
+        <tbody id="patientTableBody">
+          <!-- Dynamic rows go here -->
+        </tbody>
+      </table>
     </div>
   </div>
 

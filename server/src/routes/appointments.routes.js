@@ -6,7 +6,8 @@ import {
   updateAppointment,
   getTodayConfirmedAppointments,
   getTodayAppointments,
-  getAppointmentsByPatientId
+  getAppointmentsByPatientId,
+  getWeeklyAppointmentSummary
 } from '../controllers/appointments.controller.js';
 
 const router = express.Router();
@@ -22,6 +23,8 @@ router.put('/update/:id', updateAppointment);
 router.get('/today/confirmed', getTodayConfirmedAppointments);
 router.get('/today', getTodayAppointments);
 router.get('/patient/:id', getAppointmentsByPatientId);
+router.get('/weekly-summary', getWeeklyAppointmentSummary);
+
 
 
 export default router;
