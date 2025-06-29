@@ -55,11 +55,17 @@ async function populateTimeOptions() {
     const appointments = await response.json();
     latestAppointments = appointments;
 
-    // Get all confirmed booked times for selected date
+    // Get all confirmed booked times for selected date, normalize to HH:mm
     const takenTimes = new Set(
       appointments
-        .filter(app => app.appointment_date === selectedDate && app.status === "Confirmed")
-        .map(app => app.appointment_time)
+        .filter(app => {
+          return app.appointment_date === selectedDate && app.status === "Confirmed";
+        })
+        .map(app => {
+          // Normalize to HH:mm
+          const [h, m] = app.appointment_time.split(":");
+          return `${h.padStart(2, "0")}:${m.padStart(2, "0")}`;
+        })
     );
 
     timeSelect.innerHTML = "";
