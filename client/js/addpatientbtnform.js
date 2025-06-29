@@ -48,3 +48,19 @@ document.getElementById("patientFormFields").addEventListener("submit", function
       alert("Something went wrong. Please try again.");
     });
 });
+
+document.getElementById("dob").addEventListener("change", function () {
+  const dobValue = this.value;
+  if (dobValue) {
+    const today = new Date();
+    const birthDate = new Date(dobValue);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    document.getElementById("age").value = age >= 0 ? age : '';
+  } else {
+    document.getElementById("age").value = '';
+  }
+});
