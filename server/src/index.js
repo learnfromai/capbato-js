@@ -1,3 +1,6 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 import express from 'express';
 import cors from 'cors';
 import db from './config/db.js';
@@ -53,6 +56,7 @@ app.use((req, res) => {
 });
 
 // Global Error Handler
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   console.error('Server Error:', err);
   res.status(500).json({ error: 'Internal server error' });
