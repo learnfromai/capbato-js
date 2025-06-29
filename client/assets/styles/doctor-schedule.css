@@ -97,12 +97,13 @@ h2 {
 
 .calendar-container {
   background-color: white;
-  padding: 20px;
+  padding: 25px;
   border-radius: 16px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   max-width: 1100px;
-  margin: 0 auto; /* ✅ centers the container within its parent */
-  margin-left: calc(160px + 20px); /* ✅ shift right to account for sidebar (160px) + some gap */
+  margin: 0 auto;
+  margin-left: calc(160px + 20px);
+  margin-right: 20px;
 }
 
 
@@ -214,6 +215,112 @@ h2 {
   color: #0b4f6c;
 }
 
+/* === DOCTORS CONTAINER === */
+.doctors-container {
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  margin: 0 auto 30px auto;
+  max-width: 1100px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  margin-left: calc(160px + 20px);
+  margin-right: 20px;
+  margin-bottom: 30px;
+}
+
+.doctors-header {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.doctors-header h2 {
+  color: #0047ab;
+  font-weight: 600;
+  margin: 0;
+}
+
+.doctors-table-wrapper {
+  overflow-x: auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.doctors-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.doctors-table th,
+.doctors-table td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+
+.doctors-table th:last-child,
+.doctors-table td:last-child {
+  border-right: none;
+}
+
+.doctors-table th {
+  background: #dbeeff;
+  color: #0047ab;
+  font-weight: 600;
+  text-align: center;
+}
+
+.doctors-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.doctors-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Column widths for better layout */
+.doctors-table th:nth-child(1),
+.doctors-table td:nth-child(1) {
+  width: 40%;
+}
+
+.doctors-table th:nth-child(2),
+.doctors-table td:nth-child(2) {
+  width: 35%;
+}
+
+.doctors-table th:nth-child(3),
+.doctors-table td:nth-child(3) {
+  width: 25%;
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 1024px) {
+  .doctors-container,
+  .calendar-container {
+    margin-left: 180px;
+    margin-right: 20px;
+    max-width: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .doctors-container,
+  .calendar-container {
+    margin-left: 180px;
+    margin-right: 20px;
+    padding: 20px;
+    max-width: none;
+  }
+  
+  .doctors-table th,
+  .doctors-table td {
+    padding: 12px 8px;
+    font-size: 14px;
+  }
+}
 
 /* === Overlay === */
 .overlay {

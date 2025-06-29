@@ -101,6 +101,65 @@ document.addEventListener("DOMContentLoaded", () => {
 
   fetchAndRender();
 
+  // === Doctors Table Logic ===
+  function loadDoctorsData() {
+    fetch("http://localhost:3001/doctors")
+      .then(res => res.json())
+      .then(data => renderDoctorsTable(data))
+      .catch(err => {
+        console.error("Failed to load doctors:", err);
+        // Fallback to static data if API fails
+        loadFallbackDoctorsData();
+      });
+  }
+
+  function loadFallbackDoctorsData() {
+    const fallbackData = [
+      {
+        DoctorID: 1,
+        FirstName: "Maria",
+        LastName: "Santos",
+        Specialization: "General Medicine",
+        ContactNumber: "+63 917 123 4567"
+      },
+      {
+        DoctorID: 2,
+        FirstName: "Juan",
+        LastName: "Cruz",
+        Specialization: "Cardiology",
+        ContactNumber: "+63 918 765 4321"
+      },
+      {
+        DoctorID: 3,
+        FirstName: "Anna",
+        LastName: "Reyes",
+        Specialization: "Pediatrics",
+        ContactNumber: "+63 919 555 0123"
+      }
+    ];
+    renderDoctorsTable(fallbackData);
+  }
+
+  function renderDoctorsTable(doctors) {
+    const tbody = document.getElementById("doctorsTableBody");
+    if (!tbody) return;
+
+    tbody.innerHTML = "";
+    
+    doctors.forEach(doctor => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>Dr. ${doctor.FirstName} ${doctor.LastName}</td>
+        <td>${doctor.Specialization}</td>
+        <td>${doctor.ContactNumber || 'N/A'}</td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  // Load doctors data on page load
+  loadDoctorsData();
+
   // === Form Submission ===
   const form = document.getElementById("scheduleForm");
   if (form) {
