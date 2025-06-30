@@ -35,13 +35,21 @@ document.addEventListener("DOMContentLoaded", async function () {
     alert("An error occurred while retrieving patient details.");
   }
 
+  const patientInfoTab = document.getElementById("patientInfoTab");
   const medicalTab = document.getElementById("medicalTab");
   const appointmentTab = document.getElementById("appointmentTab");
   const prescriptionTab = document.getElementById("prescriptionTab");
   const laboratoryTab = document.getElementById("laboratoryTab");
 
+  const patientInfoContent = document.getElementById("patientInfoContent");
   const medicalContent = document.getElementById("medicalContent");
   const appointmentContent = document.getElementById("appointmentContent");
+
+  patientInfoTab.addEventListener("click", () => {
+    hideTabs();
+    patientInfoTab.classList.add("active");
+    patientInfoContent.style.display = "block";
+  });
 
   medicalTab.addEventListener("click", () => {
     hideTabs();
@@ -69,6 +77,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   function hideTabs() {
     document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+    const patientInfoContent = document.getElementById("patientInfoContent");
+    if (patientInfoContent) patientInfoContent.style.display = "none";
     if (medicalContent) medicalContent.style.display = "none";
     if (appointmentContent) appointmentContent.style.display = "none";
     const labContainer = document.getElementById("labResultContainer");
@@ -77,7 +87,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   function loadAppointmentsForPatient() {
     const tbody = document.getElementById("appointmentListBody");
-    tbody.innerHTML = `<tr><td colspan="4">Loading...</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6">Loading...</td></tr>`;
 
     fetch(`http://localhost:3001/appointments/patient/${patientId}`)
       .then(res => res.json())
@@ -85,7 +95,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         tbody.innerHTML = "";
 
         if (!data.length) {
-          tbody.innerHTML = `<tr><td colspan="4">No appointments found.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="6">No appointments found.</td></tr>`;
           return;
         }
 
@@ -95,6 +105,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             <td>${formatDate(app.appointment_date)}</td>
             <td>${formatTime(app.appointment_time)}</td>
             <td>${app.reason_for_visit}</td>
+            <td>${app.lab_tests_done || 'N/A'}</td>
+            <td>${app.prescriptions || 'N/A'}</td>
             <td>${app.status}</td>
           `;
           tbody.appendChild(row);
@@ -102,7 +114,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       })
       .catch(err => {
         console.error("Failed to fetch appointments:", err);
-        tbody.innerHTML = `<tr><td colspan="4" style="color:red;">Error loading data</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="color:red;">Error loading data</td></tr>`;
       });
   }
 

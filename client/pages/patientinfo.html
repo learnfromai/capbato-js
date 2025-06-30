@@ -68,43 +68,44 @@
   </div>
 
   <!-- Main Content -->
-  <div class="profile-wrapper">
-    <!-- Left Column: Patient Info -->
-    <div class="left-info-container">
-      <div class="card">
-        <h3>Patient Information</h3>
-        <p><strong>Patient #:</strong> <span id="patientID"></span></p>
-        <p><strong>Full Name:</strong> <span id="fullName"></span></p>
-        <p><strong>Gender:</strong> <span id="gender"></span></p>
-        <p><strong>Age:</strong> <span id="age"></span></p>
-        <p><strong>Date of Birth:</strong> <span id="dob"></span></p>
-        <p><strong>Contact Number:</strong> <span id="contact"></span></p>
-        <p><strong>Address:</strong> <span id="address"></span></p>
-      </div>
-
-      <div class="card">
-        <h3>Guardian Details</h3>
-        <p><strong>Full Name:</strong> <span id="guardianFullName"></span></p>
-        <p><strong>Gender:</strong> <span id="guardianGender"></span></p>
-        <p><strong>Relationship:</strong> <span id="guardianRelationship"></span></p>
-        <p><strong>Contact Number:</strong> <span id="guardianContact"></span></p>
-        <p><strong>Address:</strong> <span id="guardianAddress"></span></p>
-      </div>
-    </div>
-
-    <!-- Right Column: Tabs -->
-    <div class="right-actions-container">
+  <div class="main-content">
+    <div class="tab-container">
       <div class="tab-buttons">
-        <button class="tab active" id="medicalTab">Medical Records</button>
+        <button class="tab active" id="patientInfoTab">Patient Info</button>
+        <button class="tab" id="medicalTab">Medical Records</button>
         <button class="tab" id="appointmentTab">Appointments</button>
         <button class="tab" id="prescriptionTab">Prescriptions</button>
         <button class="tab" id="laboratoryTab">Laboratories</button>
       </div>
 
-      <div class="tab-content" id="medicalContent" style="display: block;">
-        <h3>Medical Records</h3>
+      <!-- Patient Info Tab Content -->
+      <div class="tab-content" id="patientInfoContent" style="display: block;">
+        <div class="patient-cards-container">
+          <div class="card">
+            <h3>Patient Information</h3>
+            <p><strong>Patient #:</strong> <span id="patientID"></span></p>
+            <p><strong>Full Name:</strong> <span id="fullName"></span></p>
+            <p><strong>Gender:</strong> <span id="gender"></span></p>
+            <p><strong>Age:</strong> <span id="age"></span></p>
+            <p><strong>Date of Birth:</strong> <span id="dob"></span></p>
+            <p><strong>Contact Number:</strong> <span id="contact"></span></p>
+            <p><strong>Address:</strong> <span id="address"></span></p>
+          </div>
+
+          <div class="card">
+            <h3>Guardian Details</h3>
+            <p><strong>Full Name:</strong> <span id="guardianFullName"></span></p>
+            <p><strong>Gender:</strong> <span id="guardianGender"></span></p>
+            <p><strong>Relationship:</strong> <span id="guardianRelationship"></span></p>
+            <p><strong>Contact Number:</strong> <span id="guardianContact"></span></p>
+            <p><strong>Address:</strong> <span id="guardianAddress"></span></p>
+          </div>
+        </div>
       </div>
 
+      <div class="tab-content" id="medicalContent" style="display: none;">
+        <h3>Medical Records</h3>
+      </div>
 
       <div class="tab-content" id="appointmentContent" style="display: none;">
         <h3>Appointments</h3>
@@ -113,12 +114,14 @@
             <tr>
               <th>Date</th>
               <th>Time</th>
-              <th>Reason</th>
+              <th>Reason for Visit</th>
+              <th>Lab Tests Done</th>
+              <th>Prescriptions</th>
               <th>Status</th>
             </tr>
           </thead>
           <tbody id="appointmentListBody">
-            <tr><td colspan="4">Loading...</td></tr>
+            <tr><td colspan="6">Loading...</td></tr>
           </tbody>
         </table>
       </div>
