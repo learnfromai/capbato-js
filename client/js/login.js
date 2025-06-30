@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } else if (role === "receptionist") {
         window.location.href = "index.html";
       } else if (role === "doctor") {
-        window.location.href = "doctor_dashboard.html";
+        window.location.href = "prescriptions.html";
       } else {
         document.getElementById("message").textContent = "Unknown role.";
       }
