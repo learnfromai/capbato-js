@@ -246,7 +246,7 @@ h2 {
 .doctors-table th,
 .doctors-table td {
   padding: 16px;
-  text-align: left;
+  text-align: center;
   border-bottom: 1px solid #ddd;
   border-right: 1px solid #ddd;
 }

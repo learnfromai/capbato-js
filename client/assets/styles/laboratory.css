@@ -498,7 +498,7 @@ table th {
 /* === User Info === */
 .user-info {
   margin-left: auto;
-  text-align: right;
+  text-align: center;
 }
 
 .role-display {
