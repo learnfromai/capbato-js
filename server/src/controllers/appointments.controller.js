@@ -39,7 +39,7 @@ export async function getAppointmentsByPatientId(req, res) {
     const [result] = await db.query(sql, [patientId]);
     res.json(result);
   } catch (error) {
-    console.error('❌ Error fetching appointments by patient ID:', error.message);
+    console.error('❌ Error fetching appointments by Patient #:', error.message);
     res.status(500).json({ error: 'Database error' });
   }
 }
@@ -58,7 +58,7 @@ export async function addAppointment(req, res) {
   } = req.body;
 
   if (!patient_name || !reason_for_visit || !appointment_date || !appointment_time || !patient_id) {
-    return res.status(400).json({ error: 'All fields including valid patient ID are required' });
+    return res.status(400).json({ error: 'All fields including valid Patient # are required' });
   }
 
   const appointmentDateTime = new Date(`${appointment_date}T${appointment_time}`);

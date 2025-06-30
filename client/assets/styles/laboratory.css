@@ -291,7 +291,7 @@ th, td {
 }
 
 /* Table column widths */
-th:nth-child(1), td:nth-child(1) { width: 20%; } /* Patient ID */
+th:nth-child(1), td:nth-child(1) { width: 20%; } /* Patient # */
 th:nth-child(2), td:nth-child(2) { width: 40%; } /* Full Name */
 th:nth-child(3), td:nth-child(3) { width: 20%; } /* Status */
 th:nth-child(4), td:nth-child(4) { width: 20%; } /* Results */

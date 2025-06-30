@@ -241,7 +241,7 @@ function loadPatients() {
         item.textContent = p.name;
         item.addEventListener("click", () => {
           patientInput.value = p.name;
-          patientIdDisplay.textContent = `Patient ID: ${p.patient_id || p.id}`;
+          patientIdDisplay.textContent = `Patient #: ${p.patient_id || p.id}`;
           patientIdWrapper.style.display = "block";
           hiddenPatientIdInput.value = p.patient_id || p.id;
           suggestionsBox.innerHTML = "";
@@ -389,7 +389,7 @@ window.addEventListener("message", function (event) {
     });
 
     hiddenPatientIdInput.value = app.patient_id;
-    patientIdDisplay.textContent = `Patient ID: ${app.patient_id}`;
+    patientIdDisplay.textContent = `Patient #: ${app.patient_id}`;
     patientIdWrapper.style.display = "block";
     document.getElementById("addAppointmentForm").dataset.editId = app.id;
   }

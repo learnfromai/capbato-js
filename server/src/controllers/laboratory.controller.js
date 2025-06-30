@@ -181,7 +181,7 @@ export const updateLabRequestResults = async (req, res) => {
 };
 
 
-// ✅ Get Most Recent Lab Request by Patient ID
+// ✅ Get Most Recent Lab Request by Patient #
 export const getLabRequestById = async (req, res) => {
   const { patientId } = req.params;
   const sql = `

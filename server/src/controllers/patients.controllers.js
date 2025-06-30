@@ -105,16 +105,19 @@ export async function addPatient(req, res) {
   const firstLetter = (lastname || '')[0].toUpperCase();
 
   try {
-    // Generate PatientID
+    // Generate PatientID with current year prefix
+    const currentYear = new Date().getFullYear();
+    const patientIdPrefix = `${currentYear}-${firstLetter}`;
+    
     const countSql = `
       SELECT COUNT(*) AS count
       FROM patients
-      WHERE PatientID LIKE '${firstLetter}%'
+      WHERE PatientID LIKE '${patientIdPrefix}%'
     `;
 
     const [countResult] = await db.query(countSql);
     const count = countResult[0].count + 1;
-    const patientId = `${firstLetter}${count}`;
+    const patientId = `${patientIdPrefix}${count}`;
 
     const patientData = [
       patientId,

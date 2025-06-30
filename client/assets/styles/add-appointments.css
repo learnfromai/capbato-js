@@ -96,7 +96,7 @@ textarea:focus {
   background-color: #f0f0f0;
 }
 
-/* === HIDDEN DISPLAY (Patient ID wrapper) === */
+/* === HIDDEN DISPLAY (Patient # wrapper) === */
 .patient-id-display {
   margin-top: 6px;
   font-size: 13px;

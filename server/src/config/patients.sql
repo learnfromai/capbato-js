@@ -1,5 +1,5 @@
 CREATE TABLE patients (
-    PatientID VARCHAR(10) PRIMARY KEY,
+    PatientID VARCHAR(15) PRIMARY KEY,
     LastName VARCHAR(120),
     FirstName VARCHAR(120),
     MiddleName VARCHAR(120),

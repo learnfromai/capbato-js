@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const patientId = urlParams.get("patient_id");
 
   if (!patientId) {
-    alert("No patient ID provided!");
+    alert("No Patient # provided!");
     return;
   }
 
