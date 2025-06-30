@@ -11,7 +11,8 @@ import authRoutes from './routes/auth.routes.js';
 import appointmentRoutes from './routes/appointments.routes.js';
 import laboratoryRoutes from './routes/laboratory.routes.js';
 import scheduleRoutes from './routes/schedule.routes.js';
-import doctorRoutes from './routes/doctors.routes.js'; // ✅ ADDED
+import doctorRoutes from './routes/doctors.routes.js';
+import usersRoutes from './routes/users.routes.js';
 
 const app = express();
 const PORT = 3001;
@@ -43,7 +44,8 @@ app.use('/auth', authRoutes);
 app.use('/appointments', appointmentRoutes);
 app.use('/api', laboratoryRoutes);
 app.use('/schedules', scheduleRoutes);
-app.use('/doctors', doctorRoutes); // ✅ REGISTERED ROUTE
+app.use('/doctors', doctorRoutes);
+app.use('/users', usersRoutes);
 
 // API status check
 app.get('/api', (req, res) => {

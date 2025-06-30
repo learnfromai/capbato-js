@@ -92,6 +92,11 @@ document.addEventListener("DOMContentLoaded", () => {
     schedulebtn: "doctor-schedule.html"
   };
 
+  // Add Accounts button for admin
+  if (role && role.toLowerCase() === 'admin') {
+    buttons.accountsbtn = "accounts.html";
+  }
+
   Object.entries(buttons).forEach(([id, url]) => {
     const btn = document.getElementById(id);
     if (btn) {

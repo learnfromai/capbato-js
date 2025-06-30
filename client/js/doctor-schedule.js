@@ -93,6 +93,24 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btn) btn.addEventListener("click", () => (window.location.href = url));
   });
 
+  // Inject Accounts button for admin if not present
+  if (role && role.toLowerCase() === 'admin') {
+    const sidebar = document.querySelector('.sidebar .nav-list');
+    if (sidebar && !document.getElementById('accountsbtn')) {
+      const li = document.createElement('li');
+      li.className = 'nav-item';
+      li.id = 'accountsbtn';
+      li.innerHTML = `
+        <i class="fas fa-users-cog nav-icon"></i>
+        <span class="nav-text">Accounts</span>
+      `;
+      sidebar.appendChild(li);
+      li.addEventListener('click', () => {
+        window.location.href = 'accounts.html';
+      });
+    }
+  }
+
   // === Calendar Logic ===
   const calendar = document.getElementById("calendar");
   const monthLabel = document.getElementById("monthLabel");

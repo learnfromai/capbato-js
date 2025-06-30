@@ -127,6 +127,25 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   loadPatients();
+
+  // Inject Accounts button for admin if not present
+  // Use the role variable already declared above
+  if (role && role.toLowerCase() === 'admin') {
+    const sidebar = document.querySelector('.sidebar .nav-list');
+    if (sidebar && !document.getElementById('accountsbtn')) {
+      const li = document.createElement('li');
+      li.className = 'nav-item';
+      li.id = 'accountsbtn';
+      li.innerHTML = `
+        <i class="fas fa-users-cog nav-icon"></i>
+        <span class="nav-text">Accounts</span>
+      `;
+      sidebar.appendChild(li);
+      li.addEventListener('click', () => {
+        window.location.href = 'accounts.html';
+      });
+    }
+  }
 });
 
 let patientsData = [];

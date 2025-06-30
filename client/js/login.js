@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Redirect based on role
       if (role === "admin") {
-        window.location.href = "admin_dashboard.html";
+        window.location.href = "index.html";
       } else if (role === "receptionist") {
         window.location.href = "index.html";
       } else if (role === "doctor") {
