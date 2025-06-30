@@ -153,6 +153,39 @@ table {
   overflow: hidden;
 }
 
+/* Column width optimization */
+th:nth-child(1), td:nth-child(1) { /* # column */
+  width: 5%;
+}
+
+th:nth-child(2), td:nth-child(2) { /* Patient Name */
+  width: 18%;
+}
+
+th:nth-child(3), td:nth-child(3) { /* Reason for Visit */
+  width: 16%;
+}
+
+th:nth-child(4), td:nth-child(4) { /* Date */
+  width: 12%;
+}
+
+th:nth-child(5), td:nth-child(5) { /* Time */
+  width: 10%;
+}
+
+th:nth-child(6), td:nth-child(6) { /* Doctor */
+  width: 16%;
+}
+
+th:nth-child(7), td:nth-child(7) { /* Status */
+  width: 10%;
+}
+
+th:nth-child(8), td:nth-child(8) { /* Action */
+  width: 13%;
+}
+
 th, td {
   padding: 14px;
   text-align: center;
@@ -172,6 +205,46 @@ th {
   background: #dbeeff;
   color: #0047ab;
   font-weight: 600;
+}
+
+/* Column text alignment optimization */
+th:nth-child(1), td:nth-child(1) { /* # column - center aligned */
+  text-align: center;
+}
+
+th:nth-child(2), td:nth-child(2) { /* Patient Name - left aligned */
+  text-align: left;
+  padding-left: 12px;
+}
+
+th:nth-child(6), td:nth-child(6) { /* Doctor - left aligned */
+  text-align: left;
+  padding-left: 12px;
+}
+
+/* Improve text handling for longer content */
+th:nth-child(2), td:nth-child(2),
+th:nth-child(6), td:nth-child(6) {
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Action column specific styling */
+th:nth-child(8), td:nth-child(8) { /* Action column */
+  white-space: normal;
+  padding: 8px 6px;
+}
+
+/* Button alignment for action column - remove asymmetric margins */
+td:nth-child(8) .modify-btn {
+  margin-right: 4px;
+  margin-left: 4px;
+}
+
+td:nth-child(8) .cancel-btn {
+  margin-left: 4px;
+  margin-right: 4px;
 }
 
 .status {
