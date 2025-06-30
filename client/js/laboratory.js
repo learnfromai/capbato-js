@@ -160,7 +160,8 @@ function renderLabResults(labResults) {
       grouped[key] = {
         patient_id: key,
         patient_name: result.patient_name,
-        tests: []
+        tests: [],
+        originalStatus: result.status // Store the original status from the database
       };
     }
 
@@ -182,15 +183,27 @@ function renderLabResults(labResults) {
     const formattedName = formatFullName(entry.patient_name);
     const row = document.createElement("tr");
 
+    // Get the status - prefer from tests, fallback to original status, then "Pending"
+    let displayStatus = "Pending";
+    if (entry.tests && entry.tests.length > 0) {
+      displayStatus = entry.tests[entry.tests.length - 1]?.status || "Pending";
+    } else if (entry.originalStatus) {
+      displayStatus = entry.originalStatus;
+    }
+
+    // Only show entries that have tests or show all entries (you can modify this logic)
+    // For now, let's show all entries but handle empty tests gracefully
+    const testsToDisplay = entry.tests && entry.tests.length > 0 ? entry.tests : [];
+
     row.innerHTML = `
       <td>${entry.patient_id}</td>
       <td>${formattedName}</td>
-      <td class="lab-status">${entry.tests[entry.tests.length - 1].status}</td>
+      <td class="lab-status">${displayStatus}</td>
       <td>
         <button class="btn btn-primary"
           data-patient-id="${entry.patient_id}"
           data-patient-name="${formattedName}"
-          data-tests='${JSON.stringify(entry.tests)}'>View</button>
+          data-tests='${JSON.stringify(testsToDisplay)}'>View</button>
       </td>
     `;
 
@@ -215,30 +228,39 @@ document.addEventListener("click", (e) => {
 
     tbody.innerHTML = "";
 
-    tests.forEach(({ group, testNames, date, status, fieldKeys }) => {
-      const testsStr = testNames.join(", ");
+    // Handle case where there are no tests
+    if (!tests || tests.length === 0) {
       const tr = document.createElement("tr");
-
-      tr.dataset.patientId = row.children[0].textContent;
-      tr.dataset.patientName = row.children[1].textContent;
-      tr.dataset.requestDate = date;
-      tr.dataset.selectedTests = fieldKeys.join(",");
-
-      const actionButtons = status.toLowerCase() === "complete"
-        ? `<button class="btn btn-info btn-sm btn-view">View</button>
-           <button class="btn btn-warning btn-sm btn-edit">Edit</button>`
-        : `<button class="btn btn-success btn-sm add-result-btn">Add Result</button>
-           <button class="btn btn-danger btn-sm btn-cancel">Cancel</button>`;
-
       tr.innerHTML = `
-        <td>${group}: ${testsStr}</td>
-        <td>${formatDateToReadable(date)}</td>
-        <td class="lab-status">${status}</td>
-        <td><div class="btn-group">${actionButtons}</div></td>
+        <td colspan="4" style="text-align: center; color: #666;">No test results available</td>
       `;
-
       tbody.appendChild(tr);
-    });
+    } else {
+      tests.forEach(({ group, testNames, date, status, fieldKeys }) => {
+        const testsStr = testNames.join(", ");
+        const tr = document.createElement("tr");
+
+        tr.dataset.patientId = row.children[0].textContent;
+        tr.dataset.patientName = row.children[1].textContent;
+        tr.dataset.requestDate = date;
+        tr.dataset.selectedTests = fieldKeys.join(",");
+
+        const actionButtons = status.toLowerCase() === "complete"
+          ? `<button class="btn btn-info btn-sm btn-view">View</button>
+             <button class="btn btn-warning btn-sm btn-edit">Edit</button>`
+          : `<button class="btn btn-success btn-sm add-result-btn">Add Result</button>
+             <button class="btn btn-danger btn-sm btn-cancel">Cancel</button>`;
+
+        tr.innerHTML = `
+          <td>${group}: ${testsStr}</td>
+          <td>${formatDateToReadable(date)}</td>
+          <td class="lab-status">${status}</td>
+          <td><div class="btn-group">${actionButtons}</div></td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+    }
 
     modal.classList.add("show");
   }
@@ -316,7 +338,10 @@ function openLabOverlay(lab) {
   };
 
   // Determine which form to load based on first test field key
-  const selectedKey = lab.selectedTests[0];
+  // Add safety check for selectedTests
+  const selectedKey = (lab.selectedTests && lab.selectedTests.length > 0) 
+    ? lab.selectedTests[0] 
+    : "fbs"; // default fallback
   const targetForm = formMap[selectedKey] || "blood-chemistry.html"; // fallback
 
   overlay.classList.add("show");
