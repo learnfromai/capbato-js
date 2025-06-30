@@ -20,13 +20,13 @@ document.addEventListener("DOMContentLoaded", async function () {
       document.getElementById("age").textContent = data.Age || "N/A";
       document.getElementById("dob").textContent = formatDate(data.DateOfBirth) || "N/A";
       document.getElementById("contact").textContent = data.ContactNumber || "N/A";
-      document.getElementById("address").textContent = formatSentence(data.Address) || "N/A";
+      document.getElementById("address").textContent = formatAddressDisplay(formatSentence(data.Address)) || "N/A";
 
       document.getElementById("guardianFullName").textContent = formatName(data.GuardianName) || "N/A";
       document.getElementById("guardianGender").textContent = formatWord(data.GuardianGender || "N/A");
       document.getElementById("guardianRelationship").textContent = formatWord(data.GuardianRelationship || "N/A");
       document.getElementById("guardianContact").textContent = data.GuardianContactNumber || "N/A";
-      document.getElementById("guardianAddress").textContent = formatSentence(data.GuardianAddress) || "N/A";
+      document.getElementById("guardianAddress").textContent = formatAddressDisplay(formatSentence(data.GuardianAddress)) || "N/A";
     } else {
       alert("Error: " + (data.error || "Failed to fetch patient data"));
     }
@@ -189,6 +189,21 @@ function formatTime(timeStr) {
   const suffix = h >= 12 ? 'PM' : 'AM';
   const hour12 = ((h + 11) % 12 + 1);
   return `${hour12}:${minute} ${suffix}`;
+}
+
+// Function to parse and format address for better display
+function formatAddressDisplay(addressString) {
+  if (!addressString || addressString === "N/A") {
+    return "N/A";
+  }
+  
+  // If address contains commas, assume it's already in the detailed format
+  if (addressString.includes(',')) {
+    return addressString;
+  }
+  
+  // For existing single-line addresses, just return as is
+  return addressString;
 }
 
 function goBack() {

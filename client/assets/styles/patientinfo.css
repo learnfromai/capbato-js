@@ -241,6 +241,21 @@ body::before {
   background-color: #3ba69c;
 }
 
+/* === Address display styling === */
+.address-display {
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-radius: 5px;
+  border-left: 4px solid #007bff;
+  margin-top: 5px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.address-display span {
+  font-weight: normal;
+  color: #495057;
+}
+
 /* === Responsive Layout === */
 @media (max-width: 900px) {
   .profile-wrapper {
