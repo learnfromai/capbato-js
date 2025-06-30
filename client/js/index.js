@@ -85,26 +85,35 @@ function refreshDashboardData() {
 
       tbody.innerHTML = '';
 
-      data.forEach(appointment => {
-        const formattedName = formatName(appointment.patient_name);
+      const now = new Date();
+      const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${appointment.patient_id || 'N/A'}</td>
-          <td>
-            <a href="patientinfo.html?patient_id=${appointment.patient_id}" class="patient-link">
-              ${formattedName}
-            </a>
-          </td>
-          <td>${appointment.reason_for_visit}</td>
-          <td>${appointment.contact_number}</td>
-          <td>${formatTime(appointment.appointment_time)}</td>
-          <td>${appointment.doctor_name || 'N/A'}</td>  <!-- ✅ Doctor column -->
-          <td>${appointment.status}</td>
-        `;
+      data
+        .filter(appointment => {
+          const [h, m] = appointment.appointment_time.split(':').map(Number);
+          const apptMinutes = h * 60 + m;
+          return apptMinutes >= nowMinutes;
+        })
+        .forEach(appointment => {
+          const formattedName = formatName(appointment.patient_name);
 
-        tbody.appendChild(row);
-      });
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${appointment.patient_id || 'N/A'}</td>
+            <td>
+              <a href="patientinfo.html?patient_id=${appointment.patient_id}" class="patient-link">
+                ${formattedName}
+              </a>
+            </td>
+            <td>${appointment.reason_for_visit}</td>
+            <td>${appointment.contact_number}</td>
+            <td>${formatTime(appointment.appointment_time)}</td>
+            <td>${appointment.doctor_name || 'N/A'}</td>
+            <td>${appointment.status}</td>
+          `;
+
+          tbody.appendChild(row);
+        });
     })
     .catch(err => console.error("Error loading today's appointments:", err));
 }
