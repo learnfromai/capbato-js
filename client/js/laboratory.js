@@ -124,10 +124,10 @@ function formatFullName(name) {
   if (!name) return "";
   const parts = name.trim().split(" ");
   if (parts.length < 2) return toTitleCase(name);
-  const last = parts.pop();
-  const first = parts.shift();
-  const middle = parts.join(" ");
-  return `${toTitleCase(last)}, ${toTitleCase(first)}${middle ? " " + toTitleCase(middle) : ""}`;
+  const first = toTitleCase(parts.shift());
+  const last = toTitleCase(parts.pop());
+  const middle = parts.map(toTitleCase).join(" ");
+  return `${first}${middle ? " " + middle : ""} ${last}`.trim();
 }
 
 function renderLabResults(labResults) {

@@ -96,11 +96,11 @@ function renderTable(data) {
   }
 
   data.forEach((patient) => {
-    const last = toTitleCase(patient.LastName || "");
+
     const first = toTitleCase(patient.FirstName || "");
     const middle = toTitleCase(patient.MiddleName || "");
-
-    const fullName = `${last}, ${first}${middle ? " " + middle : ""}`;
+    const last = toTitleCase(patient.LastName || "");
+    const fullName = `${first}${middle ? " " + middle : ""} ${last}`.trim();
 
     const row = `
       <tr>
