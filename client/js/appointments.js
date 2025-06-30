@@ -122,29 +122,6 @@ function loadAppointmentsByDate(date = null) {
         .then(response => response.json())
         .then(data => {
             let filteredAppointments = data.filter(appointment => appointment.appointment_date === selectedDate);
-            
-            // If viewing today's appointments, filter out past appointments
-            const today = new Date().toISOString().split("T")[0];
-            if (selectedDate === today) {
-                const currentTime = new Date();
-                const currentHour = currentTime.getHours();
-                const currentMinute = currentTime.getMinutes();
-                
-                filteredAppointments = filteredAppointments.filter(appointment => {
-                    const [appointmentHour, appointmentMinute] = appointment.appointment_time.split(':').map(num => parseInt(num, 10));
-                    
-                    // Keep appointment if it's in the future
-                    if (appointmentHour > currentHour) {
-                        return true;
-                    } else if (appointmentHour === currentHour && appointmentMinute > currentMinute) {
-                        return true;
-                    }
-                    
-                    // Filter out past appointments
-                    return false;
-                });
-            }
-            
             updateAppointmentsTable(filteredAppointments);
         })
         .catch(error => {
@@ -178,11 +155,14 @@ function updateAppointmentsTable(appointments) {
         return;
     }
 
-    appointments.sort((a, b) => {
-        let dateTimeA = new Date(`${a.appointment_date}T${a.appointment_time}`);
-        let dateTimeB = new Date(`${b.appointment_date}T${b.appointment_time}`);
-        return dateTimeA - dateTimeB;
-    });
+    // Only sort from latest to oldest if "Show All" is active (lastViewedDate is null)
+    if (lastViewedDate === null) {
+        appointments.sort((a, b) => {
+            let dateTimeA = new Date(`${a.appointment_date}T${a.appointment_time}`);
+            let dateTimeB = new Date(`${b.appointment_date}T${b.appointment_time}`);
+            return dateTimeB - dateTimeA;
+        });
+    }
 
     appointments.forEach((appointment, index) => {
         const statusClass = appointment.status.toLowerCase();
