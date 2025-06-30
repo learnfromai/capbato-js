@@ -1,15 +1,8 @@
 /* === GLOBAL RESET === */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* === PAGE BACKGROUND === */
+/* === GLOBAL STYLES (match dashboard & login) === */
 body {
-  position: relative;
   min-height: 100vh;
+  position: relative;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(to bottom right, rgb(109, 174, 218), #4db6ac);
   padding-top: 100px;
@@ -22,6 +15,7 @@ body::before {
   top: 0;
   left: 0;
   width: 100%;
+  height: 100%;
   min-height: 100%;
   background: inherit;
   background-size: cover;
@@ -102,7 +96,7 @@ body::before {
   gap: 20px;
   flex-wrap: nowrap;
   width: 100%;
-  margin-top: 30px; /* <- Navbar to cards spacing */
+  margin-top: 20px; /* <- Navbar to cards spacing */
 }
 
 .card {
@@ -153,7 +147,7 @@ body::before {
 
 /* === TODAY'S APPOINTMENTS SECTION === */
 .today-appointments {
-  margin: 40px auto;
+  margin: 0 auto;
   padding: 0;
   background: transparent;
   display: flex;
@@ -171,7 +165,7 @@ body::before {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   flex: 1 1 700px;
   min-width: 300px;
-  margin-top: 30px; /* <- Matches the spacing above the cards */
+  margin-top: 20px; /* <- Matches the spacing above the cards */
   overflow: hidden;
   width: 100%;
 }
@@ -239,10 +233,10 @@ body::before {
 /* === FIXED MARGIN AREA FOR DASHBOARD === */
 .dashboard-wrapper {
   margin-left: 180px;
-  margin-right: auto;
-  padding-right: 20px;
-  padding-left: 20px;
-  max-width: calc(100% - 180px);
+  margin-right: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  max-width: calc(100% - 200px);
   box-sizing: border-box;
 }
 
