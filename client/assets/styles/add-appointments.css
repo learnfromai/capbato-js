@@ -20,8 +20,8 @@ html, body {
   border-radius: 16px;
   padding: 30px;
   box-shadow: none;
-  overflow-y: auto;
-  max-height: 90vh;
+  overflow-y: visible;
+  max-height: 98vh;
   display: flex;
   flex-direction: column;
 }
