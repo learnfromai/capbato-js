@@ -61,6 +61,17 @@ document.getElementById("labRequestForm").addEventListener("submit", async funct
     others: form.querySelector('input[placeholder="Write here..."]').value
   };
 
+  // Validation: Check required patient details
+  if (!data.patient_name.trim()) {
+    showToast("Please enter patient's full name.", "error");
+    return;
+  }
+
+  if (!data.age_gender.trim()) {
+    showToast("Please enter patient's age and gender.", "error");
+    return;
+  }
+
   const testFieldMap = {
     "CBC with Platelet": "cbc_with_platelet",
     "Pregnancy Test": "pregnancy_test",
@@ -93,6 +104,8 @@ document.getElementById("labRequestForm").addEventListener("submit", async funct
   };
 
   const labels = form.querySelectorAll(".tests label");
+  let hasSelectedTest = false;
+  
   labels.forEach(label => {
     const checkbox = label.querySelector("input[type='checkbox']");
     const labelText = label.textContent.replace(/\(.*\)/, "").trim();
@@ -100,8 +113,17 @@ document.getElementById("labRequestForm").addEventListener("submit", async funct
     const field = testFieldMap[labelText];
     if (field) {
       data[field] = checkbox.checked ? "yes" : "no";
+      if (checkbox.checked) {
+        hasSelectedTest = true;
+      }
     }
   });
+
+  // Validation: Check if at least one lab test is selected
+  if (!hasSelectedTest) {
+    showToast("Please select at least one lab test.", "error");
+    return;
+  }
 
   try {
     const res = await fetch("http://localhost:3001/api/lab_requests", {
@@ -113,23 +135,30 @@ document.getElementById("labRequestForm").addEventListener("submit", async funct
     if (res.ok) {
       window.parent.postMessage({
         action: "closeLabOverlay",
+        actionType: "updateLabTable",
         toastMessage: "Lab request submitted successfully!"
       }, "*");
     } else {
       const errorText = await res.text();
       console.error("Server error:", errorText);
-      showToast("Something went wrong while submitting the form.");
+      showToast("Something went wrong while submitting the form.", "error");
     }
   } catch (err) {
     console.error("Error submitting form:", err);
-    showToast("Failed to submit form.");
+    showToast("Failed to submit form.", "error");
   }
 });
 
-function showToast(message, duration = 3000) {
+function showToast(message, type = "success", duration = 3000) {
   const toast = document.getElementById("labToast");
 
   if (!toast) return;
+
+  // Remove existing type classes
+  toast.classList.remove("error", "success");
+  
+  // Add the appropriate type class
+  toast.classList.add(type);
 
   toast.textContent = message;
   toast.classList.remove("hidden");
