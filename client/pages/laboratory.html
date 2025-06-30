@@ -15,9 +15,24 @@
       <img src="../assets/images/logo.png" alt="Logo" />
       <h1>M.G. Amores Medical Clinic</h1>
     </a>
-    <div class="user-info">
-      <div id="roleDisplay" class="role-display"></div>
-      <div id="usernameDisplay" class="username-display"></div>
+    <div class="user-info d-flex align-items-center gap-3">
+      <div class="text-end">
+        <div id="roleDisplay" class="role-display"></div>
+        <div id="usernameDisplay" class="username-display"></div>
+      </div>
+      <div class="profile-dropdown-container">
+        <div id="profileAvatar" class="profile-avatar"></div>
+        <div id="profileDropdown" class="profile-dropdown hidden">
+          <div class="dropdown-item" id="settingsOption">
+            <i class="fas fa-cog dropdown-icon"></i>
+            <span>Settings</span>
+          </div>
+          <div class="dropdown-item" id="logoutOption">
+            <i class="fas fa-sign-out-alt dropdown-icon"></i>
+            <span>Logout</span>
+          </div>
+        </div>
+      </div>
     </div>
   </nav>
 

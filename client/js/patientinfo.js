@@ -240,6 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const roleDisplay = document.getElementById("roleDisplay");
   const usernameDisplay = document.getElementById("usernameDisplay");
+  const profileAvatar = document.getElementById("profileAvatar");
 
   if (role && roleDisplay) {
     roleDisplay.textContent = role.toUpperCase();
@@ -247,5 +248,71 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (username && usernameDisplay) {
     usernameDisplay.textContent = username;
+  }
+
+  // Profile Avatar Setup
+  if (username && profileAvatar) {
+    const firstLetter = username.charAt(0).toUpperCase();
+    profileAvatar.textContent = firstLetter;
+    
+    // Generate random color based on username
+    const colors = [
+      '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57',
+      '#FF9FF3', '#54A0FF', '#5F27CD', '#00D2D3', '#FF9F43',
+      '#10AC84', '#EE5A6F', '#0ABDE3', '#006BA6', '#F79F1F',
+      '#A3CB38', '#FDA7DF', '#12CBC4', '#ED4C67', '#F79F1F'
+    ];
+    
+    // Use username hash to consistently assign same color
+    let hash = 0;
+    for (let i = 0; i < username.length; i++) {
+      hash = username.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const colorIndex = Math.abs(hash) % colors.length;
+    profileAvatar.style.backgroundColor = colors[colorIndex];
+  }
+
+  // Profile Dropdown Functionality
+  const profileDropdown = document.getElementById("profileDropdown");
+  const settingsOption = document.getElementById("settingsOption");
+  const logoutOption = document.getElementById("logoutOption");
+
+  // Toggle dropdown when avatar is clicked
+  if (profileAvatar && profileDropdown) {
+    profileAvatar.addEventListener("click", function(e) {
+      e.stopPropagation();
+      profileDropdown.classList.toggle("hidden");
+    });
+  }
+
+  // Close dropdown when clicking outside
+  document.addEventListener("click", function(e) {
+    if (profileDropdown && !profileDropdown.classList.contains("hidden")) {
+      profileDropdown.classList.add("hidden");
+    }
+  });
+
+  // Settings option click handler
+  if (settingsOption) {
+    settingsOption.addEventListener("click", function() {
+      profileDropdown.classList.add("hidden");
+      // TODO: Implement settings functionality
+      alert("Settings functionality coming soon!");
+    });
+  }
+
+  // Logout option click handler
+  if (logoutOption) {
+    logoutOption.addEventListener("click", function() {
+      profileDropdown.classList.add("hidden");
+      
+      // Clear localStorage
+      localStorage.removeItem("loggedInRole");
+      localStorage.removeItem("loggedInUsername");
+      localStorage.removeItem("isLoggedIn");
+      
+      // Redirect to login page
+      window.location.href = "login.html";
+    });
   }
 });
