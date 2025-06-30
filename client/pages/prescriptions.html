@@ -1,32 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Prescriptions</title>
-    <link rel="stylesheet" href="../assets/styles/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prescriptions</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/styles/prescriptions.css" />
 </head>
 <body>
-    <div class="container">
-        <img src="../assets/images/logo.png" alt="" class="logo">
-        <h2 class="title">M.G. AMORES MEDICAL CLINIC</h2>
+  <!-- Header -->
+  <nav class="navbar">
+    <a class="navbar-brand" href="#">
+      <img src="../assets/images/logo.png" alt="Logo" />
+      <h1>M.G. Amores Medical Clinic</h1>
+    </a>
+    <div class="ms-auto text-end">
+      <div id="roleDisplay" class="fw-bold text-primary"></div>
+      <div id="usernameDisplay" class="text-muted small"></div>
     </div>
+  </nav>
 
-    <div class="hover-area"></div>
-
-    <div class="sidebar">
+  <!-- Sidebar -->
+  <div class="sidebar">
     <button type="button" id="dashboardbtn">Dashboard</button>
     <button type="button" id="appointmentbtn">Appointments</button>
     <button type="button" id="patientbtn">Patients</button>
     <button type="button" id="laboratorybtn">Laboratory</button>
     <button type="button" id="prescriptionbtn">Prescriptions</button>
-    <button type="button" id="schedulebtn">Doctors</button> <!-- ✅ NEW -->
+    <button type="button" id="schedulebtn">Doctors</button>
   </div>
 
-    <div style="margin-left:220px; padding: 30px;">
-        <h2>Prescriptions Page</h2>
-        <p>Coming soon...</p>
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="prescriptions-header">
+      <h2 class="title-page">Prescriptions</h2>
+      <button id="addPrescriptionBtn" class="add-prescription-btn">+ Add Prescription</button>
     </div>
 
-    <script src="../js/prescriptions.js"></script>
+    <input type="text" id="searchInput" class="search-bar" placeholder="Search prescriptions...">
+
+    <table>
+      <thead>
+        <tr>
+          <th>Prescription ID</th>
+          <th>Patient Name</th>
+          <th>Doctor</th>
+          <th>Date Prescribed</th>
+          <th>Medications</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="prescriptionsTableBody">
+        <!-- Sample data - replace with dynamic content -->
+        <tr>
+          <td>P001</td>
+          <td>John Doe</td>
+          <td>Dr. Smith</td>
+          <td>2025-06-30</td>
+          <td>Amoxicillin 500mg</td>
+          <td><span class="badge bg-success">Active</span></td>
+          <td>
+            <button class="action-btn view-btn">View</button>
+            <button class="action-btn edit-btn">Edit</button>
+            <button class="action-btn delete-btn">Delete</button>
+          </td>
+        </tr>
+        <tr>
+          <td>P002</td>
+          <td>Jane Smith</td>
+          <td>Dr. Johnson</td>
+          <td>2025-06-29</td>
+          <td>Paracetamol 500mg, Ibuprofen 400mg</td>
+          <td><span class="badge bg-warning">Pending</span></td>
+          <td>
+            <button class="action-btn view-btn">View</button>
+            <button class="action-btn edit-btn">Edit</button>
+            <button class="action-btn delete-btn">Delete</button>
+          </td>
+        </tr>
+        <tr>
+          <td>P003</td>
+          <td>Mike Wilson</td>
+          <td>Dr. Brown</td>
+          <td>2025-06-28</td>
+          <td>Metformin 850mg</td>
+          <td><span class="badge bg-secondary">Completed</span></td>
+          <td>
+            <button class="action-btn view-btn">View</button>
+            <button class="action-btn edit-btn">Edit</button>
+            <button class="action-btn delete-btn">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Add Prescription Overlay -->
+  <div class="overlay" id="addPrescriptionOverlay">
+    <div class="iframe-container">
+      <button class="close-btn" id="closeAddPrescription">×</button>
+      <iframe id="addPrescriptionIframe"></iframe>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div id="confirmationModal" class="modal hidden">
+    <div class="modal-content">
+      <p id="confirmationText">Are you sure you want to delete this prescription?</p>
+      <div class="modal-buttons">
+        <button id="confirmYes" class="modal-btn yes-btn">Yes</button>
+        <button id="confirmNo" class="modal-btn no-btn">No</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastNotification" class="toast hidden">
+    <p id="toastMessage"></p>
+  </div>
+
+  <script src="../js/prescriptions.js"></script>
 </body>
 </html>

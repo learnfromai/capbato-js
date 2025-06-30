@@ -1,6 +1,7 @@
+/* === GLOBAL STYLES (match dashboard & other pages) === */
 body {
-  position: relative;
   min-height: 100vh;
+  position: relative;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(to bottom right, rgb(109, 174, 218), #4db6ac);
   padding-top: 100px;
@@ -13,6 +14,7 @@ body::before {
   top: 0;
   left: 0;
   width: 100%;
+  height: 100%;
   min-height: 100%;
   background: inherit;
   background-size: cover;
@@ -20,7 +22,7 @@ body::before {
   z-index: -1;
 }
 
-
+/* === HEADER === */
 .navbar {
   width: 100%;
   position: fixed;
@@ -56,16 +58,7 @@ body::before {
   margin: 0;
 }
 
-.hover-area {
-  position: fixed;
-  top: 100px;
-  left: 0;
-  width: 20px;
-  height: 100%;
-  z-index: 1000;
-  cursor: pointer;
-}
-
+/* === SIDEBAR === */
 .sidebar {
   position: fixed;
   top: 100px;
@@ -80,7 +73,6 @@ body::before {
   gap: 15px;
   z-index: 999;
 }
-
 
 .sidebar button {
   background-color: #4db6ac;
@@ -112,9 +104,16 @@ body::before {
   min-height: calc(100vh - 140px);
 }
 
+.title-page {
+  color: #0b4f6c;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0;
+}
 
-
-.patients-header {
+/* === PRESCRIPTIONS SPECIFIC STYLES === */
+.prescriptions-header {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -122,18 +121,26 @@ body::before {
   position: relative;
 }
 
-.patients-header .add-new-patient-btn {
+.prescriptions-header .add-prescription-btn {
   position: absolute;
   right: 0;
 }
 
-.title-page {
-  color: #0b4f6c;
-  font-size: 28px;
+.add-prescription-btn {
+  background-color: #4db6ac;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 15px;
   font-weight: bold;
-  margin: 0;
-  flex-grow: 1;
-  text-align: center;
+  box-shadow: 0 4px 8px rgba(77, 182, 172, 0.3);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.add-prescription-btn:hover {
+  background-color: #3ba69c;
+  transform: scale(1.05);
 }
 
 .search-bar {
@@ -151,23 +158,7 @@ body::before {
   border-color: #4db6ac;
 }
 
-.add-new-patient-btn {
-  background-color: #4db6ac;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 20px;
-  font-size: 15px;
-  font-weight: bold;
-  box-shadow: 0 4px 8px rgba(77, 182, 172, 0.3);
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.add-new-patient-btn:hover {
-  background-color: #3ba69c;
-  transform: scale(1.05);
-}
-
+/* === TABLE STYLES === */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -181,13 +172,13 @@ th, td {
   padding: 14px;
   text-align: center;
   border-bottom: 1px solid #ddd;
-  border-right: 1px solid #ddd; /* 🔹 Add vertical divider */
+  border-right: 1px solid #ddd;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* 🔹 Remove right border from last column */
+/* Remove right border from last column */
 th:last-child,
 td:last-child {
   border-right: none;
@@ -199,12 +190,12 @@ th {
   font-weight: 600;
 }
 
-th:nth-child(1), td:nth-child(1) { width: 30%; }
-th:nth-child(2), td:nth-child(2) { width: 70%; }
+td {
+  font-size: 14px;
+}
 
-td:nth-child(2) {
-  white-space: normal;
-  word-wrap: break-word;
+tbody tr:hover {
+  background-color: #f8f9fa;
 }
 
 /* === Actions column specific styling === */
@@ -215,7 +206,7 @@ td:last-child {
   padding: 10px 8px;
 }
 
-/* === Action buttons === */
+/* === BUTTONS === */
 .action-btn {
   padding: 6px 12px;
   border: none;
@@ -257,30 +248,50 @@ td:last-child {
   background-color: #c82333;
 }
 
+/* === OVERLAY STYLES === */
 .overlay {
-  display: none;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
+  display: none;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 2000;
 }
 
 .iframe-container {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 50%;
-  max-width: 600px;
-  height: 80vh;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: relative;
-  display: flex;
-  flex-direction: column;
+  width: 90%;
+  max-width: 800px;
+  height: 80%;
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 2001;
+  transition: background-color 0.3s ease;
+}
+
+.close-btn:hover {
+  background: #c82333;
 }
 
 .iframe-container iframe {
@@ -289,27 +300,114 @@ td:last-child {
   border: none;
 }
 
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: red;
-  color: white;
+/* === MODAL STYLES === */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  width: 90%;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.modal-btn {
+  padding: 10px 20px;
   border: none;
-  padding: 5px 10px;
+  border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
-  border-radius: 50%;
+  transition: all 0.3s ease;
 }
 
-.close-btn:hover {
-  background: darkred;
+.yes-btn {
+  background-color: #28a745;
+  color: white;
 }
 
-.patient-link {
-  color: black;
-  text-decoration: none;
+.yes-btn:hover {
+  background-color: #218838;
 }
 
-.patient-link:hover {
-  color: gray;
+.no-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.no-btn:hover {
+  background-color: #5a6268;
+}
+
+/* === TOAST NOTIFICATION === */
+.toast {
+  position: fixed;
+  top: 120px;
+  right: 20px;
+  background: #28a745;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  z-index: 4000;
+  transition: all 0.3s ease;
+}
+
+.toast.hidden {
+  display: none;
+}
+
+.toast.error {
+  background: #dc3545;
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 768px) {
+  .main-content {
+    width: calc(100% - 40px);
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .sidebar.active {
+    transform: translateX(0);
+  }
+  
+  .prescriptions-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+  
+  .search-bar {
+    max-width: 100%;
+  }
 }

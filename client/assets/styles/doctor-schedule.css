@@ -1,10 +1,25 @@
 /* === PAGE BACKGROUND === */
 body {
-  background: linear-gradient(to bottom right, #6daed9, #4db6ac);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   min-height: 100vh;
-  padding-top: 120px;
+  position: relative;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to bottom right, rgb(109, 174, 218), #4db6ac);
+  padding-top: 100px;
   margin: 0;
+}
+
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  background: inherit;
+  background-size: cover;
+  filter: blur(10px);
+  z-index: -1;
 }
 
 /* === NAVBAR === */
@@ -17,7 +32,7 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
-  z-index: 999;
+  z-index: 1000;
 }
 
 .navbar-brand {
@@ -41,16 +56,6 @@ body {
 }
 
 /* === SIDEBAR === */
-.hover-area {
-  position: fixed;
-  top: 100px;
-  left: 0;
-  width: 20px;
-  height: 100%;
-  z-index: 1000;
-  cursor: pointer;
-}
-
 .sidebar {
   position: fixed;
   top: 100px;
@@ -96,14 +101,7 @@ h2 {
 }
 
 .calendar-container {
-  background-color: white;
-  padding: 25px;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  max-width: 1100px;
-  margin: 0 auto;
-  margin-left: calc(160px + 20px);
-  margin-right: 20px;
+  margin-top: 30px;
 }
 
 
@@ -217,15 +215,7 @@ h2 {
 
 /* === DOCTORS CONTAINER === */
 .doctors-container {
-  background: white;
-  border-radius: 16px;
-  padding: 25px;
-  margin: 0 auto 30px auto;
-  max-width: 1100px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  margin-left: calc(160px + 20px);
-  margin-right: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 35px;
 }
 
 .doctors-header {
@@ -234,8 +224,9 @@ h2 {
 }
 
 .doctors-header h2 {
-  color: #0047ab;
-  font-weight: 600;
+  color: #0b4f6c;
+  font-size: 28px;
+  font-weight: bold;
   margin: 0;
 }
 
@@ -294,6 +285,26 @@ h2 {
 .doctors-table th:nth-child(3),
 .doctors-table td:nth-child(3) {
   width: 25%;
+}
+
+/* === MAIN CONTENT === */
+.main-content {
+  width: calc(100% - 200px);
+  margin-left: 180px;
+  margin-right: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  min-height: calc(100vh - 140px);
+}
+
+.title-page {
+  color: #0b4f6c;
+  font-size: 28px;
+  font-weight: bold;
 }
 
 /* === RESPONSIVE DESIGN === */
