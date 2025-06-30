@@ -1,7 +1,7 @@
 import db from '../config/db.js';
 import { validateContactNumbers, sanitizePhoneNumber } from '../utils/phoneValidation.js';
 
-export function getPatientById(req, res) {
+export async function getPatientById(req, res) {
   const patientId = req.params.id;
 
   const sql = `
@@ -13,10 +13,8 @@ export function getPatientById(req, res) {
     WHERE PatientID = ?
   `;
 
-  db.query(sql, [patientId], (err, result) => {
-    if (err) {
-      return res.status(500).json({ error: 'Database error', details: err });
-    }
+  try {
+    const [result] = await db.query(sql, [patientId]);
 
     if (result.length === 0) {
       return res.status(404).json({ error: 'Patient not found' });
@@ -31,10 +29,13 @@ export function getPatientById(req, res) {
     }
 
     res.json(patient);
-  });
+  } catch (error) {
+    console.error('❌ Error fetching patient by ID:', error.message);
+    res.status(500).json({ error: 'Database error', details: error.message });
+  }
 }
 
-export function getPatients(req, res) {
+export async function getPatients(req, res) {
   const sql = `
     SELECT 
       PatientID,
@@ -46,25 +47,26 @@ export function getPatients(req, res) {
     ORDER BY LastName ASC;
   `;
 
-  db.query(sql, (err, result) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-    } else {
-      // Optionally capitalize names here if not done in DB
-      const formatted = result.map((p) => ({
-        ...p,
-        FirstName: (p.FirstName || "").toUpperCase(),
-        MiddleName: (p.MiddleName || "").toUpperCase(),
-        LastName: (p.LastName || "").toUpperCase(),
-      }));
+  try {
+    const [result] = await db.query(sql);
+    
+    // Optionally capitalize names here if not done in DB
+    const formatted = result.map((p) => ({
+      ...p,
+      FirstName: (p.FirstName || "").toUpperCase(),
+      MiddleName: (p.MiddleName || "").toUpperCase(),
+      LastName: (p.LastName || "").toUpperCase(),
+    }));
 
-      res.json(formatted);
-    }
-  });
+    res.json(formatted);
+  } catch (error) {
+    console.error('❌ Error fetching patients:', error.message);
+    res.status(500).json({ error: error.message });
+  }
 }
 
 
-export function addPatient(req, res) {
+export async function addPatient(req, res) {
   console.log("🟡 Backend Received Data:", req.body);
 
   const {
@@ -102,18 +104,15 @@ export function addPatient(req, res) {
 
   const firstLetter = (lastname || '')[0].toUpperCase();
 
-  const countSql = `
-    SELECT COUNT(*) AS count
-    FROM patients
-    WHERE PatientID LIKE '${firstLetter}%'
-  `;
+  try {
+    // Generate PatientID
+    const countSql = `
+      SELECT COUNT(*) AS count
+      FROM patients
+      WHERE PatientID LIKE '${firstLetter}%'
+    `;
 
-  db.query(countSql, (err, countResult) => {
-    if (err) {
-      console.error("🔴 Error generating PatientID:", err);
-      return res.status(500).json({ error: "Failed to generate PatientID" });
-    }
-
+    const [countResult] = await db.query(countSql);
     const count = countResult[0].count + 1;
     const patientId = `${firstLetter}${count}`;
 
@@ -141,31 +140,29 @@ export function addPatient(req, res) {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
-    db.query(sql, patientData, (err, result) => {
-      if (err) {
-        console.error("🔴 Error inserting patient:", err);
-        return res.status(500).json({ error: "Failed to add patient", details: err });
-      } else {
-        console.log("✅ New patient added successfully!");
-        res.json({ message: "Patient added successfully!", patient_id: patientId });
-      }
-    });
-  });
+    await db.query(sql, patientData);
+    console.log("✅ New patient added successfully!");
+    res.json({ message: "Patient added successfully!", patient_id: patientId });
+
+  } catch (error) {
+    console.error("❌ Error adding patient:", error.message);
+    res.status(500).json({ error: "Failed to add patient", details: error.message });
+  }
 }
 
-export function getTotalPatients(req, res) {
+export async function getTotalPatients(req, res) {
   const sql = `SELECT COUNT(*) AS total FROM patients`;
 
-  db.query(sql, (err, result) => {
-    if (err) {
-      return res.status(500).json({ error: 'Database error', details: err });
-    }
-
+  try {
+    const [result] = await db.query(sql);
     res.json({ total: result[0].total });
-  });
+  } catch (error) {
+    console.error('❌ Error fetching total patients:', error.message);
+    res.status(500).json({ error: 'Database error', details: error.message });
+  }
 }
 
-export function searchPatients(req, res) {
+export async function searchPatients(req, res) {
   const name = req.query.name;
   if (!name) return res.status(400).json({ error: "Name query required" });
 
@@ -182,8 +179,8 @@ export function searchPatients(req, res) {
 
   const wildcard = `%${name}%`;
 
-  db.query(sql, [wildcard, wildcard, wildcard], (err, results) => {
-    if (err) return res.status(500).json({ error: "DB error", details: err });
+  try {
+    const [results] = await db.query(sql, [wildcard, wildcard, wildcard]);
 
     const formatted = results.map(p => ({
       ...p,
@@ -192,5 +189,8 @@ export function searchPatients(req, res) {
     }));
 
     res.json(formatted);
-  });
+  } catch (error) {
+    console.error('❌ Error searching patients:', error.message);
+    res.status(500).json({ error: "DB error", details: error.message });
+  }
 }

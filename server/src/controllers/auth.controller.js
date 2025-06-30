@@ -14,16 +14,15 @@ export async function register(req, res) {
     const sql =
       'INSERT INTO users (role, full_name, username, password, email) VALUES (?, ?, ?, ?, ?)'
     
-    db.query(sql, [role, fullName, username, hashedPassword, email], (err, result) => {
-      if (err) {
-        console.error("Error inserting user:", err)
-        return res.status(400).json({ message: 'Username or Email already exists' })
-      }
-      res.status(201).json({ message: 'Account created successfully' })
-    })
+    await db.query(sql, [role, fullName, username, hashedPassword, email]);
+    res.status(201).json({ message: 'Account created successfully' });
   } catch (error) {
-    console.error("Server Error:", error)
-    res.status(500).json({ message: 'Server error' })
+    console.error("❌ Error registering user:", error.message);
+    if (error.code === 'ER_DUP_ENTRY') {
+      res.status(400).json({ message: 'Username or Email already exists' });
+    } else {
+      res.status(500).json({ message: 'Server error' });
+    }
   }
 }
 
@@ -35,9 +34,11 @@ export async function login(req, res) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
-  const sql = "SELECT * FROM users WHERE username = ?";
-  db.query(sql, [username], async (err, results) => {
-    if (err || results.length === 0) {
+  try {
+    const sql = "SELECT * FROM users WHERE username = ?";
+    const [results] = await db.query(sql, [username]);
+
+    if (results.length === 0) {
       return res.status(400).json({ message: "User not found" });
     }
 
@@ -49,6 +50,9 @@ export async function login(req, res) {
     }
 
     res.status(200).json({ message: "Login successful", role: user.role });
-  });
+  } catch (error) {
+    console.error("❌ Error during login:", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
 }
 

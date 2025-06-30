@@ -1,9 +1,12 @@
 import db from '../config/db.js';
 
-export function getDoctors(req, res) {
+export async function getDoctors(req, res) {
   const query = `SELECT DoctorID, FirstName, LastName, Specialization, ContactNumber FROM doctors`;
-  db.query(query, (err, results) => {
-    if (err) return res.status(500).json({ error: 'Database error' });
+  try {
+    const [results] = await db.query(query);
     res.json(results);
-  });
+  } catch (error) {
+    console.error('❌ Error fetching doctors:', error.message);
+    res.status(500).json({ error: 'Database error' });
+  }
 }

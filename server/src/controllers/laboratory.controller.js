@@ -88,16 +88,11 @@ export const getLabRequests = async (req, res) => {
       FROM lab_request_entries
     `;
 
-    db.query(query, (err, results) => {
-      if (err) {
-        console.error("❌ Error fetching lab requests:", err.message);
-        return res.status(500).json({ error: "Failed to fetch lab requests" });
-      }
-      res.json(results);
-    });
+    const [results] = await db.query(query);
+    res.json(results);
   } catch (error) {
-    console.error("❌ Server error:", error.message);
-    res.status(500).json({ error: "Server failure" });
+    console.error("❌ Error fetching lab requests:", error.message);
+    res.status(500).json({ error: "Failed to fetch lab requests" });
   }
 };
 
@@ -187,7 +182,7 @@ export const updateLabRequestResults = async (req, res) => {
 
 
 // ✅ Get Most Recent Lab Request by Patient ID
-export const getLabRequestById = (req, res) => {
+export const getLabRequestById = async (req, res) => {
   const { patientId } = req.params;
   const sql = `
     SELECT * FROM lab_request_entries
@@ -196,16 +191,16 @@ export const getLabRequestById = (req, res) => {
     LIMIT 1
   `;
 
-  db.query(sql, [patientId], (err, results) => {
-    if (err) {
-      console.error("❌ Fetch error:", err.message);
-      return res.status(500).json({ error: "Server error" });
-    }
-
+  try {
+    const [results] = await db.query(sql, [patientId]);
+    
     if (!results || results.length === 0) {
       return res.status(404).json({ error: "Not found" });
     }
 
     res.json(results[0]);
-  });
+  } catch (error) {
+    console.error("❌ Fetch error:", error.message);
+    res.status(500).json({ error: "Server error" });
+  }
 };
