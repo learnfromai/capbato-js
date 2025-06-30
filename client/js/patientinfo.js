@@ -230,6 +230,9 @@ document.getElementById("laboratorybtn").addEventListener("click", () => {
 document.getElementById("prescriptionbtn").addEventListener("click", () => {
   window.location.href = "prescriptions.html";
 });
+document.getElementById("schedulebtn").addEventListener("click", () => {
+  window.location.href = "doctor-schedule.html";
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   const role = localStorage.getItem("loggedInRole");
