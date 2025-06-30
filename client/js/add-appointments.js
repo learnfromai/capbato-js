@@ -378,6 +378,13 @@ document.getElementById("addAppointmentForm").addEventListener("submit", async f
 window.addEventListener("message", function (event) {
   if (event.data && event.data.type === "editAppointment") {
     const app = event.data.data;
+    
+    // Update form title and button for edit mode
+    const formTitle = document.getElementById("formTitle");
+    const submitBtn = document.getElementById("submitBtn");
+    if (formTitle) formTitle.textContent = "Update Appointment";
+    if (submitBtn) submitBtn.textContent = "Update Appointment";
+    
     patientInput.value = app.patient_name;
     document.getElementById("visitType").value = app.reason_for_visit;
     document.getElementById("date").value = app.appointment_date;
@@ -400,6 +407,12 @@ window.addEventListener("message", function (event) {
     const form = document.getElementById("addAppointmentForm");
     form.reset();
     delete form.dataset.editId;
+
+    // Reset form title and button for add mode
+    const formTitle = document.getElementById("formTitle");
+    const submitBtn = document.getElementById("submitBtn");
+    if (formTitle) formTitle.textContent = "Add Appointment";
+    if (submitBtn) submitBtn.textContent = "Add Appointment";
 
     hiddenPatientIdInput.value = "";
     patientIdDisplay.textContent = "";
