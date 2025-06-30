@@ -165,6 +165,18 @@ body {
   transition: opacity 0.3s ease;
 }
 
+.lab-toast.error {
+  background-color: #dc3545;
+  border: 2px solid #b02a37;
+  color: white;
+}
+
+.lab-toast.success {
+  background-color: #28a745;
+  border: 2px solid #1e7e34;
+  color: white;
+}
+
 .lab-toast.show {
   opacity: 1;
 }

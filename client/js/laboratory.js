@@ -183,10 +183,29 @@ function renderLabResults(labResults) {
     const formattedName = formatFullName(entry.patient_name);
     const row = document.createElement("tr");
 
-    // Get the status - prefer from tests, fallback to original status, then "Pending"
+    // Determine overall status: "Pending" if ANY test is pending, otherwise use the most recent status
     let displayStatus = "Pending";
     if (entry.tests && entry.tests.length > 0) {
-      displayStatus = entry.tests[entry.tests.length - 1]?.status || "Pending";
+      // Check if any test has "Pending" status
+      const hasPendingTest = entry.tests.some(test => 
+        test.status && test.status.toLowerCase().includes("pending")
+      );
+      
+      if (hasPendingTest) {
+        displayStatus = "Pending";
+      } else {
+        // If no tests are pending, check if all are complete
+        const allComplete = entry.tests.every(test => 
+          test.status && test.status.toLowerCase().includes("complete")
+        );
+        
+        if (allComplete) {
+          displayStatus = "Complete";
+        } else {
+          // Mixed statuses - use the most recent test status
+          displayStatus = entry.tests[entry.tests.length - 1]?.status || "Pending";
+        }
+      }
     } else if (entry.originalStatus) {
       displayStatus = entry.originalStatus;
     }
