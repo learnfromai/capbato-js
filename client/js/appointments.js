@@ -122,6 +122,29 @@ function loadAppointmentsByDate(date = null) {
         .then(response => response.json())
         .then(data => {
             let filteredAppointments = data.filter(appointment => appointment.appointment_date === selectedDate);
+            
+            // If viewing today's appointments, filter out past appointments
+            const today = new Date().toISOString().split("T")[0];
+            if (selectedDate === today) {
+                const currentTime = new Date();
+                const currentHour = currentTime.getHours();
+                const currentMinute = currentTime.getMinutes();
+                
+                filteredAppointments = filteredAppointments.filter(appointment => {
+                    const [appointmentHour, appointmentMinute] = appointment.appointment_time.split(':').map(num => parseInt(num, 10));
+                    
+                    // Keep appointment if it's in the future
+                    if (appointmentHour > currentHour) {
+                        return true;
+                    } else if (appointmentHour === currentHour && appointmentMinute > currentMinute) {
+                        return true;
+                    }
+                    
+                    // Filter out past appointments
+                    return false;
+                });
+            }
+            
             updateAppointmentsTable(filteredAppointments);
         })
         .catch(error => {
@@ -137,11 +160,21 @@ function updateAppointmentsTable(appointments) {
 
     const confirmed = appointments.filter(a => a.status === "Confirmed").length;
     const cancelled = appointments.filter(a => a.status === "Cancelled").length;
-    document.getElementById("appointmentCount").textContent =
-        `Total Appointments: ${appointments.length} (${confirmed} Confirmed, ${cancelled} Cancelled)`;
+    
+    // Check if we're viewing today's appointments to show filtered message
+    const selectedDate = document.getElementById("appointmentDate").value;
+    const today = new Date().toISOString().split("T")[0];
+    const isToday = selectedDate === today;
+    
+    let countText = `Total Appointments: ${appointments.length} (${confirmed} Confirmed, ${cancelled} Cancelled)`;
+    
+    document.getElementById("appointmentCount").textContent = countText;
 
     if (!appointments || appointments.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No appointments found.</td></tr>`;
+        const noAppointmentsMessage = isToday ? 
+            "No upcoming appointments for today." : 
+            "No appointments found.";
+        tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center;">${noAppointmentsMessage}</td></tr>`;
         return;
     }
 
