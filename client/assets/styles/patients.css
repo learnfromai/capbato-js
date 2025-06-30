@@ -138,7 +138,7 @@ body::before {
 
 
 .search-bar {
-  width: 50%;
+  width: 100%;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
@@ -173,7 +173,7 @@ body::before {
 }
 
 table {
-  width: 50%;
+  width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
   border-radius: 10px;
