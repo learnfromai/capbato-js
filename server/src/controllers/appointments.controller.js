@@ -1,4 +1,5 @@
 import db from '../config/db.js';
+import { validatePhilippineMobile } from '../utils/phoneValidation.js';
 
 export async function getAppointments(req, res) {
   const query = `
@@ -83,6 +84,11 @@ export async function addAppointment(req, res) {
     }
 
     const contact_number = result[0].ContactNumber || result[0].contact_number || '';
+
+    // Validate the contact number format from database
+    if (contact_number && !validatePhilippineMobile(contact_number)) {
+      console.warn(`Invalid contact number format found in database for patient ${patient_id}: ${contact_number}`);
+    }
 
     const duplicateCheckQuery = `
       SELECT COUNT(*) AS count
@@ -174,6 +180,11 @@ export async function updateAppointment(req, res) {
     }
 
     const contact_number = patientResult.length > 0 ? patientResult[0].ContactNumber : '';
+
+    // Validate the contact number format from database
+    if (contact_number && !validatePhilippineMobile(contact_number)) {
+      console.warn(`Invalid contact number format found in database for patient ${patient_id}: ${contact_number}`);
+    }
 
     const duplicateCheckQuery = `
       SELECT COUNT(*) AS count

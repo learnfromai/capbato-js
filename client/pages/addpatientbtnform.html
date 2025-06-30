@@ -45,7 +45,7 @@
           </div>
           <div class="form-group">
             <label for="contact">Contact Number:</label>
-            <input type="tel" id="contact" required />
+            <input type="tel" id="contact" pattern="09[0-9]{9}" placeholder="09278479061" maxlength="11" required />
           </div>
         </div>
 
@@ -80,7 +80,7 @@
 
           <div class="form-group">
             <label for="guardian_contact">Contact Number:</label>
-            <input type="tel" id="guardian_contact" required />
+            <input type="tel" id="guardian_contact" pattern="09[0-9]{9}" placeholder="09278479061" maxlength="11" required />
           </div>
         </div>
 
@@ -94,6 +94,7 @@
     </form>
   </div>
 
+  <script src="../js/phone-validation.js"></script>
   <script src="../js/addpatientbtnform.js"></script>
 </body>
 </html>

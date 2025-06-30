@@ -1,9 +1,25 @@
+document.addEventListener('DOMContentLoaded', function() {
+  const contactInput = document.getElementById('contact');
+  const guardianContactInput = document.getElementById('guardian_contact');
+  
+  // Setup phone validation using utility functions
+  setupPhoneValidation(contactInput);
+  setupPhoneValidation(guardianContactInput);
+});
+
 document.getElementById("patientFormFields").addEventListener("submit", function (event) {
   event.preventDefault();
 
   const lastname = document.getElementById("lastname").value.trim();
   if (!lastname) {
     alert("Last name is required.");
+    return;
+  }
+
+  // Validate all phone inputs using utility function
+  const phoneErrors = validateAllPhoneInputs(this);
+  if (phoneErrors.length > 0) {
+    alert(phoneErrors.join('\n'));
     return;
   }
 

@@ -1,4 +1,5 @@
 import db from '../config/db.js';
+import { validateContactNumbers, sanitizePhoneNumber } from '../utils/phoneValidation.js';
 
 export function getPatientById(req, res) {
   const patientId = req.params.id;
@@ -82,6 +83,23 @@ export function addPatient(req, res) {
     guardian_address
   } = req.body;
 
+  // Validate contact numbers
+  const contactValidationErrors = validateContactNumbers({
+    'Patient contact number': contact,
+    'Guardian contact number': guardian_contact
+  });
+
+  if (contactValidationErrors.length > 0) {
+    return res.status(400).json({ 
+      error: 'Invalid contact number format', 
+      details: contactValidationErrors 
+    });
+  }
+
+  // Sanitize contact numbers
+  const sanitizedContact = sanitizePhoneNumber(contact);
+  const sanitizedGuardianContact = sanitizePhoneNumber(guardian_contact);
+
   const firstLetter = (lastname || '')[0].toUpperCase();
 
   const countSql = `
@@ -107,12 +125,12 @@ export function addPatient(req, res) {
       dob,
       age,
       (gender || '').toUpperCase(),
-      contact,
+      sanitizedContact,
       (address || '').toUpperCase(),
       (guardian_name || '').toUpperCase(),
       (guardian_gender || '').toUpperCase(),
       (guardian_relationship || '').toUpperCase(),
-      guardian_contact,
+      sanitizedGuardianContact,
       (guardian_address || '').toUpperCase()
     ];
 
