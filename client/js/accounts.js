@@ -145,6 +145,11 @@ document.addEventListener('DOMContentLoaded', function() {
       const role = document.getElementById('roleInput').value;
       const email = document.getElementById('emailInput').value.trim();
       const phone = document.getElementById('phoneInput').value.trim();
+      // Phone validation: must start with 09 and be 11 digits
+      if (!/^09\d{9}$/.test(phone)) {
+        errorDiv.textContent = 'Phone number must start with 09 and be exactly 11 digits.';
+        return;
+      }
       if (!full_name || !username || !password || !role || !email) {
         errorDiv.textContent = 'All fields except phone are required.';
         return;

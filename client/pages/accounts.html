@@ -124,7 +124,7 @@
               </div>
               <div class="mb-3">
                 <label for="phoneInput" class="form-label">Phone</label>
-                <input type="text" class="form-control" id="phoneInput" />
+                <input type="text" class="form-control" id="phoneInput" maxlength="11" pattern="09[0-9]{9}" title="Phone number must start with 09 and be 11 digits" inputmode="numeric" />
               </div>
               <button type="submit" class="add-new-patient-btn modal-submit">Create Account</button>
               <div id="createAccountError" class="modal-error"></div>

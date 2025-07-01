@@ -1,27 +1,23 @@
 // ✅ index.js (Updated): Dashboard shows Doctor, Current Patient, Total Appointments only
 
 document.addEventListener("DOMContentLoaded", () => {
-  const role = localStorage.getItem("loggedInRole");
-  const username = localStorage.getItem("loggedInUsername");
 
+  // Robust role/username/profile avatar display (matches medical-certificate.js logic)
   const roleDisplay = document.getElementById("roleDisplay");
   const usernameDisplay = document.getElementById("usernameDisplay");
   const profileAvatar = document.getElementById("profileAvatar");
-
-  if (role && roleDisplay) {
-    roleDisplay.textContent = role.toUpperCase();
+  let loggedInRole = localStorage.getItem('loggedInRole') || sessionStorage.getItem('loggedInRole');
+  let loggedInUsername = localStorage.getItem('loggedInUsername') || sessionStorage.getItem('loggedInUsername');
+  if (roleDisplay && loggedInRole) {
+    roleDisplay.textContent = loggedInRole.charAt(0).toUpperCase() + loggedInRole.slice(1);
     roleDisplay.classList.add("ms-auto");
   }
-
-  if (username && usernameDisplay) {
-    usernameDisplay.textContent = username;
+  if (usernameDisplay && loggedInUsername) {
+    usernameDisplay.textContent = loggedInUsername;
   }
-
-  // Profile Avatar Setup
-  if (username && profileAvatar) {
-    const firstLetter = username.charAt(0).toUpperCase();
-    profileAvatar.textContent = firstLetter;
-    
+  if (profileAvatar && loggedInUsername) {
+    const initials = loggedInUsername.split(' ').map(n => n[0]).join('').toUpperCase();
+    profileAvatar.textContent = initials;
     // Generate random color based on username
     const colors = [
       '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57',
@@ -29,11 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
       '#10AC84', '#EE5A6F', '#0ABDE3', '#006BA6', '#F79F1F',
       '#A3CB38', '#FDA7DF', '#12CBC4', '#ED4C67', '#F79F1F'
     ];
-    
-    // Use username hash to consistently assign same color
     let hash = 0;
-    for (let i = 0; i < username.length; i++) {
-      hash = username.charCodeAt(i) + ((hash << 5) - hash);
+    for (let i = 0; i < loggedInUsername.length; i++) {
+      hash = loggedInUsername.charCodeAt(i) + ((hash << 5) - hash);
     }
     const colorIndex = Math.abs(hash) % colors.length;
     profileAvatar.style.backgroundColor = colors[colorIndex];
@@ -83,25 +77,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const buttons = {
-    patientbtn: "patients.html",
-    dashboardbtn: "index.html",
-    appointmentbtn: "appointments.html",
-    laboratorybtn: "laboratory.html",
-    prescriptionbtn: "prescriptions.html",
-    schedulebtn: "doctor-schedule.html"
-  };
-
-  // Add Accounts button for admin
-  if (role && role.toLowerCase() === 'admin') {
-    buttons.accountsbtn = "accounts.html";
+  // Sidebar navigation for all static HTML pages (no extra JS file needed)
+  const sidebarLinks = [
+    { id: 'dashboardbtn', page: 'index.html' },
+    { id: 'appointmentbtn', page: 'appointments.html' },
+    { id: 'patientbtn', page: 'patients.html' },
+    { id: 'laboratorybtn', page: 'laboratory.html' },
+    { id: 'prescriptionbtn', page: 'prescriptions.html' },
+    { id: 'schedulebtn', page: 'doctor-schedule.html' }
+  ];
+  if (loggedInRole && loggedInRole.toLowerCase() === 'admin') {
+    sidebarLinks.push({ id: 'accountsbtn', page: 'accounts.html' });
   }
-
-  Object.entries(buttons).forEach(([id, url]) => {
-    const btn = document.getElementById(id);
-    if (btn) {
-      btn.addEventListener("click", () => {
-        window.location.href = url;
+  sidebarLinks.forEach(link => {
+    const el = document.getElementById(link.id);
+    if (el) {
+      el.style.cursor = 'pointer';
+      el.addEventListener('click', () => {
+        window.location.href = link.page;
       });
     }
   });
