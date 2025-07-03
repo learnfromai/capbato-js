@@ -4,6 +4,7 @@ dotenv.config()
 import express from 'express';
 import cors from 'cors';
 import db from './config/db.js';
+import { swaggerUi, specs } from './config/swagger.js';
 
 import patientRoutes from './routes/patients.routes.js';
 import indexRoutes from './routes/index.routes.js';
@@ -37,6 +38,13 @@ db.getConnection((err, connection) => {
   }
 });
 
+// Swagger Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
+  explorer: true,
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'Clinic Management System API Documentation'
+}));
+
 // API Routes
 app.use('/', indexRoutes);
 app.use('/patients', patientRoutes);
@@ -67,4 +75,5 @@ app.use((err, req, res, next) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
+  console.log(`📚 API Documentation available at http://localhost:${PORT}/api-docs`);
 });
