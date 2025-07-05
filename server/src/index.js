@@ -29,14 +29,15 @@ app.use((req, res, next) => {
 });
 
 // Test DB connection
-db.getConnection((err, connection) => {
-  if (err) {
-    console.error('Database connection failed:', err);
-  } else {
+(async () => {
+  try {
+    const connection = await db.getConnection();
     console.log('Connected to MySQL database');
     connection.release();
+  } catch (err) {
+    console.error('Database connection failed:', err);
   }
-});
+})();
 
 // Swagger Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
