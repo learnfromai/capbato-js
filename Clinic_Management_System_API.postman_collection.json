@@ -29,7 +29,24 @@
               "host": ["{{baseUrl}}"],
               "path": [""]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains welcome message\", function () {",
+                  "    pm.expect(pm.response.text()).to.include(\"Welcome to the Clinic Management System API!\");",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "API Status Check",
@@ -41,7 +58,30 @@
               "host": ["{{baseUrl}}"],
               "path": ["api"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is JSON\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains API status message\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    pm.expect(jsonData.message).to.equal('API is running!');",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -60,14 +100,47 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"johndoe\",\n  \"password\": \"password123\",\n  \"email\": \"john.doe@example.com\",\n  \"role\": \"doctor\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\"\n}"
+              "raw": "{\n  \"role\": \"doctor\",\n  \"username\": \"testdoctor{{$randomInt}}\",\n  \"password\": \"password123\",\n  \"fullName\": \"Dr. John Test\",\n  \"email\": \"testdoctor{{$randomInt}}@example.com\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/auth/register",
               "host": ["{{baseUrl}}"],
               "path": ["auth", "register"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains success message\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    pm.expect(jsonData.message).to.equal('Account created successfully');",
+                  "});",
+                  "",
+                  "pm.test(\"Registration requires all fields\", function () {",
+                  "    const requestBody = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect(requestBody).to.have.property('role');",
+                  "    pm.expect(requestBody).to.have.property('username');",
+                  "    pm.expect(requestBody).to.have.property('password');",
+                  "    pm.expect(requestBody).to.have.property('fullName');",
+                  "    pm.expect(requestBody).to.have.property('email');",
+                  "});",
+                  "",
+                  "pm.test(\"Valid role values\", function () {",
+                  "    const requestBody = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect(['admin', 'receptionist', 'doctor']).to.include(requestBody.role);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Login User",
@@ -81,14 +154,79 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"johndoe\",\n  \"password\": \"password123\"\n}"
+              "raw": "{\n  \"username\": \"anjeladepanes\",\n  \"password\": \"password123\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/auth/login",
               "host": ["{{baseUrl}}"],
               "path": ["auth", "login"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains login success message\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    pm.expect(jsonData.message).to.equal('Login successful');",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains user role\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('role');",
+                  "    pm.expect(['admin', 'receptionist', 'doctor']).to.include(jsonData.role);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login with Invalid Credentials",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"nonexistentuser\",\n  \"password\": \"wrongpassword\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains error message\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    pm.expect(['User not found', 'Invalid password']).to.include(jsonData.message);",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -105,7 +243,35 @@
               "host": ["{{baseUrl}}"],
               "path": ["users"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Each user has required fields\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.length > 0) {",
+                  "        const user = jsonData[0];",
+                  "        pm.expect(user).to.have.property('id');",
+                  "        pm.expect(user).to.have.property('full_name');",
+                  "        pm.expect(user).to.have.property('role');",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Create User",
@@ -119,14 +285,42 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"janedoe\",\n  \"password\": \"password123\",\n  \"email\": \"jane.doe@example.com\",\n  \"role\": \"receptionist\",\n  \"first_name\": \"Jane\",\n  \"last_name\": \"Doe\"\n}"
+              "raw": "{\n  \"full_name\": \"Jane Doe\",\n  \"username\": \"janedoe{{$randomInt}}\",\n  \"password\": \"password123\",\n  \"role\": \"receptionist\",\n  \"email\": \"jane.doe{{$randomInt}}@example.com\",\n  \"phone\": \"09123456789\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/users",
               "host": ["{{baseUrl}}"],
               "path": ["users"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains success message\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    pm.expect(jsonData.message).to.equal('Account created.');",
+                  "});",
+                  "",
+                  "pm.test(\"User creation requires all required fields\", function () {",
+                  "    const requestBody = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect(requestBody).to.have.property('full_name');",
+                  "    pm.expect(requestBody).to.have.property('username');",
+                  "    pm.expect(requestBody).to.have.property('password');",
+                  "    pm.expect(requestBody).to.have.property('role');",
+                  "    pm.expect(requestBody).to.have.property('email');",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Change User Password",
@@ -140,7 +334,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"newPassword\": \"newpassword123\"\n}"
+              "raw": "{\n  \"password\": \"newpassword123\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/users/:id/password",
@@ -153,7 +347,26 @@
                 }
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains success message\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    pm.expect(jsonData.message).to.equal('Password updated.');",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -170,7 +383,36 @@
               "host": ["{{baseUrl}}"],
               "path": ["patients"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Each patient has required fields\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.length > 0) {",
+                  "        const patient = jsonData[0];",
+                  "        pm.expect(patient).to.have.property('PatientID');",
+                  "        pm.expect(patient).to.have.property('FirstName');",
+                  "        pm.expect(patient).to.have.property('LastName');",
+                  "        pm.expect(patient).to.have.property('date_of_birth');",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Get Patient by ID",
@@ -184,11 +426,52 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": "1"
+                  "value": "{{testPatientId}}"
                 }
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains complete patient details\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('PatientID');",
+                  "    pm.expect(jsonData).to.have.property('FirstName');",
+                  "    pm.expect(jsonData).to.have.property('LastName');",
+                  "    pm.expect(jsonData).to.have.property('MiddleName');",
+                  "    pm.expect(jsonData).to.have.property('DateOfBirth');",
+                  "    pm.expect(jsonData).to.have.property('Age');",
+                  "    pm.expect(jsonData).to.have.property('Gender');",
+                  "    pm.expect(jsonData).to.have.property('ContactNumber');",
+                  "    pm.expect(jsonData).to.have.property('Address');",
+                  "    pm.expect(jsonData).to.have.property('GuardianName');",
+                  "    pm.expect(jsonData).to.have.property('GuardianGender');",
+                  "    pm.expect(jsonData).to.have.property('GuardianRelationship');",
+                  "    pm.expect(jsonData).to.have.property('GuardianContactNumber');",
+                  "    pm.expect(jsonData).to.have.property('GuardianAddress');",
+                  "});",
+                  "",
+                  "pm.test(\"Text fields are uppercase\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.FirstName) {",
+                  "        pm.expect(jsonData.FirstName).to.equal(jsonData.FirstName.toUpperCase());",
+                  "    }",
+                  "    if (jsonData.LastName) {",
+                  "        pm.expect(jsonData.LastName).to.equal(jsonData.LastName.toUpperCase());",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Search Patients",
@@ -196,17 +479,51 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/patients/search?q=john",
+              "raw": "{{baseUrl}}/patients/search?name=john",
               "host": ["{{baseUrl}}"],
               "path": ["patients", "search"],
               "query": [
                 {
-                  "key": "q",
+                  "key": "name",
                   "value": "john"
                 }
               ]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Each result has required search fields\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.length > 0) {",
+                  "        const patient = jsonData[0];",
+                  "        pm.expect(patient).to.have.property('id');",
+                  "        pm.expect(patient).to.have.property('name');",
+                  "        pm.expect(patient).to.have.property('age');",
+                  "        pm.expect(patient).to.have.property('gender');",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"Search results are limited to 10\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.length).to.be.at.most(10);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Get Total Patients",
@@ -218,7 +535,27 @@
               "host": ["{{baseUrl}}"],
               "path": ["patients", "total"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains total count\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('total');",
+                  "    pm.expect(jsonData.total).to.be.a('number');",
+                  "    pm.expect(jsonData.total).to.be.at.least(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Add Patient",
@@ -232,14 +569,49 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Patient\",\n  \"date_of_birth\": \"1990-01-01\",\n  \"gender\": \"male\",\n  \"phone\": \"+1234567890\",\n  \"email\": \"john.patient@example.com\",\n  \"address\": \"123 Main St, City, State\",\n  \"emergency_contact\": \"Jane Patient\",\n  \"emergency_phone\": \"+1234567891\"\n}"
+              "raw": "{\n  \"lastname\": \"Patient\",\n  \"firstname\": \"John\",\n  \"middlename\": \"Middle\",\n  \"dob\": \"1990-01-01\",\n  \"age\": 35,\n  \"gender\": \"male\",\n  \"contact\": \"09123456789\",\n  \"address\": \"123 Main St, City, State\",\n  \"guardian_name\": \"Jane Patient\",\n  \"guardian_gender\": \"female\",\n  \"guardian_relationship\": \"Spouse\",\n  \"guardian_contact\": \"09987654321\",\n  \"guardian_address\": \"123 Main St, City, State\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/patients/add-patient",
               "host": ["{{baseUrl}}"],
               "path": ["patients", "add-patient"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains success message\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    pm.expect(jsonData.message).to.include('Patient added successfully');",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains patient ID with year prefix\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('patient_id');",
+                  "    const currentYear = new Date().getFullYear();",
+                  "    pm.expect(jsonData.patient_id).to.match(new RegExp(`^${currentYear}-[A-Z]\\\\d+$`));",
+                  "    // Store the patient ID for use in other tests",
+                  "    pm.globals.set('testPatientId', jsonData.patient_id);",
+                  "});",
+                  "",
+                  "pm.test(\"Patient ID starts with current year and lastname first letter\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    const patientId = jsonData.patient_id;",
+                  "    const currentYear = new Date().getFullYear();",
+                  "    pm.expect(patientId).to.include(`${currentYear}-P`); // P for Patient lastname",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -256,7 +628,38 @@
               "host": ["{{baseUrl}}"],
               "path": ["appointments"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Each appointment has required fields\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.length > 0) {",
+                  "        const appointment = jsonData[0];",
+                  "        pm.expect(appointment).to.have.property('id');",
+                  "        pm.expect(appointment).to.have.property('patient_id');",
+                  "        pm.expect(appointment).to.have.property('patient_name');",
+                  "        pm.expect(appointment).to.have.property('appointment_date');",
+                  "        pm.expect(appointment).to.have.property('appointment_time');",
+                  "        pm.expect(appointment).to.have.property('status');",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Add Appointment",
@@ -270,14 +673,48 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"patient_id\": 1,\n  \"doctor_id\": 1,\n  \"appointment_date\": \"2025-07-05T10:00:00.000Z\",\n  \"notes\": \"Regular checkup\"\n}"
+              "raw": "{\n  \"patient_id\": \"{{testPatientId}}\",\n  \"patient_name\": \"PATIENT, JOHN MIDDLE\",\n  \"reason_for_visit\": \"Regular checkup\",\n  \"appointment_date\": \"2025-07-10\",\n  \"appointment_time\": \"10:00:00\",\n  \"doctor_name\": \"Dr. John Doe\",\n  \"status\": \"Confirmed\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/appointments/add",
               "host": ["{{baseUrl}}"],
               "path": ["appointments", "add"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains success message\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    pm.expect(jsonData.message).to.include('Appointment added successfully');",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains appointment ID\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData.id).to.be.a('number');",
+                  "    // Store the appointment ID for use in other tests",
+                  "    pm.globals.set('testAppointmentId', jsonData.id);",
+                  "});",
+                  "",
+                  "pm.test(\"Validates future appointment date\", function () {",
+                  "    const requestBody = JSON.parse(pm.request.body.raw);",
+                  "    const appointmentDateTime = new Date(`${requestBody.appointment_date}T${requestBody.appointment_time}`);",
+                  "    const now = new Date();",
+                  "    pm.expect(appointmentDateTime.getTime()).to.be.greaterThan(now.getTime());",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Update Appointment",
@@ -291,20 +728,33 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"appointment_date\": \"2025-07-05T11:00:00.000Z\",\n  \"notes\": \"Updated appointment time\",\n  \"status\": \"scheduled\"\n}"
+              "raw": "{\n  \"patient_id\": \"{{testPatientId}}\",\n  \"patient_name\": \"PATIENT, JOHN MIDDLE\",\n  \"reason_for_visit\": \"Follow-up checkup\",\n  \"appointment_date\": \"2025-07-11\",\n  \"appointment_time\": \"11:00:00\",\n  \"status\": \"Confirmed\",\n  \"doctor_name\": \"Dr. Jane Smith\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/appointments/update/:id",
+              "raw": "{{baseUrl}}/appointments/update/{{testAppointmentId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["appointments", "update", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
+              "path": ["appointments", "update", "{{testAppointmentId}}"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains success message\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    pm.expect(jsonData.message).to.include('Appointment updated successfully');",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Cancel Appointment",
@@ -312,17 +762,30 @@
             "method": "PUT",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/appointments/cancel/:id",
+              "raw": "{{baseUrl}}/appointments/cancel/{{testAppointmentId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["appointments", "cancel", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
+              "path": ["appointments", "cancel", "{{testAppointmentId}}"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains success message\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    pm.expect(jsonData.message).to.include('Appointment cancelled successfully');",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Get Today's Appointments",
@@ -334,7 +797,35 @@
               "host": ["{{baseUrl}}"],
               "path": ["appointments", "today"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Today's appointments have correct date\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    const today = new Date().toISOString().split('T')[0];",
+                  "    if (jsonData.length > 0) {",
+                  "        jsonData.forEach(appointment => {",
+                  "            pm.expect(appointment.appointment_date).to.equal(today);",
+                  "        });",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Get Today's Confirmed Appointments",
@@ -346,7 +837,36 @@
               "host": ["{{baseUrl}}"],
               "path": ["appointments", "today", "confirmed"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"All appointments are confirmed and today\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    const today = new Date().toISOString().split('T')[0];",
+                  "    if (jsonData.length > 0) {",
+                  "        jsonData.forEach(appointment => {",
+                  "            pm.expect(appointment.status).to.equal('Confirmed');",
+                  "            pm.expect(appointment.appointment_date).to.equal(today);",
+                  "        });",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Get Appointments by Patient ID",
@@ -354,17 +874,52 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/appointments/patient/:id",
+              "raw": "{{baseUrl}}/appointments/patient/{{testPatientId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["appointments", "patient", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
+              "path": ["appointments", "patient", "{{testPatientId}}"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Appointments contain required fields\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.length > 0) {",
+                  "        const appointment = jsonData[0];",
+                  "        pm.expect(appointment).to.have.property('id');",
+                  "        pm.expect(appointment).to.have.property('reason_for_visit');",
+                  "        pm.expect(appointment).to.have.property('appointment_date');",
+                  "        pm.expect(appointment).to.have.property('appointment_time');",
+                  "        pm.expect(appointment).to.have.property('status');",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"Results are sorted by date descending\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.length > 1) {",
+                  "        for (let i = 0; i < jsonData.length - 1; i++) {",
+                  "            const current = new Date(jsonData[i].appointment_date);",
+                  "            const next = new Date(jsonData[i + 1].appointment_date);",
+                  "            pm.expect(current.getTime()).to.be.at.least(next.getTime());",
+                  "        }",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Get Weekly Appointment Summary",
@@ -376,7 +931,29 @@
               "host": ["{{baseUrl}}"],
               "path": ["appointments", "weekly-summary"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains weekly summary data\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('object');",
+                  "    // Weekly summary should contain aggregated data",
+                  "    pm.expect(jsonData).to.satisfy(function(obj) {",
+                  "        return typeof obj === 'object' && obj !== null;",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -393,7 +970,37 @@
               "host": ["{{baseUrl}}"],
               "path": ["doctors"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Each doctor has required fields\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.length > 0) {",
+                  "        const doctor = jsonData[0];",
+                  "        pm.expect(doctor).to.have.property('DoctorID');",
+                  "        pm.expect(doctor).to.have.property('FirstName');",
+                  "        pm.expect(doctor).to.have.property('LastName');",
+                  "        pm.expect(doctor).to.have.property('Specialization');",
+                  "        pm.expect(doctor).to.have.property('ContactNumber');",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -410,7 +1017,36 @@
               "host": ["{{baseUrl}}"],
               "path": ["schedules"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Each schedule has required fields\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.length > 0) {",
+                  "        const schedule = jsonData[0];",
+                  "        pm.expect(schedule).to.have.property('id');",
+                  "        pm.expect(schedule).to.have.property('doctor_name');",
+                  "        pm.expect(schedule).to.have.property('date');",
+                  "        pm.expect(schedule).to.have.property('time');",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Add Schedule",
@@ -493,6 +1129,367 @@
       ]
     },
     {
+      "name": "Schedules",
+      "item": [
+        {
+          "name": "Get All Schedules",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/schedules",
+              "host": ["{{baseUrl}}"],
+              "path": ["schedules"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Each schedule has required fields\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.length > 0) {",
+                  "        const schedule = jsonData[0];",
+                  "        pm.expect(schedule).to.have.property('id');",
+                  "        pm.expect(schedule).to.have.property('doctor_name');",
+                  "        pm.expect(schedule).to.have.property('date');",
+                  "        pm.expect(schedule).to.have.property('time');",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"Schedules are sorted by date\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.length > 1) {",
+                  "        for (let i = 0; i < jsonData.length - 1; i++) {",
+                  "            const currentDate = new Date(jsonData[i].date);",
+                  "            const nextDate = new Date(jsonData[i + 1].date);",
+                  "            pm.expect(currentDate.getTime()).to.be.at.most(nextDate.getTime());",
+                  "        }",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Add Schedule",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"doctor\": \"Dr. John Smith\",\n  \"date\": \"2025-07-10\",\n  \"time\": \"9AM-5PM\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/schedules",
+              "host": ["{{baseUrl}}"],
+              "path": ["schedules"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains success message and ID\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    pm.expect(jsonData.message).to.equal('Schedule added');",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData.id).to.be.a('number');",
+                  "    // Store the schedule ID for use in other tests",
+                  "    pm.globals.set('testScheduleId', jsonData.id);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Schedule",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"doctor\": \"Dr. Jane Smith\",\n  \"date\": \"2025-07-11\",\n  \"time\": \"8AM-4PM\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/schedules/{{testScheduleId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["schedules", "{{testScheduleId}}"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains success message\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    pm.expect(jsonData.message).to.equal('Schedule updated');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Doctor for Today",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/schedules/today",
+              "host": ["{{baseUrl}}"],
+              "path": ["schedules", "today"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains doctor info or N/A\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('doctor_name');",
+                  "    pm.expect(typeof jsonData.doctor_name).to.equal('string');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete Schedule",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/schedules/{{testScheduleId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["schedules", "{{testScheduleId}}"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains success message\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    pm.expect(jsonData.message).to.equal('Schedule deleted');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Error Handling & Validation",
+      "item": [
+        {
+          "name": "Test Invalid Patient ID Format",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/patients/invalid-id",
+              "host": ["{{baseUrl}}"],
+              "path": ["patients", "invalid-id"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Returns 404 for invalid patient ID\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test(\"Error response contains proper message\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('error');",
+                  "    pm.expect(jsonData.error).to.equal('Patient not found');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Test Invalid Phone Number Format",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"lastname\": \"Test\",\n  \"firstname\": \"Patient\",\n  \"middlename\": \"Middle\",\n  \"dob\": \"1990-01-01\",\n  \"age\": 35,\n  \"gender\": \"male\",\n  \"contact\": \"123456789\",\n  \"address\": \"123 Main St\",\n  \"guardian_name\": \"Guardian Name\",\n  \"guardian_gender\": \"female\",\n  \"guardian_relationship\": \"Spouse\",\n  \"guardian_contact\": \"987654321\",\n  \"guardian_address\": \"123 Main St\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/patients/add-patient",
+              "host": ["{{baseUrl}}"],
+              "path": ["patients", "add-patient"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Returns 400 for invalid phone format\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Error response contains phone validation message\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('error');",
+                  "    pm.expect(jsonData.error).to.equal('Invalid contact number format');",
+                  "    pm.expect(jsonData).to.have.property('details');",
+                  "    pm.expect(jsonData.details).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Test Past Appointment Date",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": \"{{testPatientId}}\",\n  \"patient_name\": \"Test Patient\",\n  \"reason_for_visit\": \"Test appointment\",\n  \"appointment_date\": \"2020-01-01\",\n  \"appointment_time\": \"10:00:00\",\n  \"doctor_name\": \"Dr. Test\",\n  \"status\": \"Confirmed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/appointments/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["appointments", "add"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Returns 400 for past appointment date\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Error response contains past date message\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('error');",
+                  "    pm.expect(jsonData.error).to.equal('Cannot book a past time slot.');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Test Missing Required Fields - Patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstname\": \"John\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/patients/add-patient",
+              "host": ["{{baseUrl}}"],
+              "path": ["patients", "add-patient"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Returns 500 for missing required fields\", function () {",
+                  "    pm.response.to.have.status(500);",
+                  "});",
+                  "",
+                  "pm.test(\"Error response contains database error info\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('error');",
+                  "    pm.expect(jsonData.error).to.equal('Failed to add patient');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "Laboratory",
       "item": [
         {
@@ -507,14 +1504,50 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"patient_id\": 1,\n  \"test_date\": \"2025-07-04\",\n  \"glucose\": \"90\",\n  \"cholesterol\": \"180\",\n  \"triglycerides\": \"120\",\n  \"hdl\": \"45\",\n  \"ldl\": \"110\",\n  \"creatinine\": \"1.0\",\n  \"bun\": \"15\",\n  \"alt\": \"25\",\n  \"ast\": \"30\"\n}"
+              "raw": "{\n  \"patient_name\": \"PATIENT, JOHN MIDDLE\",\n  \"age\": 35,\n  \"sex\": \"MALE\",\n  \"date_taken\": \"2025-07-04\",\n  \"fbs\": \"90\",\n  \"bun\": \"15\",\n  \"creatinine\": \"1.0\",\n  \"uric_acid\": \"5.5\",\n  \"cholesterol\": \"180\",\n  \"triglycerides\": \"120\",\n  \"hdl\": \"45\",\n  \"ldl\": \"110\",\n  \"vldl\": \"24\",\n  \"sodium\": \"140\",\n  \"potassium\": \"4.0\",\n  \"chloride\": \"100\",\n  \"calcium\": \"9.5\",\n  \"sgot\": \"25\",\n  \"sgpt\": \"30\",\n  \"rbs\": \"95\",\n  \"alk_phosphatase\": \"85\",\n  \"total_protein\": \"7.2\",\n  \"albumin\": \"4.0\",\n  \"globulin\": \"3.2\",\n  \"ag_ratio\": \"1.25\",\n  \"total_bilirubin\": \"1.0\",\n  \"direct_bilirubin\": \"0.3\",\n  \"indirect_bilirubin\": \"0.7\",\n  \"ionised_calcium\": \"1.25\",\n  \"magnesium\": \"2.0\",\n  \"hbalc\": \"5.8\",\n  \"ogtt_30min\": \"140\",\n  \"ogtt_1hr\": \"180\",\n  \"ogtt_2hr\": \"120\",\n  \"ppbs_2hr\": \"115\",\n  \"inor_phosphorus\": \"3.5\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/blood_chem",
               "host": ["{{baseUrl}}"],
               "path": ["api", "blood_chem"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains success message\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    pm.expect(jsonData.message).to.equal('Blood chemistry results inserted.');",
+                  "});",
+                  "",
+                  "pm.test(\"All blood chemistry fields are properly structured\", function () {",
+                  "    const requestBody = JSON.parse(pm.request.body.raw);",
+                  "    pm.expect(requestBody).to.have.property('patient_name');",
+                  "    pm.expect(requestBody).to.have.property('age');",
+                  "    pm.expect(requestBody).to.have.property('sex');",
+                  "    pm.expect(requestBody).to.have.property('date_taken');",
+                  "    pm.expect(requestBody).to.have.property('fbs');",
+                  "    pm.expect(requestBody).to.have.property('cholesterol');",
+                  "    pm.expect(requestBody).to.have.property('triglycerides');",
+                  "    pm.expect(requestBody).to.have.property('hdl');",
+                  "    pm.expect(requestBody).to.have.property('ldl');",
+                  "    pm.expect(requestBody).to.have.property('creatinine');",
+                  "    pm.expect(requestBody).to.have.property('bun');",
+                  "    pm.expect(requestBody).to.have.property('sgot');",
+                  "    pm.expect(requestBody).to.have.property('sgpt');",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Save Lab Request Form",
@@ -528,14 +1561,43 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"patient_id\": 1,\n  \"request_date\": \"2025-07-04\",\n  \"tests_requested\": \"Blood Chemistry, CBC\",\n  \"doctor_id\": 1,\n  \"notes\": \"Routine checkup\"\n}"
+              "raw": "{\n  \"patient_id\": \"{{testPatientId}}\",\n  \"patient_name\": \"PATIENT, JOHN MIDDLE\",\n  \"age_gender\": \"35 / MALE\",\n  \"request_date\": \"2025-07-04\",\n  \"cbc_with_platelet\": \"yes\",\n  \"pregnancy_test\": \"no\",\n  \"urinalysis\": \"yes\",\n  \"fecalysis\": \"no\",\n  \"occult_blood_test\": \"no\",\n  \"hepa_b_screening\": \"yes\",\n  \"hepa_a_screening\": \"no\",\n  \"hepatitis_profile\": \"no\",\n  \"vdrl_rpr\": \"no\",\n  \"dengue_ns1\": \"no\",\n  \"ca_125_cea_psa\": \"no\",\n  \"fbs\": \"yes\",\n  \"bun\": \"yes\",\n  \"creatinine\": \"yes\",\n  \"blood_uric_acid\": \"no\",\n  \"lipid_profile\": \"yes\",\n  \"sgot\": \"yes\",\n  \"sgpt\": \"yes\",\n  \"alp\": \"no\",\n  \"sodium_na\": \"no\",\n  \"potassium_k\": \"no\",\n  \"hbalc\": \"no\",\n  \"ecg\": \"no\",\n  \"t3\": \"no\",\n  \"t4\": \"no\",\n  \"ft3\": \"no\",\n  \"ft4\": \"no\",\n  \"tsh\": \"no\",\n  \"others\": \"Routine health checkup\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/lab_requests",
               "host": ["{{baseUrl}}"],
               "path": ["api", "lab_requests"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains success message\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    pm.expect(jsonData.message).to.equal('Lab request submitted successfully');",
+                  "});",
+                  "",
+                  "pm.test(\"Lab request has valid checkbox values\", function () {",
+                  "    const requestBody = JSON.parse(pm.request.body.raw);",
+                  "    const checkboxFields = ['cbc_with_platelet', 'pregnancy_test', 'urinalysis', 'fecalysis', 'fbs', 'bun', 'creatinine'];",
+                  "    checkboxFields.forEach(field => {",
+                  "        if (requestBody[field]) {",
+                  "            pm.expect(['yes', 'no', '']).to.include(requestBody[field]);",
+                  "        }",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Get Lab Requests",
@@ -547,7 +1609,39 @@
               "host": ["{{baseUrl}}"],
               "path": ["api", "lab_requests"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Each lab request has required fields\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.length > 0) {",
+                  "        const labRequest = jsonData[0];",
+                  "        pm.expect(labRequest).to.have.property('patient_id');",
+                  "        pm.expect(labRequest).to.have.property('id');",
+                  "        pm.expect(labRequest).to.have.property('patient_name');",
+                  "        pm.expect(labRequest).to.have.property('date');",
+                  "        pm.expect(labRequest).to.have.property('test_name');",
+                  "        pm.expect(labRequest).to.have.property('status');",
+                  "        pm.expect(labRequest.test_name).to.equal('Lab Request');",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Get Lab Request by Patient ID",
@@ -555,17 +1649,46 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/lab_requests/:patientId",
+              "raw": "{{baseUrl}}/api/lab_requests/{{testPatientId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "lab_requests", ":patientId"],
-              "variable": [
-                {
-                  "key": "patientId",
-                  "value": "1"
-                }
-              ]
+              "path": ["api", "lab_requests", "{{testPatientId}}"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 or 404\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test(\"Response contains lab request data\", function () {",
+                  "        const jsonData = pm.response.json();",
+                  "        pm.expect(jsonData).to.be.an('object');",
+                  "        pm.expect(jsonData).to.have.property('patient_id');",
+                  "        pm.expect(jsonData).to.have.property('patient_name');",
+                  "        pm.expect(jsonData).to.have.property('request_date');",
+                  "    });",
+                  "",
+                  "    pm.test(\"Returns most recent lab request\", function () {",
+                  "        const jsonData = pm.response.json();",
+                  "        pm.expect(jsonData).to.have.property('id');",
+                  "        pm.expect(jsonData.id).to.be.a('number');",
+                  "    });",
+                  "} else if (pm.response.code === 404) {",
+                  "    pm.test(\"No lab request found message\", function () {",
+                  "        const jsonData = pm.response.json();",
+                  "        pm.expect(jsonData).to.have.property('error');",
+                  "        pm.expect(jsonData.error).to.equal('Not found');",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Update Lab Request Results",
@@ -579,24 +1702,41 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"results\": \"All tests normal\",\n  \"status\": \"completed\"\n}"
+              "raw": "{\n  \"fbs\": \"Normal\",\n  \"bun\": \"Normal\",\n  \"creatinine\": \"Normal\",\n  \"lipid_profile\": \"Normal\",\n  \"sgot\": \"Normal\",\n  \"sgpt\": \"Normal\",\n  \"status\": \"Complete\",\n  \"date_taken\": \"2025-07-04\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/lab_requests/:patientId/:requestDate",
+              "raw": "{{baseUrl}}/api/lab_requests/{{testPatientId}}/2025-07-04",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "lab_requests", ":patientId", ":requestDate"],
-              "variable": [
-                {
-                  "key": "patientId",
-                  "value": "1"
-                },
-                {
-                  "key": "requestDate",
-                  "value": "2025-07-04"
-                }
-              ]
+              "path": ["api", "lab_requests", "{{testPatientId}}", "2025-07-04"]
             }
-          }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains success message\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    pm.expect(jsonData.message).to.equal('Lab results updated successfully.');",
+                  "});",
+                  "",
+                  "pm.test(\"Update contains valid lab result fields\", function () {",
+                  "    const requestBody = JSON.parse(pm.request.body.raw);",
+                  "    const allowedFields = ['fbs', 'bun', 'creatinine', 'blood_uric_acid', 'lipid_profile', 'sgot', 'sgpt', 'alp', 'sodium_na', 'potassium_k', 'hbalc', 'ecg', 't3', 't4', 'ft3', 'ft4', 'tsh', 'status', 'date_taken'];",
+                  "    Object.keys(requestBody).forEach(key => {",
+                  "        pm.expect(allowedFields).to.include(key);",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ]
         }
       ]
     }
@@ -607,7 +1747,24 @@
       "script": {
         "type": "text/javascript",
         "exec": [
-          ""
+          "// Set default values for global variables if they don't exist",
+          "if (!pm.globals.get('testPatientId')) {",
+          "    pm.globals.set('testPatientId', '2025-A1'); // Default to current year format",
+          "}",
+          "",
+          "if (!pm.globals.get('testAppointmentId')) {",
+          "    pm.globals.set('testAppointmentId', '1'); // Default appointment ID",
+          "}",
+          "",
+          "if (!pm.globals.get('testScheduleId')) {",
+          "    pm.globals.set('testScheduleId', '1'); // Default schedule ID",
+          "}",
+          "",
+          "// Log current test being run",
+          "console.log('Running: ' + pm.info.requestName);",
+          "",
+          "// Set current year for use in tests",
+          "pm.globals.set('currentYear', new Date().getFullYear().toString());"
         ]
       }
     },
@@ -616,7 +1773,25 @@
       "script": {
         "type": "text/javascript",
         "exec": [
-          ""
+          "// Global test script that runs after each request",
+          "pm.test('Response time is acceptable', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+          "});",
+          "",
+          "// Verify Content-Type for JSON responses",
+          "if (pm.response.code !== 404 && pm.response.headers.get('Content-Type')) {",
+          "    pm.test('Response Content-Type is JSON', function () {",
+          "        pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+          "    });",
+          "}",
+          "",
+          "// Log response status for debugging",
+          "console.log('Response Status:', pm.response.status, pm.response.code);",
+          "",
+          "// Log any validation errors",
+          "if (pm.response.code >= 400) {",
+          "    console.log('Error Response:', pm.response.text());",
+          "}"
         ]
       }
     }
