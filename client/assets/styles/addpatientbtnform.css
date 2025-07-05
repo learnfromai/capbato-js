@@ -205,3 +205,45 @@ input[type="tel"]::placeholder {
     padding: 8px;
 }
 
+/* Address selector specific styling */
+.address-details select {
+    background-color: white;
+    cursor: pointer;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.address-details select:disabled {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+    color: #6c757d;
+    border-color: #dee2e6;
+}
+
+.address-details select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.address-details select option {
+    padding: 8px;
+    font-size: 14px;
+}
+
+.address-details select option:disabled {
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Loading and error states */
+.address-details select.loading {
+    background-color: #f8f9fa;
+    color: #6c757d;
+}
+
+.address-details select.error {
+    border-color: #dc3545;
+    background-color: #f8d7da;
+    color: #721c24;
+}
+

@@ -5,6 +5,37 @@ document.addEventListener('DOMContentLoaded', function() {
   // Setup phone validation using utility functions
   setupPhoneValidation(contactInput);
   setupPhoneValidation(guardianContactInput);
+
+  // Initialize Philippine Address Selectors
+  const patientAddressSelector = new PHAddressSelector({
+    onSelectionChange: (level, value) => {
+      console.log(`Patient ${level} selected:`, value);
+    }
+  });
+
+  const guardianAddressSelector = new PHAddressSelector({
+    onSelectionChange: (level, value) => {
+      console.log(`Guardian ${level} selected:`, value);
+    }
+  });
+
+  // Initialize patient address selector
+  patientAddressSelector.init({
+    province: document.getElementById('province'),
+    city: document.getElementById('city'),
+    barangay: document.getElementById('barangay')
+  });
+
+  // Initialize guardian address selector
+  guardianAddressSelector.init({
+    province: document.getElementById('guardian_province'),
+    city: document.getElementById('guardian_city'),
+    barangay: document.getElementById('guardian_barangay')
+  });
+
+  // Store selectors globally for form submission
+  window.patientAddressSelector = patientAddressSelector;
+  window.guardianAddressSelector = guardianAddressSelector;
 });
 
 document.getElementById("patientFormFields").addEventListener("submit", function (event) {
@@ -19,18 +50,12 @@ document.getElementById("patientFormFields").addEventListener("submit", function
   // Validate address components
   const requiredAddressFields = [
     { id: "house_no", name: "House No." },
-    { id: "street_name", name: "Street Name" },
-    { id: "barangay", name: "Barangay" },
-    { id: "city", name: "City/Municipality" },
-    { id: "province", name: "Province" }
+    { id: "street_name", name: "Street Name" }
   ];
 
   const requiredGuardianAddressFields = [
     { id: "guardian_house_no", name: "Guardian House No." },
-    { id: "guardian_street_name", name: "Guardian Street Name" },
-    { id: "guardian_barangay", name: "Guardian Barangay" },
-    { id: "guardian_city", name: "Guardian City/Municipality" },
-    { id: "guardian_province", name: "Guardian Province" }
+    { id: "guardian_street_name", name: "Guardian Street Name" }
   ];
 
   // Check patient address fields
@@ -51,6 +76,19 @@ document.getElementById("patientFormFields").addEventListener("submit", function
     }
   }
 
+  // Validate address selections
+  const patientAddress = window.patientAddressSelector.getSelectedValues();
+  if (!patientAddress.province.code || !patientAddress.city.code || !patientAddress.barangay.code) {
+    alert('Please select complete address information (Province, City/Municipality, and Barangay).');
+    return;
+  }
+
+  const guardianAddress = window.guardianAddressSelector.getSelectedValues();
+  if (!guardianAddress.province.code || !guardianAddress.city.code || !guardianAddress.barangay.code) {
+    alert('Please select complete guardian address information (Province, City/Municipality, and Barangay).');
+    return;
+  }
+
   // Validate all phone inputs using utility function
   const phoneErrors = validateAllPhoneInputs(this);
   if (phoneErrors.length > 0) {
@@ -66,21 +104,23 @@ document.getElementById("patientFormFields").addEventListener("submit", function
     return components.join(', ');
   }
 
-  // Collect address components
-  const patientAddress = combineAddress(
+  // Get address selections and combine with house/street info
+  const patientAddressData = window.patientAddressSelector.getSelectedValues();
+  const patientFullAddress = combineAddress(
     document.getElementById("house_no").value,
     document.getElementById("street_name").value,
-    document.getElementById("barangay").value,
-    document.getElementById("city").value,
-    document.getElementById("province").value
+    patientAddressData.barangay.name,
+    patientAddressData.city.name,
+    patientAddressData.province.name
   );
 
-  const guardianAddress = combineAddress(
+  const guardianAddressData = window.guardianAddressSelector.getSelectedValues();
+  const guardianFullAddress = combineAddress(
     document.getElementById("guardian_house_no").value,
     document.getElementById("guardian_street_name").value,
-    document.getElementById("guardian_barangay").value,
-    document.getElementById("guardian_city").value,
-    document.getElementById("guardian_province").value
+    guardianAddressData.barangay.name,
+    guardianAddressData.city.name,
+    guardianAddressData.province.name
   );
 
   const patientData = {
@@ -91,13 +131,13 @@ document.getElementById("patientFormFields").addEventListener("submit", function
     age: document.getElementById("age").value,
     gender: document.getElementById("gender").value,
     contact: document.getElementById("contact").value,
-    address: patientAddress,
+    address: patientFullAddress,
 
     guardian_name: document.getElementById("guardian_name").value.trim(),
     guardian_gender: document.getElementById("guardian_gender").value,
     guardian_relationship: document.getElementById("guardian_relationship").value.trim(),
     guardian_contact: document.getElementById("guardian_contact").value,
-    guardian_address: guardianAddress
+    guardian_address: guardianFullAddress
   };
 
   console.log("Sending Data:", patientData);
