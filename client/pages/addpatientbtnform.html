@@ -64,17 +64,23 @@
             </div>
             <div class="form-row">
               <div class="form-group">
-                <label for="barangay">Barangay:</label>
-                <input type="text" id="barangay" placeholder="e.g., Poblacion" required />
+                <label for="province">Province:</label>
+                <select id="province" required>
+                  <option value="" disabled selected>Loading provinces...</option>
+                </select>
               </div>
               <div class="form-group">
                 <label for="city">City/Municipality:</label>
-                <input type="text" id="city" placeholder="e.g., Quezon City" required />
+                <select id="city" required disabled>
+                  <option value="" disabled selected>Select province first</option>
+                </select>
               </div>
             </div>
             <div class="form-group">
-              <label for="province">Province:</label>
-              <input type="text" id="province" placeholder="e.g., Metro Manila" required />
+              <label for="barangay">Barangay:</label>
+              <select id="barangay" required disabled>
+                <option value="" disabled selected>Select city first</option>
+              </select>
             </div>
           </div>
         </div>
@@ -124,17 +130,23 @@
             </div>
             <div class="form-row">
               <div class="form-group">
-                <label for="guardian_barangay">Barangay:</label>
-                <input type="text" id="guardian_barangay" placeholder="e.g., Poblacion" required />
+                <label for="guardian_province">Province:</label>
+                <select id="guardian_province" required>
+                  <option value="" disabled selected>Loading provinces...</option>
+                </select>
               </div>
               <div class="form-group">
                 <label for="guardian_city">City/Municipality:</label>
-                <input type="text" id="guardian_city" placeholder="e.g., Quezon City" required />
+                <select id="guardian_city" required disabled>
+                  <option value="" disabled selected>Select province first</option>
+                </select>
               </div>
             </div>
             <div class="form-group">
-              <label for="guardian_province">Province:</label>
-              <input type="text" id="guardian_province" placeholder="e.g., Metro Manila" required />
+              <label for="guardian_barangay">Barangay:</label>
+              <select id="guardian_barangay" required disabled>
+                <option value="" disabled selected>Select city first</option>
+              </select>
             </div>
           </div>
         </div>
@@ -145,6 +157,7 @@
   </div>
 
   <script src="../js/phone-validation.js"></script>
+  <script src="../js/ph-address-selector.js"></script>
   <script src="../js/addpatientbtnform.js"></script>
 </body>
 </html>

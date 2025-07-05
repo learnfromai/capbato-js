@@ -14,6 +14,7 @@ import laboratoryRoutes from './routes/laboratory.routes.js';
 import scheduleRoutes from './routes/schedule.routes.js';
 import doctorRoutes from './routes/doctors.routes.js';
 import usersRoutes from './routes/users.routes.js';
+import addressRoutes from './routes/address.routes.js';
 
 const app = express();
 const PORT = 3001;
@@ -55,6 +56,7 @@ app.use('/api', laboratoryRoutes);
 app.use('/schedules', scheduleRoutes);
 app.use('/doctors', doctorRoutes);
 app.use('/users', usersRoutes);
+app.use('/address', addressRoutes);
 
 // API status check
 app.get('/api', (req, res) => {

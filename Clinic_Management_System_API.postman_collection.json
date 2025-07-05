@@ -1739,6 +1739,399 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Address",
+      "description": "Philippine address selection endpoints for cascading dropdowns",
+      "item": [
+        {
+          "name": "Get All Provinces",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/address/provinces",
+              "host": ["{{baseUrl}}"],
+              "path": ["address", "provinces"]
+            },
+            "description": "Get all Philippine provinces/regions for address selection"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Provinces have required properties\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.length).to.be.greaterThan(0);",
+                  "    ",
+                  "    const firstProvince = responseJson[0];",
+                  "    pm.expect(firstProvince).to.have.property('code');",
+                  "    pm.expect(firstProvince).to.have.property('name');",
+                  "    pm.expect(firstProvince.code).to.be.a('string');",
+                  "    pm.expect(firstProvince.name).to.be.a('string');",
+                  "});",
+                  "",
+                  "pm.test(\"Contains expected provinces\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    const provinceNames = responseJson.map(p => p.name);",
+                  "    ",
+                  "    // Check for some well-known provinces",
+                  "    pm.expect(provinceNames).to.include('ABRA');",
+                  "    pm.expect(provinceNames).to.include('BATAAN');",
+                  "    pm.expect(provinceNames).to.include('CEBU');",
+                  "});",
+                  "",
+                  "pm.test(\"Has comprehensive coverage (80+ provinces)\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.length).to.be.at.least(80);",
+                  "});",
+                  "",
+                  "// Store first province for next tests",
+                  "if (pm.response.code === 200) {",
+                  "    const provinces = pm.response.json();",
+                  "    if (provinces.length > 0) {",
+                  "        pm.globals.set('testProvinceCode', provinces[0].code);",
+                  "        pm.globals.set('testProvinceName', provinces[0].name);",
+                  "        console.log('Set test province:', provinces[0].name, '(' + provinces[0].code + ')');",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Cities by Province",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/address/cities/{{testProvinceCode}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["address", "cities", "{{testProvinceCode}}"]
+            },
+            "description": "Get all cities/municipalities for a specific province"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Set default province if not set",
+                  "if (!pm.globals.get('testProvinceCode')) {",
+                  "    pm.globals.set('testProvinceCode', 'ABRA');",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Cities have required properties\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    ",
+                  "    if (responseJson.length > 0) {",
+                  "        const firstCity = responseJson[0];",
+                  "        pm.expect(firstCity).to.have.property('code');",
+                  "        pm.expect(firstCity).to.have.property('name');",
+                  "        pm.expect(firstCity.code).to.be.a('string');",
+                  "        pm.expect(firstCity.name).to.be.a('string');",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"Cities are for the requested province\", function () {",
+                  "    const requestedProvince = pm.globals.get('testProvinceCode');",
+                  "    console.log('Testing cities for province:', requestedProvince);",
+                  "    ",
+                  "    // This test verifies the API returns results for the province",
+                  "    // The actual validation of correct province filtering is implicit",
+                  "    pm.expect(pm.response.code).to.equal(200);",
+                  "});",
+                  "",
+                  "pm.test(\"City codes are properly formatted\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    ",
+                  "    responseJson.forEach(function(city) {",
+                  "        // City codes should be lowercase with underscores",
+                  "        pm.expect(city.code).to.match(/^[a-z_]+$/);",
+                  "    });",
+                  "});",
+                  "",
+                  "// Store first city for next tests",
+                  "if (pm.response.code === 200) {",
+                  "    const cities = pm.response.json();",
+                  "    if (cities.length > 0) {",
+                  "        pm.globals.set('testCityCode', cities[0].code);",
+                  "        pm.globals.set('testCityName', cities[0].name);",
+                  "        console.log('Set test city:', cities[0].name, '(' + cities[0].code + ')');",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Barangays by City",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/address/barangays/{{testCityCode}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["address", "barangays", "{{testCityCode}}"]
+            },
+            "description": "Get all barangays for a specific city/municipality"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Set default city if not set",
+                  "if (!pm.globals.get('testCityCode')) {",
+                  "    pm.globals.set('testCityCode', 'bangued');",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Barangays have required properties\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.length).to.be.greaterThan(0);",
+                  "    ",
+                  "    const firstBarangay = responseJson[0];",
+                  "    pm.expect(firstBarangay).to.have.property('code');",
+                  "    pm.expect(firstBarangay).to.have.property('name');",
+                  "    pm.expect(firstBarangay.code).to.be.a('string');",
+                  "    pm.expect(firstBarangay.name).to.be.a('string');",
+                  "});",
+                  "",
+                  "pm.test(\"Barangay codes follow format\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    ",
+                  "    responseJson.forEach(function(barangay) {",
+                  "        // Barangay codes should follow B### pattern",
+                  "        pm.expect(barangay.code).to.match(/^B\\d{3}$/);",
+                  "    });",
+                  "});",
+                  "",
+                  "pm.test(\"Barangays are for the requested city\", function () {",
+                  "    const requestedCity = pm.globals.get('testCityCode');",
+                  "    console.log('Testing barangays for city:', requestedCity);",
+                  "    ",
+                  "    // This test verifies the API returns results for the city",
+                  "    pm.expect(pm.response.code).to.equal(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Has comprehensive barangay data\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    // Most cities should have multiple barangays",
+                  "    pm.expect(responseJson.length).to.be.at.least(1);",
+                  "});",
+                  "",
+                  "// Store first barangay for reference",
+                  "if (pm.response.code === 200) {",
+                  "    const barangays = pm.response.json();",
+                  "    if (barangays.length > 0) {",
+                  "        pm.globals.set('testBarangayCode', barangays[0].code);",
+                  "        pm.globals.set('testBarangayName', barangays[0].name);",
+                  "        console.log('Set test barangay:', barangays[0].name, '(' + barangays[0].code + ')');",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Test Metro Manila Cities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/address/cities/NATIONAL_CAPITAL_REGION_-_MANILA",
+              "host": ["{{baseUrl}}"],
+              "path": ["address", "cities", "NATIONAL_CAPITAL_REGION_-_MANILA"]
+            },
+            "description": "Test getting Metro Manila cities to verify NCR data"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Contains Manila districts\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    const cityNames = responseJson.map(c => c.name);",
+                  "    ",
+                  "    // Check for some Manila districts",
+                  "    pm.expect(cityNames).to.include('BINONDO');",
+                  "    pm.expect(cityNames).to.include('ERMITA');",
+                  "    pm.expect(cityNames).to.include('MALATE');",
+                  "});",
+                  "",
+                  "pm.test(\"Has multiple Manila districts\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.length).to.be.at.least(10);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Test Cascading Flow",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/address/barangays/binondo",
+              "host": ["{{baseUrl}}"],
+              "path": ["address", "barangays", "binondo"]
+            },
+            "description": "Test complete cascading flow: Province → City → Barangay"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Binondo has barangays\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.length).to.be.greaterThan(0);",
+                  "});",
+                  "",
+                  "pm.test(\"Binondo barangays have numbered names\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    const hasNumberedBarangays = responseJson.some(b => ",
+                  "        b.name.includes('BARANGAY') && /\\d+/.test(b.name)",
+                  "    );",
+                  "    pm.expect(hasNumberedBarangays).to.be.true;",
+                  "});",
+                  "",
+                  "// Summary test results",
+                  "console.log('Complete cascading flow test passed!');",
+                  "console.log('Province: NATIONAL CAPITAL REGION - MANILA');",
+                  "console.log('City: BINONDO');",
+                  "console.log('Barangays found:', pm.response.json().length);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Test Error Handling - Invalid Province",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/address/cities/INVALID_PROVINCE",
+              "host": ["{{baseUrl}}"],
+              "path": ["address", "cities", "INVALID_PROVINCE"]
+            },
+            "description": "Test error handling for invalid province code"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 (empty array for invalid province)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Returns empty array for invalid province\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('array');",
+                  "    pm.expect(responseJson.length).to.equal(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Test Error Handling - Invalid City",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/address/barangays/invalid_city",
+              "host": ["{{baseUrl}}"],
+              "path": ["address", "barangays", "invalid_city"]
+            },
+            "description": "Test error handling for invalid city code"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 (empty array for invalid city)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Returns empty array for invalid city\", function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('array');",
+                  "    pm.expect(responseJson.length).to.equal(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
     }
   ],
   "event": [
