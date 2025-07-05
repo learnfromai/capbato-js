@@ -198,7 +198,7 @@ function updateAppointmentsTable(appointments) {
 
         const row = `
             <tr>
-                <td>${index + 1}</td>
+                <td>${appointment.patient_id}</td>
                 <td>${formatNameProperCase(appointment.patient_name)}</td>
                 <td>${appointment.reason_for_visit}</td>
                 <td>${formattedDate}</td>
