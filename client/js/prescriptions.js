@@ -12,6 +12,22 @@ document.addEventListener("DOMContentLoaded", function () {
   const role = localStorage.getItem("loggedInRole");
   const username = localStorage.getItem("loggedInUsername");
 
+  const addPrescriptionBtn = document.getElementById("addPrescriptionBtn");
+  const actionsHeader = document.getElementById("actionsHeader");
+  const actionsCells = document.querySelectorAll(".actionsCell");
+  if (role && role.toLowerCase() !== "doctor") {
+    if (addPrescriptionBtn) addPrescriptionBtn.style.display = "none";
+    if (actionsHeader) actionsHeader.style.display = "none";
+    actionsCells.forEach(cell => cell.style.display = "none");
+  } else if (addPrescriptionBtn) {
+    // Only for doctor: keep Add Prescription button visible, but disable its function
+    addPrescriptionBtn.addEventListener("click", () => {
+      // Do nothing (form will not open)
+    });
+    // Remove addPrescriptionToTable exposure
+    window.addPrescriptionToTable = undefined;
+  }
+
   const roleDisplay = document.getElementById("roleDisplay");
   const usernameDisplay = document.getElementById("usernameDisplay");
   const profileAvatar = document.getElementById("profileAvatar");
@@ -116,19 +132,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+
   // Add Prescription Overlay
-  const addPrescriptionBtn = document.getElementById("addPrescriptionBtn");
   const addPrescriptionOverlay = document.getElementById("addPrescriptionOverlay");
   const addPrescriptionIframe = document.getElementById("addPrescriptionIframe");
   const closeAddPrescription = document.getElementById("closeAddPrescription");
 
-  if (addPrescriptionBtn && addPrescriptionOverlay) {
-    addPrescriptionBtn.addEventListener("click", () => {
-      addPrescriptionOverlay.style.display = "flex";
-      // addPrescriptionIframe.src = "add-prescription-form.html"; // You can create this form later
-      showToast("Add Prescription form will be implemented soon!", "info");
-    });
-  }
+  // Remove overlay open logic for Add Prescription button
 
   if (closeAddPrescription && addPrescriptionOverlay) {
     closeAddPrescription.addEventListener("click", () => {

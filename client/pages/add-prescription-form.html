@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Prescription</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/styles/prescriptions.css" />
+  <style>
+    body { background: #f8f9fa; }
+    .form-container { max-width: 500px; margin: 30px auto; background: #fff; padding: 24px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h3 class="mb-4">Add Prescription</h3>
+    <form id="addPrescriptionForm" autocomplete="off">
+      <div class="mb-3 position-relative">
+        <label for="patientName" class="form-label">Patient Name</label>
+        <input type="text" class="form-control" id="patientName" name="patientName" required autocomplete="off">
+        <div id="patientSuggestions" class="list-group position-absolute w-100" style="z-index: 10;"></div>
+        <div id="patientNumberDisplay" class="form-text text-primary mt-1"></div>
+      </div>
+      <div class="mb-3">
+        <label for="doctorName" class="form-label">Doctor</label>
+        <input type="text" class="form-control" id="doctorName" name="doctorName" required readonly>
+      </div>
+      <div class="mb-3">
+        <label for="datePrescribed" class="form-label">Date Prescribed</label>
+        <input type="date" class="form-control" id="datePrescribed" name="datePrescribed" required>
+      </div>
+      <div class="mb-3">
+        <label for="medications" class="form-label">Medications</label>
+        <textarea class="form-control" id="medications" name="medications" rows="2" required></textarea>
+      </div>
+      <!-- Status field removed -->
+      <div class="d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add</button>
+      </div>
+    </form>
+  </div>
+  <script>
+    // Autofill doctor name from localStorage
+    document.getElementById('doctorName').value = localStorage.getItem('loggedInUsername') || '';
+    // Set today's date as default
+    document.getElementById('datePrescribed').value = new Date().toISOString().split('T')[0];
+
+    // --- Autocomplete logic for patient name ---
+    let patients = [];
+    let appointments = [];
+    let selectedPatientId = null;
+    const patientInput = document.getElementById('patientName');
+    const suggestionsBox = document.getElementById('patientSuggestions');
+    const dateInput = document.getElementById('datePrescribed');
+    const patientNumberDisplay = document.getElementById('patientNumberDisplay');
+
+    // Fetch patients and appointments on load
+    fetch('http://localhost:3001/patients')
+      .then(res => res.json())
+      .then(data => { patients = data; })
+      .catch(() => { patients = []; });
+    fetch('http://localhost:3001/appointments')
+      .then(res => res.json())
+      .then(data => { appointments = data; })
+      .catch(() => { appointments = []; });
+
+    function toTitleCase(str) {
+      return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    }
+
+    function getMatchingPatients(input, date) {
+      if (!input) return [];
+      input = input.toLowerCase();
+      // Find patients with appointment on the selected date
+      const apptPatientIds = appointments
+        .filter(a => a.appointment_date === date)
+        .map(a => a.patient_id);
+      // Filter patients by name and appointment
+      return patients.filter(p => {
+        const fullName = `${toTitleCase(p.FirstName || '')}${p.MiddleName ? ' ' + toTitleCase(p.MiddleName) : ''} ${toTitleCase(p.LastName || '')}`.trim();
+        return apptPatientIds.includes(p.PatientID) && fullName.toLowerCase().includes(input);
+      });
+    }
+
+    function showSuggestions() {
+      const val = patientInput.value;
+      const date = dateInput.value;
+      const matches = getMatchingPatients(val, date);
+      suggestionsBox.innerHTML = '';
+      selectedPatientId = null;
+      patientNumberDisplay.textContent = '';
+      if (val && matches.length > 0) {
+        matches.forEach(p => {
+          const fullName = `${toTitleCase(p.FirstName || '')}${p.MiddleName ? ' ' + toTitleCase(p.MiddleName) : ''} ${toTitleCase(p.LastName || '')}`.trim();
+          const div = document.createElement('div');
+          div.className = 'list-group-item list-group-item-action';
+          div.textContent = fullName;
+          div.onclick = () => {
+            patientInput.value = fullName;
+            selectedPatientId = p.PatientID;
+            patientNumberDisplay.textContent = `Patient Number: ${p.PatientID}`;
+            suggestionsBox.innerHTML = '';
+          };
+          suggestionsBox.appendChild(div);
+        });
+        suggestionsBox.style.display = 'block';
+      } else {
+        suggestionsBox.style.display = 'none';
+      }
+    }
+
+    patientInput.addEventListener('input', function() {
+      showSuggestions();
+      selectedPatientId = null;
+      patientNumberDisplay.textContent = '';
+    });
+    dateInput.addEventListener('change', function() {
+      showSuggestions();
+      selectedPatientId = null;
+      patientNumberDisplay.textContent = '';
+    });
+    document.addEventListener('click', function(e) {
+      if (!suggestionsBox.contains(e.target) && e.target !== patientInput) {
+        suggestionsBox.innerHTML = '';
+        suggestionsBox.style.display = 'none';
+      }
+    });
+
+    // Cancel button closes the overlay (parent)
+    document.getElementById('cancelBtn').onclick = function() {
+      if (window.parent) {
+        window.parent.document.getElementById('addPrescriptionOverlay').style.display = 'none';
+        window.parent.document.getElementById('addPrescriptionIframe').src = '';
+      }
+    };
+    // Handle form submit
+    document.getElementById('addPrescriptionForm').onsubmit = function(e) {
+      e.preventDefault();
+      const data = {
+        patientName: this.patientName.value,
+        doctor: this.doctorName.value,
+        datePrescribed: this.datePrescribed.value,
+        medications: this.medications.value,
+        patientNumber: selectedPatientId || ''
+      };
+      // Send data to parent for table update
+      if (window.parent && window.parent.addPrescriptionToTable) {
+        window.parent.addPrescriptionToTable(data);
+      }
+      // Close overlay
+      if (window.parent) {
+        window.parent.document.getElementById('addPrescriptionOverlay').style.display = 'none';
+        window.parent.document.getElementById('addPrescriptionIframe').src = '';
+        if (window.parent.showToast) window.parent.showToast('Prescription added!', 'success');
+      }
+    };
+  </script>
+</body>
+</html>
