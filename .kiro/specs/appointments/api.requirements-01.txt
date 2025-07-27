@@ -1,0 +1,162 @@
+Core Appointment Operations:
+WHEN a client sends GET request to /api/appointments 
+THE SYSTEM SHALL return HTTP 200 with list of all appointments including patient details and appointment information
+
+WHEN a client sends POST request to /api/appointments/add with valid appointment data in JSON format
+THE SYSTEM SHALL create the appointment and return HTTP 201 with success message and appointment ID
+
+WHEN a client sends PUT request to /api/appointments/update/{id} with valid appointment data in JSON format
+THE SYSTEM SHALL update the appointment and return HTTP 200 with success message
+
+WHEN a client sends PUT request to /api/appointments/cancel/{id} with status in JSON format
+THE SYSTEM SHALL update the appointment status and return HTTP 200 with success message
+
+WHEN a client sends GET request to /api/appointments/patient/{id}
+THE SYSTEM SHALL return HTTP 200 with list of appointments for the specified patient ID
+
+WHEN a client sends GET request to /api/appointments/today
+THE SYSTEM SHALL return HTTP 200 with list of today's confirmed appointments
+
+WHEN a client sends GET request to /api/appointments/today/confirmed
+THE SYSTEM SHALL return HTTP 200 with count of today's confirmed appointments
+
+WHEN a client sends GET request to /api/appointments/weekly-summary
+THE SYSTEM SHALL return HTTP 200 with weekly appointment summary data
+
+---
+
+Request Validation - Required Fields:
+WHEN a client sends appointment creation request missing patient_name field
+THE SYSTEM SHALL return HTTP 400 with error message "All fields including valid Patient # are required"
+
+WHEN a client sends appointment creation request missing reason_for_visit field
+THE SYSTEM SHALL return HTTP 400 with error message "All fields including valid Patient # are required"
+
+WHEN a client sends appointment creation request missing appointment_date field
+THE SYSTEM SHALL return HTTP 400 with error message "All fields including valid Patient # are required"
+
+WHEN a client sends appointment creation request missing appointment_time field
+THE SYSTEM SHALL return HTTP 400 with error message "All fields including valid Patient # are required"
+
+WHEN a client sends appointment creation request missing patient_id field
+THE SYSTEM SHALL return HTTP 400 with error message "All fields including valid Patient # are required"
+
+WHEN a client sends appointment update request missing required fields
+THE SYSTEM SHALL return HTTP 400 with error message "All fields are required"
+
+WHEN a client sends appointment cancellation request missing status field
+THE SYSTEM SHALL return HTTP 400 with error message "Status is required."
+
+---
+
+Request Validation - Data Format:
+WHEN a client sends appointment request with contact_number in invalid Philippine mobile format
+THE SYSTEM SHALL log warning about invalid contact number format but allow the operation to proceed
+
+WHEN a client sends appointment request with appointment_date and appointment_time in the past
+THE SYSTEM SHALL return HTTP 400 with error message "Cannot book a past time slot."
+
+WHEN a client sends appointment request with non-existent patient_id
+THE SYSTEM SHALL return HTTP 400 with error message "Patient does not exist in the database."
+
+---
+
+Business Rules - Duplicate Prevention:
+WHEN a client sends appointment creation request for a patient who already has a confirmed appointment on the same date
+THE SYSTEM SHALL return HTTP 400 with error message "This patient already has an appointment for that day."
+
+WHEN a client sends appointment update request for a patient who already has another confirmed appointment on the same date
+THE SYSTEM SHALL return HTTP 400 with error message "This patient already has another appointment on the same day."
+
+---
+
+Business Rules - Time Slot Management:
+WHEN a client sends appointment creation request for a time slot that already has 1 confirmed appointment
+THE SYSTEM SHALL return HTTP 400 with error message "This time slot is already booked."
+
+WHEN a client sends appointment update request for a time slot that already has 4 confirmed appointments
+THE SYSTEM SHALL return HTTP 400 with error message "This time slot is already fully booked."
+
+WHEN a client sends appointment confirmation request for a time slot that already has 4 confirmed appointments
+THE SYSTEM SHALL return HTTP 400 with error message "This time slot is already fully booked. Please choose another."
+
+---
+
+Resource Not Found:
+WHEN a client sends appointment update request for non-existent appointment ID
+THE SYSTEM SHALL return HTTP 404 with error message "Appointment not found."
+
+WHEN a client sends appointment cancellation request for non-existent appointment ID
+THE SYSTEM SHALL return HTTP 404 with error message "Appointment not found."
+
+WHEN a client sends GET request to /api/appointments/patient/{id} for non-existent patient
+THE SYSTEM SHALL return HTTP 404 with error message about patient not found
+
+---
+
+Data Retrieval Requirements:
+WHEN retrieving appointments
+THE SYSTEM SHALL include patient_name, reason_for_visit, appointment_date, appointment_time, status, patient_id, contact_number, and doctor_name fields
+
+WHEN retrieving appointments with patient details
+THE SYSTEM SHALL join with patients table to provide formatted patient name as "LastName, FirstName MiddleName"
+
+WHEN retrieving today's appointments
+THE SYSTEM SHALL filter by current date and confirmed status, ordered by appointment_time ascending
+
+WHEN retrieving appointments by patient ID
+THE SYSTEM SHALL order results by appointment_date and appointment_time in descending order
+
+WHEN retrieving weekly appointment summary
+THE SYSTEM SHALL include appointments from the last 6 days with confirmed status, grouped by date
+
+---
+
+Status Management:
+WHEN a client sends appointment cancellation request with status "Confirmed"
+THE SYSTEM SHALL treat it as a reconfirmation and verify time slot availability before updating
+
+WHEN a client sends appointment cancellation request with status "Cancelled"
+THE SYSTEM SHALL update the appointment status to cancelled without availability checks
+
+WHEN creating new appointments
+THE SYSTEM SHALL set default status from request body or use system default
+
+---
+
+Patient Data Integration:
+WHEN processing appointment requests
+THE SYSTEM SHALL verify patient existence in patients table using PatientID
+
+WHEN processing appointment requests with valid patient_id
+THE SYSTEM SHALL retrieve and store the patient's ContactNumber from patients table
+
+WHEN storing appointments
+THE SYSTEM SHALL include patient contact information for communication purposes
+
+---
+
+Error Handling:
+WHEN database operations fail during appointment processing
+THE SYSTEM SHALL return HTTP 500 with error message "Database error" and log detailed error information
+
+WHEN appointment creation fails due to database issues
+THE SYSTEM SHALL return HTTP 500 with error message "Failed to insert appointment"
+
+WHEN appointment update fails due to database issues
+THE SYSTEM SHALL return HTTP 500 with error message "Failed to update appointment"
+
+WHEN appointment status update fails due to database issues
+THE SYSTEM SHALL return HTTP 500 with error message "Failed to update appointment status."
+
+WHEN data retrieval operations fail
+THE SYSTEM SHALL return HTTP 500 with error message "Database error" and include error details in response
+
+---
+
+Security and Logging:
+THE SYSTEM SHALL log all appointment operations with relevant details for audit purposes
+THE SYSTEM SHALL validate Philippine mobile number format using regex pattern /^09\d{9}$/
+THE SYSTEM SHALL sanitize and validate all input data before database operations
+THE SYSTEM SHALL use prepared statements for all database queries to prevent SQL injection
+THE SYSTEM SHALL log warnings for invalid contact number formats found in database records
