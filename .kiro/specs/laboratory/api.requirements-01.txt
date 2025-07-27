@@ -1,0 +1,78 @@
+Core Laboratory Operations:
+WHEN a client sends POST request to /api/laboratory/lab_requests with valid lab request data in JSON format
+THE SYSTEM SHALL create a new lab request entry and return HTTP 201 with success message "Lab request submitted successfully"
+
+WHEN a client sends POST request to /api/laboratory/blood_chem with valid blood chemistry data in JSON format  
+THE SYSTEM SHALL save blood chemistry results and return HTTP 201 with success message "Blood chemistry results inserted."
+
+WHEN a client sends GET request to /api/laboratory/lab_requests
+THE SYSTEM SHALL return HTTP 200 with array of all lab requests including patient details and test selections
+
+WHEN a client sends GET request to /api/laboratory/lab_requests/completed
+THE SYSTEM SHALL return HTTP 200 with array of completed lab tests formatted for dashboard display
+
+WHEN a client sends GET request to /api/laboratory/lab_requests/:patientId  
+THE SYSTEM SHALL return HTTP 200 with the most recent lab request for the specified patient
+
+WHEN a client sends PUT request to /api/laboratory/lab_requests/:patientId/:requestDate with lab results
+THE SYSTEM SHALL update the lab request with results and return HTTP 200 with success message "Lab results updated successfully."
+
+---
+
+Request Validation:
+WHEN a client sends lab request missing required patient_id field
+THE SYSTEM SHALL return HTTP 400 with error message "Patient ID is required"
+
+WHEN a client sends lab request missing required patient_name field  
+THE SYSTEM SHALL return HTTP 400 with error message "Patient name is required"
+
+WHEN a client sends lab request missing required request_date field
+THE SYSTEM SHALL return HTTP 400 with error message "Request date is required"
+
+WHEN a client sends blood chemistry request missing required patient_name field
+THE SYSTEM SHALL return HTTP 400 with error message "Patient name is required for blood chemistry results"
+
+WHEN a client sends blood chemistry request missing required date_taken field
+THE SYSTEM SHALL return HTTP 400 with error message "Date taken is required for blood chemistry results"
+
+WHEN a client sends update request with no valid lab result fields
+THE SYSTEM SHALL return HTTP 400 with error message "No valid lab fields to update."
+
+---
+
+Data Retrieval Failures:
+WHEN a client requests lab request for non-existent patient ID
+THE SYSTEM SHALL return HTTP 404 with error message "Not found"
+
+WHEN a client requests update for non-existent patient ID and request date combination
+THE SYSTEM SHALL return HTTP 404 with error message "Lab request not found for the specified patient and date"
+
+---
+
+System Error Handling:
+WHEN database connection fails during lab request submission
+THE SYSTEM SHALL return HTTP 500 with error message "Failed to submit lab request" and log the database error
+
+WHEN database connection fails during blood chemistry save operation
+THE SYSTEM SHALL return HTTP 500 with error message "Insert failed" and log the database error
+
+WHEN database connection fails during lab requests retrieval
+THE SYSTEM SHALL return HTTP 500 with error message "Failed to fetch lab requests" and log the database error
+
+WHEN database connection fails during lab results update
+THE SYSTEM SHALL return HTTP 500 with error message "Failed to update lab request with results" and log the database error
+
+WHEN database connection fails during completed tests retrieval  
+THE SYSTEM SHALL return HTTP 500 with error message "Failed to fetch completed lab tests" and log the database error
+
+---
+
+Data Integrity Requirements:
+THE SYSTEM SHALL validate patient_id format matches existing patient records before creating lab requests
+THE SYSTEM SHALL set default status to 'Pending' for new lab requests
+THE SYSTEM SHALL only allow status updates to 'Complete' when lab results are provided
+THE SYSTEM SHALL preserve original request_date when updating lab results
+THE SYSTEM SHALL log all lab request creation, updates, and retrievals with timestamp
+THE SYSTEM SHALL ensure date_taken is set when status is updated to 'Complete'
+THE SYSTEM SHALL validate that request_date and date_taken are valid date formats
+THE SYSTEM SHALL limit lab result updates to predefined allowed fields only
