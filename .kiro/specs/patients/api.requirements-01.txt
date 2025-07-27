@@ -1,0 +1,95 @@
+Core Patient Operations:
+WHEN a client sends GET request to /api/patients 
+THE SYSTEM SHALL return HTTP 200 with array of all patients containing PatientID, FirstName, MiddleName, LastName, and formatted DateOfBirth
+
+WHEN a client sends GET request to /api/patients/:id with valid patient ID 
+THE SYSTEM SHALL return HTTP 200 with complete patient details including personal information and guardian details
+
+WHEN a client sends POST request to /api/patients/add-patient with valid patient data in JSON format
+THE SYSTEM SHALL create new patient record, generate unique PatientID with format YYYY-[FirstLetter][Number], and return HTTP 200 with success message and patient_id
+
+WHEN a client sends GET request to /api/patients/total 
+THE SYSTEM SHALL return HTTP 200 with JSON object containing total count of patients in database
+
+WHEN a client sends GET request to /api/patients/search with name query parameter
+THE SYSTEM SHALL return HTTP 200 with array of matching patients containing id, formatted name, age, and gender
+
+---
+
+Request Validation:
+WHEN a client sends add patient request missing required fields (lastname, firstname, dob, age, gender, address)
+THE SYSTEM SHALL return HTTP 400 with error message indicating missing required fields
+
+WHEN a client sends add patient request with invalid contact number format
+THE SYSTEM SHALL return HTTP 400 with error code "Invalid contact number format" and validation details
+
+WHEN a client sends add patient request with invalid guardian contact number format  
+THE SYSTEM SHALL return HTTP 400 with error code "Invalid contact number format" and validation details
+
+WHEN a client sends search request without name query parameter
+THE SYSTEM SHALL return HTTP 400 with error message "Name query required"
+
+---
+
+Patient ID Generation:
+WHEN a new patient is created
+THE SYSTEM SHALL generate PatientID using format YYYY-[FirstLetterOfLastName][SequentialNumber] where YYYY is current year
+
+WHEN generating patient ID
+THE SYSTEM SHALL query existing patients with same year and first letter prefix to determine next sequential number
+
+WHEN patient ID is generated successfully
+THE SYSTEM SHALL ensure uniqueness by using count of existing patients with matching prefix plus one
+
+---
+
+Data Formatting and Processing:
+WHEN patient data is stored or retrieved
+THE SYSTEM SHALL convert all text fields (names, address, guardian information) to uppercase format
+
+WHEN contact numbers are processed
+THE SYSTEM SHALL sanitize phone numbers using phoneValidation utility before storage
+
+WHEN patient date of birth is retrieved
+THE SYSTEM SHALL format DateOfBirth as 'YYYY-MM-DD' string format
+
+WHEN search results are returned
+THE SYSTEM SHALL concatenate FirstName, MiddleName, and LastName into single name field and limit results to 10 patients
+
+---
+
+Error Handling:
+WHEN a client requests patient by non-existent ID
+THE SYSTEM SHALL return HTTP 404 with error message "Patient not found"
+
+WHEN database query fails during patient operations
+THE SYSTEM SHALL return HTTP 500 with error message "Database error" and log error details
+
+WHEN database connection fails during add patient operation
+THE SYSTEM SHALL return HTTP 500 with error message "Failed to add patient" and log error details
+
+WHEN search query encounters database error
+THE SYSTEM SHALL return HTTP 500 with error message "DB error" and log error details
+
+---
+
+Security and Data Integrity:
+THE SYSTEM SHALL validate contact numbers against proper phone number format before accepting patient data
+THE SYSTEM SHALL log all patient creation attempts with success/failure status
+THE SYSTEM SHALL ensure patient data is properly escaped to prevent SQL injection attacks
+THE SYSTEM SHALL require all patient data fields to be properly sanitized before database insertion
+
+---
+
+Search Functionality:
+WHEN performing patient search
+THE SYSTEM SHALL search across FirstName, MiddleName, and LastName fields using LIKE pattern matching
+
+WHEN search query is provided
+THE SYSTEM SHALL use wildcard matching (%) for partial name matches in any of the name fields
+
+WHEN search results are formatted
+THE SYSTEM SHALL trim whitespace from concatenated names and ensure proper case formatting
+
+WHEN search operation completes
+THE SYSTEM SHALL limit results to maximum of 10 patients for performance optimization
