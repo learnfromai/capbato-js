@@ -1,0 +1,111 @@
+Core Appointment Management:
+WHEN a client sends POST request to /appointments/add with valid patient_id, patient_name, reason_for_visit, appointment_date, and appointment_time in JSON format
+THE SYSTEM SHALL create a new appointment record and return HTTP 201 with success message and appointment ID
+
+WHEN a client sends PUT request to /appointments/update/:id with valid appointment data in JSON format
+THE SYSTEM SHALL update the specified appointment and return HTTP 200 with success message
+
+WHEN a client sends PUT request to /appointments/cancel/:id with valid status in JSON format  
+THE SYSTEM SHALL update the appointment status and return HTTP 200 with success message
+
+WHEN a client sends GET request to /appointments
+THE SYSTEM SHALL return HTTP 200 with array of all appointments including patient details and appointment information
+
+---
+
+Request Validation:
+WHEN a client sends POST request to /appointments/add missing required fields (patient_id, patient_name, reason_for_visit, appointment_date, appointment_time)
+THE SYSTEM SHALL return HTTP 400 with error message "All fields including valid Patient # are required"
+
+WHEN a client sends POST request to /appointments/add with non-existent patient_id
+THE SYSTEM SHALL return HTTP 400 with error message "Patient does not exist in the database."
+
+WHEN a client sends PUT request to /appointments/update/:id missing required fields (patient_name, reason_for_visit, appointment_date, appointment_time)
+THE SYSTEM SHALL return HTTP 400 with error message "All fields are required"
+
+WHEN a client sends PUT request to /appointments/cancel/:id missing status field
+THE SYSTEM SHALL return HTTP 400 with error message "Status is required."
+
+WHEN a client sends PUT request to /appointments/cancel/:id with non-existent appointment ID
+THE SYSTEM SHALL return HTTP 404 with error message "Appointment not found."
+
+---
+
+Business Rules - Time Constraints:
+WHEN a client sends POST request to /appointments/add with appointment_date and appointment_time in the past
+THE SYSTEM SHALL return HTTP 400 with error message "Cannot book a past time slot."
+
+WHEN a client sends POST request to /appointments/add for a time slot that already has 1 confirmed appointment
+THE SYSTEM SHALL return HTTP 400 with error message "This time slot is already booked."
+
+WHEN a client sends PUT request to /appointments/update/:id for a time slot that already has 4 confirmed appointments
+THE SYSTEM SHALL return HTTP 400 with error message "This time slot is already fully booked."
+
+WHEN a client sends PUT request to /appointments/cancel/:id with status "Confirmed" for a time slot that already has 4 confirmed appointments
+THE SYSTEM SHALL return HTTP 400 with error message "This time slot is already fully booked. Please choose another."
+
+---
+
+Business Rules - Patient Constraints:
+WHEN a client sends POST request to /appointments/add for a patient who already has a confirmed appointment on the same date
+THE SYSTEM SHALL return HTTP 400 with error message "This patient already has an appointment for that day."
+
+WHEN a client sends PUT request to /appointments/update/:id for a patient who already has another confirmed appointment on the same date
+THE SYSTEM SHALL return HTTP 400 with error message "This patient already has another appointment on the same day."
+
+---
+
+Data Retrieval Operations:
+WHEN a client sends GET request to /appointments/patient/:id
+THE SYSTEM SHALL return HTTP 200 with array of appointments for the specified patient ordered by date and time descending
+
+WHEN a client sends GET request to /appointments/today/confirmed
+THE SYSTEM SHALL return HTTP 200 with JSON object containing total count of today's confirmed appointments
+
+WHEN a client sends GET request to /appointments/today  
+THE SYSTEM SHALL return HTTP 200 with array of today's confirmed appointments ordered by appointment time ascending
+
+WHEN a client sends GET request to /appointments/weekly-summary
+THE SYSTEM SHALL return HTTP 200 with array of appointment counts grouped by date for the past 7 days
+
+---
+
+Contact Number Validation:
+WHEN the system processes an appointment with patient contact number
+THE SYSTEM SHALL validate the contact number against Philippine mobile format and log warnings for invalid formats
+
+WHEN the system creates or updates an appointment
+THE SYSTEM SHALL retrieve and store the patient's contact number from the patients table
+
+---
+
+Status Management:
+WHEN a client sends PUT request to /appointments/cancel/:id with status "Confirmed"
+THE SYSTEM SHALL reconfirm the appointment and return success message "Appointment reconfirmed successfully!"
+
+WHEN a client sends PUT request to /appointments/cancel/:id with status other than "Confirmed"
+THE SYSTEM SHALL cancel the appointment and return success message "Appointment cancelled successfully!"
+
+---
+
+Error Handling:
+WHEN any appointment operation encounters a database error
+THE SYSTEM SHALL return HTTP 500 with error message "Database error" and log the error details
+
+WHEN POST /appointments/add encounters a database error during insertion
+THE SYSTEM SHALL return HTTP 500 with error message "Failed to insert appointment"
+
+WHEN PUT /appointments/update/:id encounters a database error during update
+THE SYSTEM SHALL return HTTP 500 with error message "Failed to update appointment"
+
+WHEN PUT /appointments/cancel/:id encounters a database error during status update
+THE SYSTEM SHALL return HTTP 500 with error message "Failed to update appointment status."
+
+---
+
+Data Security and Integrity:
+THE SYSTEM SHALL verify patient existence by querying the patients table before creating appointments
+THE SYSTEM SHALL prevent duplicate appointment bookings for the same patient on the same date
+THE SYSTEM SHALL enforce time slot capacity limits to prevent overbooking
+THE SYSTEM SHALL maintain referential integrity between appointments and patients tables
+THE SYSTEM SHALL automatically set created_at timestamp for new appointment records
