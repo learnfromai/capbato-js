@@ -1,0 +1,63 @@
+Login Form Display:
+WHEN a user navigates to the login page 
+THE SYSTEM SHALL display a login form with username field, password field, and "Login" button
+
+WHEN the login page loads 
+THE SYSTEM SHALL display the clinic branding with logo and "M.G. Amores Medical Clinic" title in the navbar
+
+WHEN the login form is displayed 
+THE SYSTEM SHALL include a "Go Back" button below the login form
+
+WHEN the login form is displayed 
+THE SYSTEM SHALL show username and password input fields with appropriate icons (person icon for username, lock icon for password)
+
+---
+
+Form Submission and Authentication:
+WHEN a user clicks the "Login" button 
+THE SYSTEM SHALL prevent the default form submission and proceed with authentication
+
+WHEN a user submits the login form 
+THE SYSTEM SHALL extract username and password values from the input fields
+
+WHEN the system processes authentication 
+THE SYSTEM SHALL send a POST request to "http://localhost:3001/auth/login" with username and password in JSON format
+
+---
+
+Authentication Response Handling:
+WHEN authentication succeeds 
+THE SYSTEM SHALL store the user role and username in localStorage
+
+WHEN authentication succeeds with admin role 
+THE SYSTEM SHALL redirect to "index.html"
+
+WHEN authentication succeeds with receptionist role 
+THE SYSTEM SHALL redirect to "index.html"  
+
+WHEN authentication succeeds with doctor role 
+THE SYSTEM SHALL redirect to "prescriptions.html"
+
+WHEN authentication fails due to server response error 
+THE SYSTEM SHALL display the server error message in red text below the form
+
+WHEN authentication fails due to network error 
+THE SYSTEM SHALL display "Login failed." message in red text below the form
+
+WHEN authentication succeeds but role is unknown 
+THE SYSTEM SHALL display "Unknown role." message in red text below the form
+
+---
+
+User Interface and Styling:
+WHEN the login page is displayed 
+THE SYSTEM SHALL show a centered login form with white background and rounded corners on a gradient blue background
+
+WHEN error messages are displayed 
+THE SYSTEM SHALL show them in red color (#crimson) below the login form
+
+WHEN the login form is focused 
+THE SYSTEM SHALL change the input field background color to light green (#e6f4f1)
+
+WHEN the page loads 
+THE SYSTEM SHALL display the form with proper spacing, shadows, and responsive design up to 450px maximum width
