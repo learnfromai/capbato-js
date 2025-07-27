@@ -1,0 +1,56 @@
+Login Form Display:
+WHEN a user navigates to the login page 
+THE SYSTEM SHALL display a login form with username field, password field, and "Login" button
+
+WHEN the login form is displayed 
+THE SYSTEM SHALL include a "Go Back" button below the login form
+
+WHEN the login page loads 
+THE SYSTEM SHALL display the clinic logo and name "M.G. Amores Medical Clinic" in the navigation header
+
+WHEN the login form is displayed 
+THE SYSTEM SHALL show username and password input fields with appropriate icons (person icon for username, lock icon for password)
+
+---
+
+Form Submission and Processing:
+WHEN a user submits the login form 
+THE SYSTEM SHALL prevent the default form submission and process the login via JavaScript
+
+WHEN a user clicks "Login" button or submits the form
+THE SYSTEM SHALL send a POST request to "http://localhost:3001/auth/login" with username and password
+
+WHEN a user clicks the "Go Back" button
+THE SYSTEM SHALL navigate back to the previous page (implicit browser behavior)
+
+---
+
+Authentication Response Handling:
+WHEN authentication succeeds 
+THE SYSTEM SHALL store the user role and username in localStorage
+
+WHEN authentication succeeds and user role is "admin" or "receptionist"
+THE SYSTEM SHALL redirect to "index.html" 
+
+WHEN authentication succeeds and user role is "doctor"
+THE SYSTEM SHALL redirect to "prescriptions.html"
+
+WHEN authentication fails due to invalid credentials or server error
+THE SYSTEM SHALL display the error message "Login failed." below the form in red color
+
+WHEN authentication fails with an unknown role
+THE SYSTEM SHALL display "Unknown role." message
+
+---
+
+Current Implementation Limitations:
+THE SYSTEM SHALL NOT include "Remember Me" checkbox functionality
+THE SYSTEM SHALL NOT include "Forgot Password?" link
+THE SYSTEM SHALL NOT include "Create Account" registration link  
+THE SYSTEM SHALL NOT set automatic focus on username field when page loads
+THE SYSTEM SHALL NOT perform real-time email format validation
+THE SYSTEM SHALL NOT disable submit button when fields are empty
+THE SYSTEM SHALL NOT show loading state on submit button during authentication
+THE SYSTEM SHALL NOT automatically redirect users with valid stored tokens
+THE SYSTEM SHALL NOT validate input format before submission
+THE SYSTEM SHALL NOT handle return key press explicitly (relies on browser default form submission)
