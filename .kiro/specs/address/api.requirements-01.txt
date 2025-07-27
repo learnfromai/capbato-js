@@ -1,0 +1,86 @@
+Core Address Data Retrieval:
+WHEN a client sends GET request to /address/provinces 
+THE SYSTEM SHALL return HTTP 200 with array of all provinces in JSON format containing code and name properties
+
+WHEN a client sends GET request to /address/cities/:provinceCode with valid province code
+THE SYSTEM SHALL return HTTP 200 with array of cities/municipalities for the specified province in JSON format containing code and name properties
+
+WHEN a client sends GET request to /address/barangays/:cityCode with valid city code
+THE SYSTEM SHALL return HTTP 200 with array of barangays for the specified city in JSON format containing code and name properties
+
+WHEN the system retrieves address data successfully
+THE SYSTEM SHALL sort all results alphabetically by name property before returning
+
+---
+
+Data Format Requirements:
+WHEN the system returns province data
+THE SYSTEM SHALL generate province codes by converting province names to uppercase with spaces replaced by underscores
+
+WHEN the system returns city data  
+THE SYSTEM SHALL generate city codes by converting city names to lowercase with spaces replaced by underscores
+
+WHEN the system returns barangay data
+THE SYSTEM SHALL generate barangay codes following the pattern B### where ### is a zero-padded three-digit number starting from 001
+
+WHEN returning any address data
+THE SYSTEM SHALL ensure each item contains exactly two properties: code (string) and name (string)
+
+---
+
+Request Parameter Handling:
+WHEN a client sends request to /address/cities/:provinceCode with invalid or non-existent province code
+THE SYSTEM SHALL return HTTP 200 with empty array
+
+WHEN a client sends request to /address/barangays/:cityCode with invalid or non-existent city code  
+THE SYSTEM SHALL return HTTP 200 with empty array
+
+WHEN a client sends request with province code containing underscores
+THE SYSTEM SHALL convert underscores back to spaces for internal lookup processing
+
+WHEN a client sends request with city code containing underscores
+THE SYSTEM SHALL convert underscores back to spaces and convert to uppercase for internal lookup processing
+
+WHEN a client sends request with empty province code parameter
+THE SYSTEM SHALL return HTTP 200 with empty array
+
+WHEN a client sends request with empty city code parameter
+THE SYSTEM SHALL return HTTP 200 with empty array
+
+---
+
+Data Source Management:
+WHEN the system starts up
+THE SYSTEM SHALL load Philippine address data from philippines-complete.json file in the data directory
+
+WHEN loading address data
+THE SYSTEM SHALL parse JSON structure organized by regions containing province_list with municipality_list and barangay_list
+
+WHEN extracting provinces
+THE SYSTEM SHALL iterate through all regions and collect all unique provinces from province_list objects
+
+WHEN extracting cities for a province
+THE SYSTEM SHALL locate the province within any region and return all municipalities from its municipality_list
+
+---
+
+Error Handling:
+WHEN the system encounters an error loading the Philippine address data file
+THE SYSTEM SHALL return HTTP 500 with error message "Failed to fetch provinces/cities/barangays" depending on the endpoint
+
+WHEN the system encounters a JSON parsing error
+THE SYSTEM SHALL log the error to console and return HTTP 500 with generic error message
+
+WHEN the system cannot access the data file
+THE SYSTEM SHALL log "Error fetching provinces/cities/barangays" with error details to console
+
+WHEN any unexpected error occurs during address data processing
+THE SYSTEM SHALL return HTTP 500 with JSON object containing error property with descriptive message
+
+---
+
+Performance Requirements:
+THE SYSTEM SHALL respond to all address endpoints within 2000 milliseconds under normal load conditions
+THE SYSTEM SHALL limit response size to under 1MB for any single address endpoint request
+THE SYSTEM SHALL cache loaded Philippine address data in memory to avoid repeated file system access
+THE SYSTEM SHALL maintain data integrity by ensuring barangay codes are unique within each city context
