@@ -1,0 +1,72 @@
+Patient Data Retrieval:
+WHEN a client sends GET request to /patients 
+THE SYSTEM SHALL return HTTP 200 with JSON array of all patients including PatientID, FirstName, MiddleName, LastName, and formatted DateOfBirth
+
+WHEN a client sends GET request to /patients 
+THE SYSTEM SHALL format patient names in uppercase and order results by LastName in ascending order
+
+WHEN a client sends GET request to /patients/{id} with valid patient ID 
+THE SYSTEM SHALL return HTTP 200 with complete patient data including personal and guardian information
+
+WHEN a client sends GET request to /patients/{id} with valid patient ID 
+THE SYSTEM SHALL format all string fields in uppercase for consistent data presentation
+
+---
+
+Patient Search:
+WHEN a client sends GET request to /patients/search with 'name' query parameter 
+THE SYSTEM SHALL return HTTP 200 with JSON array of matching patients limited to 10 results
+
+WHEN performing patient search 
+THE SYSTEM SHALL match the search term against FirstName, MiddleName, and LastName fields using case-insensitive LIKE comparison
+
+WHEN a client sends GET request to /patients/search without 'name' parameter 
+THE SYSTEM SHALL return HTTP 400 with error message "Name query required"
+
+---
+
+Patient Statistics:
+WHEN a client sends GET request to /patients/total 
+THE SYSTEM SHALL return HTTP 200 with JSON object containing total patient count
+
+---
+
+Patient Creation:
+WHEN a client sends POST request to /patients/add-patient with valid patient data 
+THE SYSTEM SHALL create new patient record and return HTTP 201 with success message and generated PatientID
+
+WHEN creating new patient 
+THE SYSTEM SHALL generate PatientID with format "YYYY-L#" where YYYY is current year, L is first letter of lastname, and # is sequential number
+
+WHEN creating new patient 
+THE SYSTEM SHALL validate contact number format and return HTTP 400 with detailed validation errors if invalid
+
+WHEN creating new patient 
+THE SYSTEM SHALL sanitize and format all contact numbers to standard format
+
+WHEN creating new patient 
+THE SYSTEM SHALL convert all string fields to uppercase before storing in database
+
+---
+
+Error Handling:
+WHEN a client sends GET request to /patients/{id} with non-existent patient ID 
+THE SYSTEM SHALL return HTTP 404 with error message "Patient not found"
+
+WHEN database connection fails during patient operations 
+THE SYSTEM SHALL return HTTP 500 with error message "Database error" and log detailed error information
+
+WHEN patient creation fails due to validation errors 
+THE SYSTEM SHALL return HTTP 400 with detailed error information including field-specific validation messages
+
+---
+
+Data Validation:
+WHEN processing patient contact numbers 
+THE SYSTEM SHALL validate phone number format and reject invalid formats with specific error messages
+
+WHEN processing patient data 
+THE SYSTEM SHALL sanitize all input data to prevent SQL injection and ensure data integrity
+
+WHEN storing patient data 
+THE SYSTEM SHALL ensure all required fields are present and properly formatted according to database schema constraints
