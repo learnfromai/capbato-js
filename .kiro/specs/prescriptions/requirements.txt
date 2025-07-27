@@ -1,0 +1,222 @@
+Page Display and Authentication:
+WHEN a user navigates to the prescriptions page
+THE SYSTEM SHALL verify authentication status and redirect to login if not authenticated
+
+WHEN the prescriptions page loads for an authenticated user
+THE SYSTEM SHALL display the page header with clinic logo, name, user role, and username
+
+WHEN the prescriptions page loads
+THE SYSTEM SHALL display the navigation sidebar with "Prescriptions" marked as active
+
+WHEN the prescriptions page loads 
+THE SYSTEM SHALL display the main content area with "Prescriptions" title and prescription table
+
+---
+
+Role-Based Access Control:
+WHEN the prescriptions page loads for a non-doctor user
+THE SYSTEM SHALL hide the "Add Prescription" button
+
+WHEN the prescriptions page loads for a non-doctor user
+THE SYSTEM SHALL hide the "Actions" column header in the prescription table
+
+WHEN the prescriptions page loads for a doctor user
+THE SYSTEM SHALL display the "Add Prescription" button but disable its functionality
+
+WHEN the prescriptions page loads for an admin user
+THE SYSTEM SHALL inject an "Accounts" navigation item in the sidebar
+
+---
+
+Profile Management:
+WHEN the prescriptions page loads
+THE SYSTEM SHALL display user's profile avatar with first letter of username and colored background
+
+WHEN a user clicks on the profile avatar
+THE SYSTEM SHALL toggle the profile dropdown menu with "Settings" and "Logout" options
+
+WHEN a user clicks "Settings" in the profile dropdown
+THE SYSTEM SHALL show "Settings functionality coming soon!" alert message
+
+WHEN a user clicks "Logout" in the profile dropdown
+THE SYSTEM SHALL clear localStorage authentication data and redirect to login page
+
+WHEN a user clicks outside the profile dropdown
+THE SYSTEM SHALL close the dropdown menu
+
+---
+
+Navigation:
+WHEN a user clicks on any sidebar navigation item
+THE SYSTEM SHALL navigate to the corresponding page
+
+WHEN a user clicks "Dashboard" in sidebar
+THE SYSTEM SHALL navigate to index.html
+
+WHEN a user clicks "Appointments" in sidebar
+THE SYSTEM SHALL navigate to appointments.html
+
+WHEN a user clicks "Patients" in sidebar
+THE SYSTEM SHALL navigate to patients.html
+
+WHEN a user clicks "Laboratory" in sidebar
+THE SYSTEM SHALL navigate to laboratory.html
+
+WHEN a user clicks "Doctors" in sidebar
+THE SYSTEM SHALL navigate to doctor-schedule.html
+
+---
+
+Search and Filter Functionality:
+WHEN a user types in the search input field
+THE SYSTEM SHALL filter prescription table rows in real-time based on search term
+
+WHEN a user enters a search term
+THE SYSTEM SHALL show only table rows containing the search term in any column
+
+WHEN a user clears the search input field
+THE SYSTEM SHALL display all prescription table rows
+
+WHEN the search input receives focus
+THE SYSTEM SHALL change border color to teal (#4db6ac)
+
+---
+
+Data Table Display:
+WHEN the prescription table displays data
+THE SYSTEM SHALL show columns for Patient Number, Patient Name, Doctor, Date Prescribed, Medications, and Actions
+
+WHEN the prescription table displays patient names
+THE SYSTEM SHALL left-align the Patient Name column text
+
+WHEN the prescription table displays doctor names
+THE SYSTEM SHALL left-align the Doctor column text
+
+WHEN the prescription table displays medications
+THE SYSTEM SHALL left-align the Medications column text
+
+WHEN the prescription table displays patient numbers
+THE SYSTEM SHALL center-align the Patient Number column text
+
+WHEN the prescription table displays dates
+THE SYSTEM SHALL center-align the Date Prescribed column text
+
+WHEN a user hovers over a table row
+THE SYSTEM SHALL highlight the row with light gray background (#f8f9fa)
+
+---
+
+Add Prescription Overlay Management:
+WHEN a user clicks the "Add Prescription" button (if visible)
+THE SYSTEM SHALL do nothing (functionality disabled for security)
+
+WHEN the add prescription overlay is opened
+THE SYSTEM SHALL display the overlay with iframe containing add-prescription-form.html
+
+WHEN a user clicks the close button on add prescription overlay
+THE SYSTEM SHALL close the overlay and clear the iframe source
+
+WHEN a user clicks outside the overlay content area
+THE SYSTEM SHALL close the overlay and clear the iframe source
+
+---
+
+Add Prescription Form:
+WHEN the add prescription form loads
+THE SYSTEM SHALL auto-fill the doctor name field with logged-in username
+
+WHEN the add prescription form displays the doctor field
+THE SYSTEM SHALL make the doctor name field read-only to prevent manual editing
+
+WHEN the add prescription form loads
+THE SYSTEM SHALL set the date prescribed field to today's date
+
+WHEN the add prescription form loads
+THE SYSTEM SHALL fetch patient data from the server API endpoint
+
+WHEN the add prescription form loads
+THE SYSTEM SHALL fetch appointment data from the server API endpoint
+
+WHEN patient or appointment data fails to load
+THE SYSTEM SHALL continue with empty data arrays to prevent form breakage
+
+WHEN a user types in the patient name field
+THE SYSTEM SHALL show autocomplete suggestions based on patients with appointments on selected date
+
+WHEN filtering patient autocomplete suggestions
+THE SYSTEM SHALL only show patients who have appointments scheduled for the selected prescription date
+
+WHEN the system displays patient names in autocomplete suggestions
+THE SYSTEM SHALL format names in title case (first letter of each word capitalized)
+
+WHEN a user selects a patient from autocomplete suggestions
+THE SYSTEM SHALL fill the patient name field and display the patient number
+
+WHEN a user changes the date prescribed
+THE SYSTEM SHALL update patient name autocomplete suggestions based on new date
+
+WHEN a user clicks outside the patient suggestions dropdown
+THE SYSTEM SHALL hide the suggestions dropdown
+
+WHEN a user clicks "Cancel" button in add prescription form
+THE SYSTEM SHALL close the overlay and return to prescriptions page
+
+WHEN a user submits the add prescription form with valid data
+THE SYSTEM SHALL add the prescription to the table and show success toast notification
+
+WHEN a user attempts to submit the add prescription form with missing required fields
+THE SYSTEM SHALL prevent form submission and show browser validation messages
+
+WHEN the add prescription form is submitted successfully
+THE SYSTEM SHALL reset the form and close the overlay
+
+---
+
+Action Button Functionality:
+WHEN a user clicks the "View" action button on a prescription row
+THE SYSTEM SHALL show a toast notification "Viewing prescription [ID]"
+
+WHEN a user clicks the "Edit" action button on a prescription row
+THE SYSTEM SHALL show a toast notification "Editing prescription [ID]"
+
+WHEN a user clicks the "Delete" action button on a prescription row
+THE SYSTEM SHALL show confirmation modal asking "Are you sure you want to delete prescription [ID]?"
+
+WHEN a user clicks "Yes" in the delete confirmation modal
+THE SYSTEM SHALL remove the prescription row from the table and show success toast notification
+
+WHEN a user clicks "No" in the delete confirmation modal
+THE SYSTEM SHALL close the modal without deleting the prescription
+
+WHEN a user clicks outside the confirmation modal
+THE SYSTEM SHALL close the modal without performing any action
+
+---
+
+Toast Notification System:
+WHEN the system displays a toast notification
+THE SYSTEM SHALL show the toast in the top-right corner with appropriate styling
+
+WHEN the system displays a success toast notification
+THE SYSTEM SHALL use green background color (#28a745)
+
+WHEN the system displays an error toast notification
+THE SYSTEM SHALL use red background color (#dc3545)
+
+WHEN a toast notification is displayed
+THE SYSTEM SHALL automatically hide it after 3 seconds
+
+---
+
+Responsive Design:
+WHEN the prescriptions page is viewed on mobile devices (max-width: 768px)
+THE SYSTEM SHALL hide the sidebar by default and allow it to slide in when activated
+
+WHEN the prescriptions page is viewed on mobile devices
+THE SYSTEM SHALL adjust main content width to use full screen minus margins
+
+WHEN the prescriptions page is viewed on mobile devices
+THE SYSTEM SHALL stack prescription header elements vertically instead of horizontally
+
+WHEN the prescriptions page is viewed on mobile devices
+THE SYSTEM SHALL make the search bar take full available width
