@@ -1,0 +1,117 @@
+Core Address Retrieval:
+WHEN a client sends GET request to /address/provinces 
+THE SYSTEM SHALL return HTTP 200 with JSON array of all Philippine provinces containing code and name properties
+
+WHEN a client sends GET request to /address/cities/:provinceCode with valid province code
+THE SYSTEM SHALL return HTTP 200 with JSON array of cities/municipalities for that province containing code and name properties
+
+WHEN a client sends GET request to /address/barangays/:cityCode with valid city code
+THE SYSTEM SHALL return HTTP 200 with JSON array of barangays for that city containing code and name properties
+
+WHEN the system processes address data requests
+THE SYSTEM SHALL sort all returned arrays alphabetically by name property
+
+WHEN the system returns province data
+THE SYSTEM SHALL format province codes as uppercase with underscores replacing spaces
+
+WHEN the system processes province code parameters for city lookup
+THE SYSTEM SHALL convert province codes back to province names with underscores replaced by spaces
+
+WHEN the system returns city data  
+THE SYSTEM SHALL format city codes as lowercase with underscores replacing spaces
+
+WHEN the system processes city code parameters for barangay lookup
+THE SYSTEM SHALL convert city codes back to uppercase municipality names with underscores replaced by spaces
+
+WHEN the system returns barangay data
+THE SYSTEM SHALL format barangay codes as B### pattern with zero-padded three-digit numbers
+
+---
+
+Request Validation:
+WHEN a client sends request to /address/cities/ without provinceCode path parameter
+THE SYSTEM SHALL return HTTP 404 as handled by Express router
+
+WHEN a client sends request to /address/barangays/ without cityCode path parameter
+THE SYSTEM SHALL return HTTP 404 as handled by Express router
+
+WHEN a client sends request to /address/cities/:provinceCode with non-existent province code
+THE SYSTEM SHALL return HTTP 200 with empty JSON array
+
+WHEN a client sends request to /address/barangays/:cityCode with non-existent city code
+THE SYSTEM SHALL return HTTP 200 with empty JSON array
+
+WHEN a client sends request with invalid province code format
+THE SYSTEM SHALL gracefully handle conversion and return empty array if no matches found
+
+WHEN a client sends request with invalid city code format  
+THE SYSTEM SHALL gracefully handle conversion and return empty array if no matches found
+
+---
+
+Data Format Requirements:
+WHEN the system returns province data
+THE SYSTEM SHALL include exactly two properties per province object: code (string) and name (string)
+
+WHEN the system returns city data
+THE SYSTEM SHALL include exactly two properties per city object: code (string) and name (string)
+
+WHEN the system returns barangay data  
+THE SYSTEM SHALL include exactly two properties per barangay object: code (string) and name (string)
+
+WHEN the system processes address requests
+THE SYSTEM SHALL return Content-Type application/json header
+
+WHEN the system returns successful address data
+THE SYSTEM SHALL ensure all name properties contain non-empty trimmed strings
+
+WHEN the system returns successful address data
+THE SYSTEM SHALL ensure all code properties contain properly formatted non-empty strings
+
+---
+
+System Error Handling:
+WHEN the system encounters file system errors reading Philippine address data
+THE SYSTEM SHALL return HTTP 500 with JSON error object containing message "Failed to fetch provinces"
+
+WHEN the system encounters file system errors reading city data
+THE SYSTEM SHALL return HTTP 500 with JSON error object containing message "Failed to fetch cities"
+
+WHEN the system encounters file system errors reading barangay data
+THE SYSTEM SHALL return HTTP 500 with JSON error object containing message "Failed to fetch barangays"
+
+WHEN the system encounters any internal processing error
+THE SYSTEM SHALL log the error details to console with timestamp and error description
+
+WHEN the system encounters errors
+THE SYSTEM SHALL never expose internal file paths or sensitive system information in error responses
+
+---
+
+Performance Requirements:
+WHEN the system processes address requests
+THE SYSTEM SHALL respond within 2 seconds under normal load conditions
+
+WHEN the system loads Philippine address data
+THE SYSTEM SHALL cache the data in memory to avoid repeated file system reads
+
+WHEN the system returns province data
+THE SYSTEM SHALL include at least 80 provinces in the response array
+
+WHEN the system processes multiple concurrent address requests
+THE SYSTEM SHALL maintain consistent response times without blocking
+
+---
+
+Security Requirements:
+WHEN the system processes address requests
+THE SYSTEM SHALL validate and sanitize path parameters to prevent directory traversal attacks
+
+WHEN the system handles province code parameters
+THE SYSTEM SHALL only allow alphanumeric characters, spaces, underscores, and hyphens
+
+WHEN the system handles city code parameters  
+THE SYSTEM SHALL only allow lowercase alphanumeric characters and underscores
+
+WHEN the system processes any address request
+THE SYSTEM SHALL log the request method, URL, and timestamp for audit purposes
