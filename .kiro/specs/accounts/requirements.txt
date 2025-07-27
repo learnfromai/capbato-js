@@ -1,0 +1,174 @@
+Page Loading and Authentication:
+WHEN a user navigates to the accounts page without valid authentication
+THE SYSTEM SHALL redirect the user to the login page
+
+WHEN an authenticated user navigates to the accounts page
+THE SYSTEM SHALL display the accounts management interface with navigation sidebar, header, and main content area
+
+WHEN the accounts page loads for an authenticated user
+THE SYSTEM SHALL display the logged-in user's role in uppercase and username in the header profile section
+
+WHEN the accounts page loads
+THE SYSTEM SHALL generate and display a profile avatar with the first letter of the username and a color based on username hash
+
+---
+
+User List Display and Management:
+WHEN the accounts page loads
+THE SYSTEM SHALL fetch all users from the server and display them in a table with columns for Name, Role, and Action
+
+WHEN the user list is loading
+THE SYSTEM SHALL display "Loading..." message in the table body
+
+WHEN the user list fails to load
+THE SYSTEM SHALL display "Failed to load users." message in the table body
+
+WHEN users are successfully retrieved
+THE SYSTEM SHALL display each user's full name (left-aligned), role (center-aligned), and a "Change Password" action button (center-aligned)
+
+---
+
+Create Account Modal Display:
+WHEN a user clicks the "Create Account" button
+THE SYSTEM SHALL display a modal overlay with a create account form
+
+WHEN the create account modal opens
+THE SYSTEM SHALL display form fields for Full Name, Username, Password, Role, Email, and Phone
+
+WHEN the create account modal is displayed
+THE SYSTEM SHALL provide a role dropdown with options: Admin, Receptionist, and Doctor
+
+WHEN the create account modal opens
+THE SYSTEM SHALL clear any previous error messages and reset the form fields
+
+---
+
+Create Account Form Validation:
+WHEN a user submits the create account form with empty required fields
+THE SYSTEM SHALL display "All fields except phone are required." error message
+
+WHEN a user enters a phone number that doesn't match the pattern 09xxxxxxxxx (11 digits starting with 09)
+THE SYSTEM SHALL display "Phone number must start with 09 and be exactly 11 digits." error message
+
+WHEN a user enters a password that doesn't meet complexity requirements
+THE SYSTEM SHALL display "Password must be at least 8 characters, contain uppercase, lowercase, number, and symbol." error message
+
+WHEN a user submits valid form data
+THE SYSTEM SHALL send a POST request to create the user account
+
+---
+
+Create Account Response Handling:
+WHEN account creation succeeds
+THE SYSTEM SHALL close the modal, reset the form, and reload the page to show the new user
+
+WHEN account creation fails due to duplicate username or email
+THE SYSTEM SHALL display "Username or email already exists." error message
+
+WHEN account creation fails due to server error
+THE SYSTEM SHALL display "Server error." or the specific error message returned from the server
+
+---
+
+Change Password Modal Display:
+WHEN a user clicks a "Change Password" button for any user
+THE SYSTEM SHALL display a change password modal with the target username highlighted
+
+WHEN the change password modal opens
+THE SYSTEM SHALL display fields for "New Password" and "Confirm Password"
+
+WHEN the change password modal is displayed
+THE SYSTEM SHALL show the username for which the password is being changed
+
+---
+
+Change Password Form Validation:
+WHEN a user enters a new password that doesn't meet complexity requirements
+THE SYSTEM SHALL display "Password must be at least 8 characters, contain uppercase, lowercase, number, and symbol." error message
+
+WHEN the new password and confirm password fields don't match
+THE SYSTEM SHALL display "Passwords do not match." error message
+
+WHEN password validation passes
+THE SYSTEM SHALL send a PUT request to update the user's password
+
+---
+
+Change Password Response Handling:
+WHEN password change succeeds
+THE SYSTEM SHALL close the modal and display "Password changed successfully!" alert
+
+WHEN password change fails due to user not found
+THE SYSTEM SHALL display "Failed to change password." error message
+
+WHEN password change fails due to server error
+THE SYSTEM SHALL display "Server error." error message
+
+---
+
+Modal Behavior and Interaction:
+WHEN any modal is displayed
+THE SYSTEM SHALL show a close button (×) in the top-right corner
+
+WHEN a user clicks the close button on any modal
+THE SYSTEM SHALL close the modal
+
+WHEN a user clicks outside the modal content area
+THE SYSTEM SHALL close the modal
+
+WHEN a modal is closed
+THE SYSTEM SHALL clear any error messages and reset form fields
+
+---
+
+Navigation and Profile Management:
+WHEN a user clicks on any sidebar navigation item
+THE SYSTEM SHALL navigate to the corresponding page (Dashboard, Appointments, Patients, Laboratory, Prescriptions, Doctors)
+
+WHEN a user clicks on the profile avatar
+THE SYSTEM SHALL toggle the profile dropdown menu
+
+WHEN the profile dropdown is open and user clicks elsewhere
+THE SYSTEM SHALL close the profile dropdown
+
+WHEN a user clicks "Settings" in the profile dropdown
+THE SYSTEM SHALL display "Settings functionality coming soon!" alert and close the dropdown
+
+WHEN a user clicks "Logout" in the profile dropdown
+THE SYSTEM SHALL clear localStorage authentication data and redirect to login page
+
+---
+
+Table Display and Styling:
+WHEN the accounts table is rendered
+THE SYSTEM SHALL display user names left-aligned with proper padding
+
+WHEN the accounts table is rendered
+THE SYSTEM SHALL display roles and action buttons center-aligned
+
+WHEN the accounts table is rendered
+THE SYSTEM SHALL apply appropriate styling with borders, shadows, and hover effects
+
+---
+
+Error Handling and User Feedback:
+WHEN any API request fails
+THE SYSTEM SHALL provide appropriate error messaging to inform the user of the failure
+
+WHEN form validation fails
+THE SYSTEM SHALL display validation errors in red text below the relevant form
+
+WHEN successful operations complete
+THE SYSTEM SHALL provide appropriate success feedback (alerts or page reloads)
+
+---
+
+Security and Authorization:
+WHEN creating a new user account
+THE SYSTEM SHALL hash the password before storing it in the database
+
+WHEN changing a user password
+THE SYSTEM SHALL hash the new password before updating it in the database
+
+WHEN the page loads
+THE SYSTEM SHALL verify user authentication status from localStorage before displaying content
