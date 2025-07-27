@@ -1,0 +1,100 @@
+Login Form Display:
+WHEN a user navigates to the login page 
+THE SYSTEM SHALL display a login form with username field, password field, and "Login" button
+
+WHEN the login page loads 
+THE SYSTEM SHALL display the clinic branding with logo and "M.G. Amores Medical Clinic" title in the navigation bar
+
+WHEN the login form is displayed 
+THE SYSTEM SHALL include a "Go Back" button below the login form (currently non-functional)
+
+WHEN the login form is displayed 
+THE SYSTEM SHALL show username field with person icon and password field with lock icon
+
+WHEN the page loads
+THE SYSTEM SHALL wait for DOM content to load before initializing form event handlers
+
+---
+
+Form Submission and User Feedback:
+WHEN a user submits the login form
+THE SYSTEM SHALL prevent the default form submission and handle authentication via JavaScript
+
+WHEN the login form is submitted with empty required fields
+THE SYSTEM SHALL rely on HTML5 required attribute validation to prevent submission
+
+WHEN a user submits the login form with credentials
+THE SYSTEM SHALL send POST request to http://localhost:3001/auth/login with username and password in JSON format
+
+WHEN authentication request is in progress
+THE SYSTEM SHALL not provide any visual loading indicators or button state changes
+
+---
+
+Authentication Response Handling:
+WHEN authentication request succeeds 
+THE SYSTEM SHALL store the user role in localStorage as "loggedInRole"
+
+WHEN authentication request succeeds 
+THE SYSTEM SHALL store the username in localStorage as "loggedInUsername"
+
+WHEN authentication succeeds for admin role
+THE SYSTEM SHALL redirect to index.html
+
+WHEN authentication succeeds for receptionist role  
+THE SYSTEM SHALL redirect to index.html
+
+WHEN authentication succeeds for doctor role
+THE SYSTEM SHALL redirect to prescriptions.html
+
+WHEN authentication succeeds with unknown role
+THE SYSTEM SHALL display "Unknown role." message in the error message area
+
+---
+
+Error Handling:
+WHEN authentication fails due to invalid credentials 
+THE SYSTEM SHALL display the error message returned from server in red color below the form
+
+WHEN authentication request fails due to network or server error
+THE SYSTEM SHALL display "Login failed." message in red color below the form
+
+WHEN any authentication error occurs
+THE SYSTEM SHALL log the error to browser console with "Login Error:" prefix
+
+WHEN authentication error is displayed
+THE SYSTEM SHALL clear any previous success states and show error in #message element
+
+---
+
+User Interface Behavior:
+WHEN the page loads
+THE SYSTEM SHALL apply gradient background styling from light blue to teal
+
+WHEN the page loads
+THE SYSTEM SHALL center the login form wrapper on the page with white background and rounded corners
+
+WHEN user interacts with input fields
+THE SYSTEM SHALL change background color to light green (#e6f4f1) on focus
+
+WHEN user hovers over the Login button
+THE SYSTEM SHALL change background color from teal (#4db6ac) to darker teal (#3ba69c) with 0.3s transition
+
+WHEN user hovers over the Go Back button  
+THE SYSTEM SHALL change background from light teal to darker teal with color transition effects
+
+WHEN input fields receive focus
+THE SYSTEM SHALL remove outline and box-shadow while maintaining background color change
+
+---
+
+Current Implementation Limitations:
+THE SYSTEM SHALL NOT validate email format in real-time
+THE SYSTEM SHALL NOT disable submit button when fields are empty  
+THE SYSTEM SHALL NOT show loading spinner or disable button during authentication
+THE SYSTEM SHALL NOT include "Remember Me" checkbox functionality
+THE SYSTEM SHALL NOT include "Forgot Password?" link
+THE SYSTEM SHALL NOT include "Create Account" registration link
+THE SYSTEM SHALL NOT automatically redirect users with valid stored tokens
+THE SYSTEM SHALL NOT handle Enter key press specifically (relies on default form submission)
+THE SYSTEM SHALL NOT provide Go Back button functionality
