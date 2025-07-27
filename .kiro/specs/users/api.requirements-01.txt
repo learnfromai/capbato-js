@@ -1,0 +1,93 @@
+Core User Management:
+WHEN a client sends GET request to /api/users
+THE SYSTEM SHALL return HTTP 200 with JSON array containing all users with id, full_name, and role fields
+
+WHEN a client sends POST request to /api/users with valid user data in JSON format
+THE SYSTEM SHALL create new user account with hashed password and return HTTP 201 with success message
+
+WHEN a client sends PUT request to /api/users/{id}/password with valid password data
+THE SYSTEM SHALL update user password with bcrypt hashing and return HTTP 200 with success message
+
+---
+
+Request Validation - User Creation:
+WHEN a client sends user creation request missing full_name field
+THE SYSTEM SHALL return HTTP 400 with error message "Missing required fields."
+
+WHEN a client sends user creation request missing username field
+THE SYSTEM SHALL return HTTP 400 with error message "Missing required fields."
+
+WHEN a client sends user creation request missing password field
+THE SYSTEM SHALL return HTTP 400 with error message "Missing required fields."
+
+WHEN a client sends user creation request missing role field
+THE SYSTEM SHALL return HTTP 400 with error message "Missing required fields."
+
+WHEN a client sends user creation request missing email field
+THE SYSTEM SHALL return HTTP 400 with error message "Missing required fields."
+
+---
+
+Request Validation - Password Change:
+WHEN a client sends password change request missing password field
+THE SYSTEM SHALL return HTTP 400 with error message "Password is required."
+
+WHEN a client sends password change request with invalid user ID
+THE SYSTEM SHALL return HTTP 404 with error message "User not found."
+
+---
+
+Business Rule Validation:
+WHEN a client attempts to create user with existing username
+THE SYSTEM SHALL return HTTP 409 with error message "Username or email already exists."
+
+WHEN a client attempts to create user with existing email address
+THE SYSTEM SHALL return HTTP 409 with error message "Username or email already exists."
+
+WHEN a client attempts to change password for non-existent user
+THE SYSTEM SHALL return HTTP 404 with error message "User not found."
+
+---
+
+Data Processing Requirements:
+WHEN processing user creation request with valid data
+THE SYSTEM SHALL hash password using bcrypt with 10 rounds before storing in database
+
+WHEN processing user creation request
+THE SYSTEM SHALL validate email format and ensure it contains @ symbol and valid domain structure
+
+WHEN processing user creation request
+THE SYSTEM SHALL validate role field contains only allowed values: admin, doctor, or receptionist
+
+WHEN processing user creation request with phone number
+THE SYSTEM SHALL store phone number as optional field or null if not provided
+
+---
+
+Security Requirements:
+THE SYSTEM SHALL hash all passwords using bcrypt with minimum 10 rounds before storing in database
+THE SYSTEM SHALL never return password hashes in any API response
+THE SYSTEM SHALL validate all input parameters to prevent SQL injection attacks
+THE SYSTEM SHALL require proper authentication and authorization for user management endpoints
+THE SYSTEM SHALL log all user creation and password change operations with timestamp and IP address
+
+---
+
+Error Handling:
+WHEN database connection fails during user operations
+THE SYSTEM SHALL return HTTP 500 with error message "Database error" and log detailed error information
+
+WHEN any unexpected server error occurs during user operations
+THE SYSTEM SHALL return HTTP 500 with generic error message and log full error details for debugging
+
+WHEN database constraint violations occur during user creation
+THE SYSTEM SHALL return appropriate HTTP status code with user-friendly error message
+
+---
+
+Data Integrity Requirements:
+THE SYSTEM SHALL enforce unique constraints on username and email fields in database
+THE SYSTEM SHALL automatically set created_at timestamp when creating new users
+THE SYSTEM SHALL automatically update updated_at timestamp when modifying user data
+THE SYSTEM SHALL maintain referential integrity for user roles with allowed enum values
+THE SYSTEM SHALL validate email uniqueness across all existing users before creation
