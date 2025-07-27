@@ -1,0 +1,210 @@
+Page Load and Authentication:
+WHEN a user navigates to the dashboard page
+THE SYSTEM SHALL verify authentication status and redirect to login page if user is not authenticated
+
+WHEN an authenticated user loads the dashboard page
+THE SYSTEM SHALL display the user's role and username in the header area
+
+WHEN the dashboard page loads for an authenticated user
+THE SYSTEM SHALL set the appropriate page title to "M.G. Amores Medical Clinic"
+
+WHEN a user has a valid authentication token stored
+THE SYSTEM SHALL automatically display the dashboard without requiring re-authentication
+
+---
+
+Header Display and Profile Management:
+WHEN the dashboard page loads
+THE SYSTEM SHALL display a fixed header with clinic logo, clinic name, user role, username, and profile avatar
+
+WHEN the dashboard displays user information
+THE SYSTEM SHALL show the user role in title case and username below it in the header area
+
+WHEN the dashboard creates a profile avatar
+THE SYSTEM SHALL generate initials from the username and assign a consistent color based on username
+
+WHEN a user clicks on the profile avatar
+THE SYSTEM SHALL display a dropdown menu with "Settings" and "Logout" options
+
+WHEN a user clicks outside the profile dropdown
+THE SYSTEM SHALL close the dropdown menu
+
+WHEN a user selects "Settings" from the profile dropdown
+THE SYSTEM SHALL close the dropdown and display a placeholder message for future settings functionality
+
+WHEN a user selects "Logout" from the profile dropdown
+THE SYSTEM SHALL clear all stored authentication data and redirect to the login page
+
+---
+
+Sidebar Navigation:
+WHEN the dashboard page loads
+THE SYSTEM SHALL display a fixed sidebar with navigation menu items for Dashboard, Appointments, Patients, Laboratory, Prescriptions, and Doctors
+
+WHEN the current page is the dashboard
+THE SYSTEM SHALL highlight the Dashboard menu item as active with special styling and color
+
+WHEN a user is logged in as an admin
+THE SYSTEM SHALL add an "Accounts" menu item to the sidebar navigation
+
+WHEN a user hovers over any sidebar menu item
+THE SYSTEM SHALL change the background color and text color to indicate hover state
+
+WHEN a user clicks on any sidebar menu item
+THE SYSTEM SHALL navigate to the corresponding page
+
+---
+
+Summary Cards Display:
+WHEN the dashboard page loads
+THE SYSTEM SHALL display three summary cards showing Doctor, Current Patient, and Total Appointments
+
+WHEN displaying the doctor card
+THE SYSTEM SHALL show "Dr. Smith (Assigned)" as the assigned doctor with appropriate styling
+
+WHEN displaying the current patient card
+THE SYSTEM SHALL fetch and show the name of the patient currently being served or "N/A" if none
+
+WHEN displaying the total appointments card
+THE SYSTEM SHALL show the count of confirmed appointments for today and display today's date
+
+WHEN calculating the current patient
+THE SYSTEM SHALL determine the patient with appointment time closest to and before the current time
+
+---
+
+Appointments Table Display and Functionality:
+WHEN the dashboard page loads
+THE SYSTEM SHALL display a "Today's Appointments" table with columns for Patient #, Patient, Reason for visit, Contact, Time, Doctor, and Status
+
+WHEN loading today's appointments
+THE SYSTEM SHALL fetch appointment data from the API and filter to show only future appointments from current time
+
+WHEN displaying appointment times
+THE SYSTEM SHALL format times in 12-hour format with AM/PM notation
+
+WHEN displaying patient names
+THE SYSTEM SHALL format names in proper title case
+
+WHEN displaying patient names in the appointments table
+THE SYSTEM SHALL make each patient name a clickable link to the patient information page
+
+WHEN the appointments table is empty
+THE SYSTEM SHALL display an empty table with headers visible
+
+WHEN there are appointments to display
+THE SYSTEM SHALL show all future appointments for today sorted by time
+
+WHEN the appointments table is displayed
+THE SYSTEM SHALL include a "See All" link at the bottom to navigate to the full appointments page
+
+---
+
+Lab Results Display and Management (Doctor Role):
+WHEN a user is logged in as a doctor
+THE SYSTEM SHALL display a "Today's Lab Test Results" table below the appointments table
+
+WHEN a user is not logged in as a doctor
+THE SYSTEM SHALL hide the lab results section entirely
+
+WHEN loading lab test results for doctors
+THE SYSTEM SHALL fetch completed lab tests and filter to show only tests completed today
+
+WHEN displaying lab test results
+THE SYSTEM SHALL show columns for Patient #, Patient Name, Lab Test, Date, Status, and Action
+
+WHEN there are no lab test results for today
+THE SYSTEM SHALL display a message "No completed lab tests for today" in the table
+
+WHEN there are lab test results to display
+THE SYSTEM SHALL format patient names in title case and dates in "MMM DD, YYYY" format
+
+WHEN displaying lab test status
+THE SYSTEM SHALL show status badges with appropriate color coding for completion status
+
+WHEN displaying lab test action buttons
+THE SYSTEM SHALL show a "View" button with an eye icon for each completed test
+
+WHEN a doctor clicks the "View" button for a lab test
+THE SYSTEM SHALL open a modal overlay displaying the detailed lab test results
+
+WHEN the lab results table is displayed
+THE SYSTEM SHALL include a "See All" link at the bottom to navigate to the full laboratory page
+
+---
+
+Data Refresh and Real-time Updates:
+WHEN the dashboard page is active
+THE SYSTEM SHALL automatically refresh appointments data every 10 seconds
+
+WHEN the dashboard page is active
+THE SYSTEM SHALL automatically refresh current patient information every 10 seconds
+
+WHEN the dashboard page is active and user is a doctor
+THE SYSTEM SHALL automatically refresh lab test results every 30 seconds
+
+WHEN any data refresh occurs
+THE SYSTEM SHALL update the display without requiring user interaction or page reload
+
+WHEN data fetching fails
+THE SYSTEM SHALL log errors to console and maintain existing display data
+
+---
+
+Modal Functionality:
+WHEN a doctor clicks to view lab test results
+THE SYSTEM SHALL open a modal overlay with iframe displaying the appropriate lab test form
+
+WHEN opening the lab test modal
+THE SYSTEM SHALL determine the correct form type based on the test type and load the corresponding HTML form
+
+WHEN the lab test modal is displayed
+THE SYSTEM SHALL show a close button (X) in the top-right corner of the modal
+
+WHEN a user clicks the close button or clicks outside the modal
+THE SYSTEM SHALL close the lab test modal and clear the iframe source
+
+WHEN the Escape key is pressed while the modal is open
+THE SYSTEM SHALL close the lab test modal
+
+WHEN the lab test modal loads a form
+THE SYSTEM SHALL send the lab test data to the iframe for display in read-only mode
+
+WHEN the lab test form sends a close message
+THE SYSTEM SHALL close the modal and refresh lab results if data was updated
+
+---
+
+Navigation and User Interactions:
+WHEN any clickable element is hovered
+THE SYSTEM SHALL provide visual feedback through color changes or transformations
+
+WHEN patient links are clicked in any table
+THE SYSTEM SHALL navigate to the patient information page with the correct patient ID parameter
+
+WHEN "See All" links are clicked
+THE SYSTEM SHALL navigate to the corresponding full page (appointments or laboratory)
+
+WHEN the page encounters any navigation errors
+THE SYSTEM SHALL handle gracefully without breaking the user interface
+
+WHEN date and time information is displayed
+THE SYSTEM SHALL use consistent formatting throughout the dashboard
+
+---
+
+Responsive Design and Styling:
+WHEN the dashboard is displayed on different screen sizes
+THE SYSTEM SHALL maintain usable layout and navigation functionality
+
+WHEN tables contain long text content
+THE SYSTEM SHALL handle text overflow with ellipsis and maintain table structure
+
+WHEN cards and tables are displayed
+THE SYSTEM SHALL apply consistent shadow effects and border radius for visual coherence
+
+WHEN status information is displayed
+THE SYSTEM SHALL use color coding to indicate different states (complete, pending, cancelled)
+
+WHEN interactive elements are displayed
+THE SYSTEM SHALL provide appropriate hover effects and transition animations
