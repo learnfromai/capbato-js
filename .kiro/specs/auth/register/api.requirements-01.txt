@@ -1,42 +1,51 @@
-Core Registration Processing:
-WHEN a client sends POST request to /api/auth/register with firstName, lastName, email, and password 
-THE SYSTEM SHALL validate all required fields, generate username from email prefix, create user account, and return HTTP 201 with user ID
+Core Registration:
+WHEN a client sends POST request to /auth/register with valid role, username, password, fullName, and email in JSON format 
+THE SYSTEM SHALL validate all required fields, hash the password, create user account, and return HTTP 201 with success message
+
+WHEN a client sends registration request with valid data 
+THE SYSTEM SHALL hash the password using bcrypt with 10 rounds before storing in database
+
+WHEN a client sends registration request with valid unique credentials 
+THE SYSTEM SHALL insert user record into database with role, full_name, username, hashed password, and email
 
 ---
 
-Username Generation Logic:
-WHEN processing registration with email address 
-THE SYSTEM SHALL extract the portion before @ symbol as base username (e.g., "john.doe@example.com" → "john.doe")
+Request Validation:
+WHEN a client sends registration request missing role field 
+THE SYSTEM SHALL return HTTP 400 with message "All fields are required"
 
-WHEN generated username already exists in system 
-THE SYSTEM SHALL append incremental number to make it unique (e.g., "john.doe" → "john.doe1", "john.doe2")
+WHEN a client sends registration request missing username field 
+THE SYSTEM SHALL return HTTP 400 with message "All fields are required"
 
----
+WHEN a client sends registration request missing password field 
+THE SYSTEM SHALL return HTTP 400 with message "All fields are required"
 
-Input Validation:
-WHEN registration request is missing firstName field 
-THE SYSTEM SHALL return HTTP 400 with error code REG_MISSING_FIRSTNAME and message "First name is required"
+WHEN a client sends registration request missing fullName field 
+THE SYSTEM SHALL return HTTP 400 with message "All fields are required"
 
-WHEN registration request is missing lastName field 
-THE SYSTEM SHALL return HTTP 400 with error code REG_MISSING_LASTNAME and message "Last name is required"
-
-WHEN registration request is missing email field 
-THE SYSTEM SHALL return HTTP 400 with error code REG_MISSING_EMAIL and message "Email address is required"
-
-WHEN registration request is missing password field 
-THE SYSTEM SHALL return HTTP 400 with error code REG_MISSING_PASSWORD and message "Password is required"
-
-WHEN registration request contains invalid email format 
-THE SYSTEM SHALL return HTTP 400 with error code REG_INVALID_EMAIL and message "Please provide a valid email address"
+WHEN a client sends registration request missing email field 
+THE SYSTEM SHALL return HTTP 400 with message "All fields are required"
 
 ---
 
-Business Rule Validation:
-WHEN registration request contains email that already exists 
-THE SYSTEM SHALL return HTTP 409 with error code REG_EMAIL_EXISTS and message "This email address is already registered"
+Registration Failures:
+WHEN a client sends registration request with username that already exists 
+THE SYSTEM SHALL return HTTP 400 with message "Username or Email already exists"
 
-WHEN password doesn't meet security requirements (minimum 8 characters, at least one uppercase, one lowercase, one number) 
-THE SYSTEM SHALL return HTTP 400 with error code REG_WEAK_PASSWORD and detailed requirement messages
+WHEN a client sends registration request with email that already exists 
+THE SYSTEM SHALL return HTTP 400 with message "Username or Email already exists"
 
-WHEN firstName or lastName contains invalid characters (numbers, special characters except ñ) 
-THE SYSTEM SHALL return HTTP 400 with error code REG_INVALID_NAME and message "Names can only contain letters, spaces, and hyphens"
+WHEN registration fails due to database constraint violation 
+THE SYSTEM SHALL detect duplicate entry error and return appropriate user-friendly message
+
+WHEN registration fails due to unexpected server error 
+THE SYSTEM SHALL return HTTP 500 with message "Server error" and log the error details
+
+---
+
+Security Requirements:
+THE SYSTEM SHALL hash all passwords using bcrypt with 10 rounds before storing in database 
+THE SYSTEM SHALL never store passwords in plaintext anywhere in the system 
+THE SYSTEM SHALL enforce unique constraints on both username and email fields 
+THE SYSTEM SHALL log all registration errors with error details for debugging purposes 
+THE SYSTEM SHALL validate role field against allowed values (admin, doctor, receptionist)
