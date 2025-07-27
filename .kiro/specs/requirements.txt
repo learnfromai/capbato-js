@@ -1,0 +1,251 @@
+# EARS Requirements for Login Page (login.html)
+
+## Login Form Display
+
+### REQ-LOGIN-001: Basic Login Form Display
+WHEN a user navigates to the login page
+THE SYSTEM SHALL display a login form with username field, password field, and "Login" button
+
+**Current Implementation**: ✅ IMPLEMENTED
+- Location: legacy/client/pages/login.html (lines 23-36)
+- Username field with person icon (line 26)
+- Password field with lock icon (line 31)
+- Submit button with login icon (line 35)
+
+### REQ-LOGIN-002: Page Navigation and Branding
+WHEN the login page loads
+THE SYSTEM SHALL display a fixed navigation bar with clinic logo and name "M.G. Amores Medical Clinic"
+
+**Current Implementation**: ✅ IMPLEMENTED
+- Location: legacy/client/pages/login.html (lines 13-18)
+- Fixed navbar with logo and clinic name
+
+### REQ-LOGIN-003: Go Back Button
+WHEN the login form is displayed
+THE SYSTEM SHALL include a "Go Back" button below the login form
+
+**Current Implementation**: ✅ IMPLEMENTED
+- Location: legacy/client/pages/login.html (line 38)
+- Styled go back button with arrow icon
+- Note: No JavaScript functionality attached
+
+### REQ-LOGIN-004: Input Field Focus [MISSING]
+WHEN the login page loads
+THE SYSTEM SHALL set focus on the username input field for immediate user interaction
+
+**Current Implementation**: ❌ NOT IMPLEMENTED
+- No autofocus attribute or JavaScript focus setting in login.html or login.js
+
+### REQ-LOGIN-005: Remember Me Checkbox [MISSING]
+WHEN the login form is displayed
+THE SYSTEM SHALL include a "Remember Me" checkbox for persistent login
+
+**Current Implementation**: ❌ NOT IMPLEMENTED
+- Not present in current HTML form
+
+### REQ-LOGIN-006: Account Links [MISSING]
+WHEN the login form is displayed
+THE SYSTEM SHALL include "Forgot Password?" link and "Create Account" registration link
+
+**Current Implementation**: ❌ NOT IMPLEMENTED
+- No forgot password or registration links in current form
+
+---
+
+## Form Validation and User Feedback
+
+### REQ-LOGIN-007: Real-time Email Validation [MISSING]
+WHEN a user types in the username field
+THE SYSTEM SHALL validate email format in real-time and show format error if invalid email is entered
+
+**Current Implementation**: ❌ NOT IMPLEMENTED
+- Current implementation only accepts username, not email
+- No real-time validation in login.js
+- Backend auth.controller.js only processes username field
+
+### REQ-LOGIN-008: Empty Fields Button State [MISSING]
+WHEN all fields are still empty
+THE SYSTEM SHALL disable the submit button
+
+**Current Implementation**: ❌ NOT IMPLEMENTED
+- Button remains enabled regardless of field state
+- No validation in login.js for empty fields
+
+### REQ-LOGIN-009: Form Submission Progress [MISSING]
+WHEN a user submits the login form with valid format
+THE SYSTEM SHALL disable the submit button and replace the "Login" text with a circular progress to prevent double submission
+
+**Current Implementation**: ❌ NOT IMPLEMENTED
+- Button remains clickable during submission
+- No progress indicator shown
+- No double-submission prevention
+
+### REQ-LOGIN-010: Keyboard Navigation
+WHEN a user presses return key in any input field
+THE SYSTEM SHALL proceed with authentication
+
+**Current Implementation**: ✅ IMPLEMENTED
+- Default HTML form behavior allows Enter key submission
+- Form submission event handler in login.js (line 6)
+
+---
+
+## Authentication Processing
+
+### REQ-LOGIN-011: Button Click Authentication
+WHEN a user clicks "Login" button
+THE SYSTEM SHALL proceed with authentication
+
+**Current Implementation**: ✅ IMPLEMENTED
+- Location: legacy/client/js/login.js (lines 6-44)
+- Form submit event handler processes authentication
+
+### REQ-LOGIN-012: Authentication Request
+WHEN authentication is initiated
+THE SYSTEM SHALL send username and password to backend API endpoint /auth/login
+
+**Current Implementation**: ✅ IMPLEMENTED
+- Location: legacy/client/js/login.js (lines 13-17)
+- Fetch request to http://localhost:3001/auth/login
+- Sends username and password in JSON body
+
+---
+
+## Authentication Response Handling
+
+### REQ-LOGIN-013: Successful Authentication Redirect
+WHEN authentication succeeds
+THE SYSTEM SHALL redirect to appropriate page based on user role
+
+**Current Implementation**: ✅ IMPLEMENTED
+- Location: legacy/client/js/login.js (lines 26-38)
+- Admin/Receptionist: redirected to index.html
+- Doctor: redirected to prescriptions.html
+- Sets loggedInRole and loggedInUsername in localStorage
+
+### REQ-LOGIN-014: Authentication Failure Message
+WHEN authentication fails due to invalid credentials
+THE SYSTEM SHALL display error message above the form in red color
+
+**Current Implementation**: ✅ IMPLEMENTED
+- Location: legacy/client/js/login.js (line 22)
+- Error message displayed in red text below form
+- Uses message element defined in login.html (line 40)
+
+### REQ-LOGIN-015: Server Error Handling
+WHEN authentication fails due to server error
+THE SYSTEM SHALL display "Login failed." message
+
+**Current Implementation**: ✅ IMPLEMENTED
+- Location: legacy/client/js/login.js (lines 41-42)
+- Catches network errors and displays generic failure message
+
+---
+
+## Session Management
+
+### REQ-LOGIN-016: Token-based Auto-redirect [MISSING]
+WHEN user returns to login page with valid stored authentication data
+THE SYSTEM SHALL automatically redirect to appropriate home page without requiring re-authentication
+
+**Current Implementation**: ❌ NOT IMPLEMENTED
+- No check for existing authentication state in login.js
+- No token-based authentication (uses simple localStorage role/username)
+- Users must re-login even if previously authenticated
+
+### REQ-LOGIN-017: Authentication State Storage
+WHEN authentication succeeds
+THE SYSTEM SHALL store user role and username in browser localStorage
+
+**Current Implementation**: ✅ IMPLEMENTED
+- Location: legacy/client/js/login.js (lines 27-28)
+- Stores loggedInRole and loggedInUsername in localStorage
+- Used by other pages for authentication checks
+
+---
+
+## Backend Authentication Logic
+
+### REQ-LOGIN-018: Username-based Authentication
+WHEN login request is received
+THE SYSTEM SHALL authenticate using username (not email) and password against users table
+
+**Current Implementation**: ✅ IMPLEMENTED
+- Location: legacy/server/src/controllers/auth.controller.js (lines 30-57)
+- Queries users table by username field
+- Uses bcrypt for password comparison
+
+### REQ-LOGIN-019: User Role Response
+WHEN authentication is successful
+THE SYSTEM SHALL return user role in response for client-side routing
+
+**Current Implementation**: ✅ IMPLEMENTED
+- Location: legacy/server/src/controllers/auth.controller.js (line 52)
+- Returns user role (admin, receptionist, doctor) in JSON response
+
+### REQ-LOGIN-020: Database User Structure Support
+WHEN user authentication is processed
+THE SYSTEM SHALL support users table with unique username, email, password hash, role, and full_name fields
+
+**Current Implementation**: ✅ IMPLEMENTED
+- Database schema supports: id, role (enum), username (unique), password, full_name, email (unique), phone, timestamps
+- Roles: admin, receptionist, doctor
+
+---
+
+## UI Styling and Responsiveness
+
+### REQ-LOGIN-021: Visual Design
+WHEN the login page is displayed
+THE SYSTEM SHALL show a centered white card with gradient background, Bootstrap icons, and clinic branding
+
+**Current Implementation**: ✅ IMPLEMENTED
+- Location: legacy/client/assets/styles/login.css
+- Gradient background, centered white card design
+- Bootstrap icons for input fields
+- Responsive design with proper spacing
+
+### REQ-LOGIN-022: Input Field Styling
+WHEN user interacts with input fields
+THE SYSTEM SHALL provide visual feedback with focus states and icon indicators
+
+**Current Implementation**: ✅ IMPLEMENTED
+- Input fields change background color on focus (line 108-109 in login.css)
+- Bootstrap icons provide visual context for username and password fields
+
+---
+
+## Current Gaps Summary
+
+### Critical Missing Features:
+1. ❌ Auto-focus on username field
+2. ❌ Real-time email validation
+3. ❌ Form field validation and button disable states
+4. ❌ Progress indicator during submission
+5. ❌ Remember Me functionality
+6. ❌ Forgot Password link
+7. ❌ Create Account link
+8. ❌ Token-based auto-redirect for returning users
+9. ❌ Go Back button functionality
+
+### Correctly Implemented Features:
+1. ✅ Basic form structure and styling
+2. ✅ Username/password authentication
+3. ✅ Role-based redirection
+4. ✅ Error message display
+5. ✅ Backend authentication logic
+6. ✅ LocalStorage session management
+7. ✅ Responsive design
+8. ✅ Keyboard navigation (Enter key)
+
+---
+
+**Implementation Files**:
+- HTML: legacy/client/pages/login.html
+- JavaScript: legacy/client/js/login.js  
+- CSS: legacy/client/assets/styles/login.css
+- Backend: legacy/server/src/controllers/auth.controller.js
+- Database: users table with roles (admin, receptionist, doctor)
+
+**Last Updated**: January 27, 2025
+**Total Requirements**: 22 (15 Implemented, 7 Missing)
