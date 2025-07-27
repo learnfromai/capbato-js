@@ -1,0 +1,156 @@
+Page Display and Navigation:
+WHEN a user navigates to the accounts management page
+THE SYSTEM SHALL display the accounts page with clinic branding, navigation sidebar, and user profile information
+
+WHEN the accounts page loads
+THE SYSTEM SHALL display the logged-in user's role and username in the top navigation area
+
+WHEN the accounts page loads
+THE SYSTEM SHALL highlight the "Accounts" navigation item as active in the sidebar
+
+WHEN the accounts page loads
+THE SYSTEM SHALL display a profile avatar with the first letter of the username and a color-coded background
+
+WHEN a user clicks on the profile avatar
+THE SYSTEM SHALL display a dropdown menu with "Settings" and "Logout" options
+
+WHEN a user clicks "Logout" from the profile dropdown
+THE SYSTEM SHALL clear user session data and redirect to the login page
+
+---
+
+User Account Table Display:
+WHEN the accounts page loads
+THE SYSTEM SHALL display a table with columns for Name, Role, and Action
+
+WHEN the accounts page loads
+THE SYSTEM SHALL fetch user account data from the server and display it in the table
+
+WHEN user data is loading
+THE SYSTEM SHALL display "Loading..." message in the table body
+
+WHEN the server request fails
+THE SYSTEM SHALL display "Failed to load users." message in the table body
+
+WHEN user data is successfully loaded
+THE SYSTEM SHALL display each user's full name in the Name column, aligned to the left
+
+WHEN user data is successfully loaded
+THE SYSTEM SHALL display each user's role in the Role column, centered
+
+WHEN user data is successfully loaded
+THE SYSTEM SHALL display a "Change Password" button for each user in the Action column, centered
+
+---
+
+Create Account Modal Display:
+WHEN a user clicks the "Create Account" button
+THE SYSTEM SHALL display a modal dialog with the title "Create Account"
+
+WHEN the create account modal opens
+THE SYSTEM SHALL display a form with the following required fields: Full Name, Username, Password, Role, and Email
+
+WHEN the create account modal opens
+THE SYSTEM SHALL display an optional Phone field with validation pattern
+
+WHEN the create account modal opens
+THE SYSTEM SHALL display a role dropdown with options: Admin, Receptionist, and Doctor
+
+WHEN the create account modal opens
+THE SYSTEM SHALL clear any previous error messages
+
+WHEN a user clicks the close button (×) on the create account modal
+THE SYSTEM SHALL close the modal without saving
+
+WHEN a user clicks outside the create account modal
+THE SYSTEM SHALL close the modal without saving
+
+---
+
+Create Account Form Validation:
+WHEN a user submits the create account form with empty required fields
+THE SYSTEM SHALL display "All fields except phone are required." error message
+
+WHEN a user enters a phone number that doesn't match the pattern
+THE SYSTEM SHALL display "Phone number must start with 09 and be exactly 11 digits." error message
+
+WHEN a user enters a password that doesn't meet complexity requirements
+THE SYSTEM SHALL display "Password must be at least 8 characters, contain uppercase, lowercase, number, and symbol." error message
+
+WHEN a user enters a phone number
+THE SYSTEM SHALL validate that it starts with "09" and is exactly 11 digits long
+
+WHEN a user enters a password
+THE SYSTEM SHALL validate that it contains at least one uppercase letter, one lowercase letter, one number, and one symbol, with minimum 8 characters
+
+---
+
+Create Account Submission and Response:
+WHEN a user submits a valid create account form
+THE SYSTEM SHALL send a POST request to the server with the user data
+
+WHEN the server responds with a duplicate username or email error
+THE SYSTEM SHALL display the error message from the server
+
+WHEN the server responds with any other error
+THE SYSTEM SHALL display the error message or "Failed to create account." as fallback
+
+WHEN account creation fails due to server error
+THE SYSTEM SHALL display "Server error." message
+
+WHEN account creation succeeds
+THE SYSTEM SHALL close the modal, reset the form, and reload the page to show the new account
+
+---
+
+Change Password Modal Display:
+WHEN a user clicks a "Change Password" button for any user
+THE SYSTEM SHALL display a change password modal with the title "Change Password"
+
+WHEN the change password modal opens
+THE SYSTEM SHALL display the username of the account being modified
+
+WHEN the change password modal opens
+THE SYSTEM SHALL display "New Password" and "Confirm Password" input fields
+
+WHEN the change password modal opens
+THE SYSTEM SHALL clear any previous error messages and input values
+
+WHEN a user clicks the close button (×) on the change password modal
+THE SYSTEM SHALL close the modal without saving
+
+WHEN a user clicks outside the change password modal
+THE SYSTEM SHALL close the modal without saving
+
+---
+
+Change Password Form Validation and Submission:
+WHEN a user enters a new password that doesn't meet complexity requirements
+THE SYSTEM SHALL display "Password must be at least 8 characters, contain uppercase, lowercase, number, and symbol." error message
+
+WHEN a user enters passwords that don't match
+THE SYSTEM SHALL display "Passwords do not match." error message
+
+WHEN a user submits a valid password change form
+THE SYSTEM SHALL send a PUT request to the server with the new password
+
+WHEN the server responds with an error during password change
+THE SYSTEM SHALL display the error message from the server or "Failed to change password." as fallback
+
+WHEN password change fails due to server error
+THE SYSTEM SHALL display "Server error." message
+
+WHEN password change succeeds
+THE SYSTEM SHALL close the modal and display "Password changed successfully!" alert message
+
+---
+
+Navigation and Page Transitions:
+WHEN a user clicks on any sidebar navigation item
+THE SYSTEM SHALL redirect to the corresponding page (Dashboard, Appointments, Patients, Laboratory, Prescriptions, Doctors)
+
+WHEN a user clicks the "Settings" option from profile dropdown  
+THE SYSTEM SHALL display "Settings functionality coming soon!" alert message
+
+WHEN the system detects missing authentication data
+THE SYSTEM SHALL redirect the user to the login page
