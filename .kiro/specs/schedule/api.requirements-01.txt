@@ -1,0 +1,76 @@
+Core Schedule Operations:
+WHEN a client sends GET request to /schedules 
+THE SYSTEM SHALL return HTTP 200 with JSON array of all doctor schedules ordered by date
+
+WHEN a client sends POST request to /schedules with valid doctor, date, and time in JSON format
+THE SYSTEM SHALL create new schedule entry and return HTTP 201 with JSON object containing success message and generated schedule ID
+
+WHEN a client sends PUT request to /schedules/:id with valid doctor, date, and time in JSON format
+THE SYSTEM SHALL update the specified schedule and return HTTP 200 with success message "Schedule updated"
+
+WHEN a client sends DELETE request to /schedules/:id with valid schedule ID
+THE SYSTEM SHALL remove the specified schedule and return HTTP 200 with success message "Schedule deleted"
+
+WHEN a client sends GET request to /schedules/today
+THE SYSTEM SHALL return HTTP 200 with JSON object containing doctor_name for current date or {"doctor_name": "N/A"} if no doctor scheduled
+
+---
+
+Request Validation:
+WHEN a client sends POST request to /schedules with request body containing doctor, date, and time fields
+THE SYSTEM SHALL accept the request for processing with those field values
+
+WHEN a client sends PUT request to /schedules/:id with request body containing doctor, date, and time fields  
+THE SYSTEM SHALL accept the request for processing with those field values
+
+WHEN a client sends POST request to /schedules missing doctor field
+THE SYSTEM SHALL return HTTP 400 with error message "Missing doctor, date, or time"
+
+WHEN a client sends POST request to /schedules missing date field  
+THE SYSTEM SHALL return HTTP 400 with error message "Missing doctor, date, or time"
+
+WHEN a client sends POST request to /schedules missing time field
+THE SYSTEM SHALL return HTTP 400 with error message "Missing doctor, date, or time"
+
+WHEN a client sends PUT request to /schedules/:id missing doctor field
+THE SYSTEM SHALL return HTTP 400 with error message "Missing doctor, date, or time"
+
+WHEN a client sends PUT request to /schedules/:id missing date field
+THE SYSTEM SHALL return HTTP 400 with error message "Missing doctor, date, or time"
+
+WHEN a client sends PUT request to /schedules/:id missing time field  
+THE SYSTEM SHALL return HTTP 400 with error message "Missing doctor, date, or time"
+
+---
+
+Error Handling:
+WHEN a client sends PUT request to /schedules/:id with non-existent schedule ID
+THE SYSTEM SHALL execute update operation and return HTTP 200 with success message regardless of affected rows
+
+WHEN a client sends DELETE request to /schedules/:id with non-existent schedule ID  
+THE SYSTEM SHALL execute delete operation and return HTTP 200 with success message regardless of affected rows
+
+WHEN a database error occurs during schedule retrieval
+THE SYSTEM SHALL return HTTP 500 with error message containing database error details
+
+WHEN a database error occurs during schedule creation
+THE SYSTEM SHALL return HTTP 500 with error message containing database error details
+
+WHEN a database error occurs during schedule update
+THE SYSTEM SHALL return HTTP 500 with error message containing database error details
+
+WHEN a database error occurs during schedule deletion
+THE SYSTEM SHALL return HTTP 500 with error message containing database error details
+
+WHEN a database error occurs during today's doctor lookup
+THE SYSTEM SHALL return HTTP 500 with error message containing database error details
+
+---
+
+Data Integrity Requirements:
+THE SYSTEM SHALL store doctor_name as varchar(100) in doctor_schedule table
+THE SYSTEM SHALL store date as DATE format in doctor_schedule table  
+THE SYSTEM SHALL store time as varchar(50) in doctor_schedule table
+THE SYSTEM SHALL auto-generate unique integer ID for each schedule entry
+THE SYSTEM SHALL maintain referential integrity for all schedule operations
+THE SYSTEM SHALL log all database errors with error details for debugging purposes
