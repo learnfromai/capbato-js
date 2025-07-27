@@ -60,7 +60,7 @@ WHEN the dashboard page loads
 THE SYSTEM SHALL display three summary cards showing Doctor, Current Patient, and Total Appointments
 
 WHEN displaying the doctor card
-THE SYSTEM SHALL show "Dr. Smith (Assigned)" as the assigned doctor with appropriate styling
+THE SYSTEM SHALL show the assigned doctor's name with "(Assigned)" suffix and appropriate styling
 
 WHEN displaying the current patient card
 THE SYSTEM SHALL fetch and show the name of the patient currently being served or "N/A" if none
