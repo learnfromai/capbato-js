@@ -1,0 +1,114 @@
+Core Doctor Retrieval:
+WHEN a client sends GET request to /doctors 
+THE SYSTEM SHALL return HTTP 200 with JSON array containing all doctors with fields: DoctorID, FirstName, LastName, Specialization, ContactNumber
+
+WHEN a client sends GET request to /doctors/:id with valid doctor ID
+THE SYSTEM SHALL return HTTP 200 with JSON object containing doctor details with fields: DoctorID, FirstName, LastName, Specialization, ContactNumber
+
+WHEN a client sends GET request for a doctor
+THE SYSTEM SHALL query the doctors table and return matching records from the database
+
+---
+
+Request Validation:
+WHEN a client sends GET request to /doctors/:id with non-numeric doctor ID
+THE SYSTEM SHALL return HTTP 400 with error code DOCTORS_INVALID_ID and message "Doctor ID must be a valid number"
+
+WHEN a client sends GET request to /doctors/:id with negative doctor ID
+THE SYSTEM SHALL return HTTP 400 with error code DOCTORS_INVALID_ID and message "Doctor ID must be a positive number"
+
+WHEN a client sends POST request to /doctors missing FirstName field
+THE SYSTEM SHALL return HTTP 400 with error code DOCTORS_MISSING_FIRSTNAME and message "First name is required"
+
+WHEN a client sends POST request to /doctors missing LastName field
+THE SYSTEM SHALL return HTTP 400 with error code DOCTORS_MISSING_LASTNAME and message "Last name is required"
+
+WHEN a client sends POST request to /doctors with empty FirstName or LastName
+THE SYSTEM SHALL return HTTP 400 with error code DOCTORS_EMPTY_REQUIRED_FIELD and message "First name and last name cannot be empty"
+
+WHEN a client sends POST request to /doctors with FirstName or LastName exceeding 50 characters
+THE SYSTEM SHALL return HTTP 400 with error code DOCTORS_FIELD_TOO_LONG and message "First name and last name must not exceed 50 characters"
+
+WHEN a client sends POST request to /doctors with Specialization exceeding 100 characters
+THE SYSTEM SHALL return HTTP 400 with error code DOCTORS_SPECIALIZATION_TOO_LONG and message "Specialization must not exceed 100 characters"
+
+WHEN a client sends POST request to /doctors with ContactNumber exceeding 20 characters
+THE SYSTEM SHALL return HTTP 400 with error code DOCTORS_CONTACT_TOO_LONG and message "Contact number must not exceed 20 characters"
+
+---
+
+Doctor Not Found:
+WHEN a client sends GET request to /doctors/:id with non-existent doctor ID
+THE SYSTEM SHALL return HTTP 404 with error code DOCTORS_NOT_FOUND and message "Doctor not found"
+
+WHEN a client sends PUT request to /doctors/:id with non-existent doctor ID
+THE SYSTEM SHALL return HTTP 404 with error code DOCTORS_NOT_FOUND and message "Doctor not found"
+
+WHEN a client sends DELETE request to /doctors/:id with non-existent doctor ID
+THE SYSTEM SHALL return HTTP 404 with error code DOCTORS_NOT_FOUND and message "Doctor not found"
+
+---
+
+Doctor Creation:
+WHEN a client sends POST request to /doctors with valid FirstName and LastName
+THE SYSTEM SHALL create new doctor record and return HTTP 201 with created doctor object including generated DoctorID
+
+WHEN a client sends POST request to /doctors with valid data including optional Specialization and ContactNumber
+THE SYSTEM SHALL create new doctor record with all provided fields and return HTTP 201 with created doctor object
+
+WHEN doctor is successfully created
+THE SYSTEM SHALL auto-increment DoctorID and set it as primary key for the new record
+
+---
+
+Doctor Updates:
+WHEN a client sends PUT request to /doctors/:id with valid doctor data
+THE SYSTEM SHALL update the existing doctor record and return HTTP 200 with updated doctor object
+
+WHEN a client sends PUT request to /doctors/:id with partial valid data
+THE SYSTEM SHALL update only the provided fields and return HTTP 200 with updated doctor object
+
+WHEN doctor is successfully updated
+THE SYSTEM SHALL preserve the original DoctorID and update timestamp
+
+---
+
+Doctor Deletion:
+WHEN a client sends DELETE request to /doctors/:id with valid existing doctor ID
+THE SYSTEM SHALL remove the doctor record from database and return HTTP 204 with no content
+
+WHEN doctor deletion is successful
+THE SYSTEM SHALL ensure the doctor record is permanently removed from the doctors table
+
+---
+
+Database Error Handling:
+WHEN database connection fails during doctor operations
+THE SYSTEM SHALL return HTTP 500 with error code DOCTORS_DATABASE_ERROR and message "Database error"
+
+WHEN database query execution fails during doctor operations
+THE SYSTEM SHALL log the error details and return HTTP 500 with error code DOCTORS_DATABASE_ERROR and message "Database error"
+
+WHEN database constraint violation occurs during doctor creation or update
+THE SYSTEM SHALL return HTTP 400 with error code DOCTORS_CONSTRAINT_VIOLATION and appropriate message based on the constraint
+
+---
+
+Response Format:
+WHEN returning single doctor data
+THE SYSTEM SHALL format response as JSON object with properties: DoctorID, FirstName, LastName, Specialization, ContactNumber
+
+WHEN returning multiple doctors data
+THE SYSTEM SHALL format response as JSON array of doctor objects with properties: DoctorID, FirstName, LastName, Specialization, ContactNumber
+
+WHEN returning error responses
+THE SYSTEM SHALL format response as JSON object with properties: error (error code) and message (human-readable description)
+
+---
+
+Security Requirements:
+THE SYSTEM SHALL validate all input parameters to prevent SQL injection attacks
+THE SYSTEM SHALL sanitize all string inputs before database operations
+THE SYSTEM SHALL log all doctor management operations with timestamp and user context
+THE SYSTEM SHALL require proper authentication and authorization for POST, PUT, and DELETE operations
+THE SYSTEM SHALL implement rate limiting for doctor API endpoints to prevent abuse
