@@ -1,0 +1,135 @@
+Page Load and Authentication:
+WHEN a user navigates to the accounts page 
+THE SYSTEM SHALL verify authentication status from localStorage and redirect to login page if not authenticated
+
+WHEN an authenticated user loads the accounts page 
+THE SYSTEM SHALL display the user's role in uppercase and username in the navigation header
+
+WHEN the accounts page loads 
+THE SYSTEM SHALL generate and display a profile avatar with the user's first initial and a color-coded background based on username hash
+
+WHEN the accounts page loads 
+THE SYSTEM SHALL display the main navigation sidebar with "Accounts" marked as active
+
+---
+
+Accounts Table Display:
+WHEN the accounts page loads 
+THE SYSTEM SHALL fetch all user accounts from the backend API and display them in a table
+
+WHEN the accounts data is loading 
+THE SYSTEM SHALL display "Loading..." message in the table body
+
+WHEN the accounts data loads successfully 
+THE SYSTEM SHALL display each user's full name (left-aligned), role (center-aligned), and action buttons (center-aligned) in table rows
+
+WHEN the accounts data fails to load 
+THE SYSTEM SHALL display "Failed to load users." message in the table body
+
+WHEN user accounts are displayed 
+THE SYSTEM SHALL show a "Change Password" button for each user account in the action column
+
+---
+
+Create Account Modal Display:
+WHEN a user clicks the "Create Account" button 
+THE SYSTEM SHALL display a modal form with fields for full name, username, password, role, email, and phone
+
+WHEN the create account modal opens 
+THE SYSTEM SHALL clear any previous error messages and reset form fields
+
+WHEN the create account modal is displayed 
+THE SYSTEM SHALL include a role dropdown with options: Admin, Receptionist, Doctor
+
+WHEN a user clicks the close button or clicks outside the modal 
+THE SYSTEM SHALL close the create account modal
+
+---
+
+Create Account Form Validation:
+WHEN a user submits the create account form with empty required fields 
+THE SYSTEM SHALL display "All fields except phone are required." error message
+
+WHEN a user enters a phone number that doesn't start with 09 or isn't 11 digits 
+THE SYSTEM SHALL display "Phone number must start with 09 and be exactly 11 digits." error message
+
+WHEN a user enters a password that doesn't meet complexity requirements 
+THE SYSTEM SHALL display "Password must be at least 8 characters, contain uppercase, lowercase, number, and symbol." error message
+
+WHEN a user submits valid create account form data 
+THE SYSTEM SHALL send POST request to backend API with user data
+
+WHEN account creation succeeds 
+THE SYSTEM SHALL close the modal, reset the form, and reload the page to show the new account
+
+WHEN account creation fails 
+THE SYSTEM SHALL display the backend error message in the modal
+
+---
+
+Change Password Modal:
+WHEN a user clicks a "Change Password" button for a specific user 
+THE SYSTEM SHALL display a dynamically created change password modal with the target username displayed
+
+WHEN the change password modal opens 
+THE SYSTEM SHALL clear any previous error messages and password fields
+
+WHEN the change password modal is displayed 
+THE SYSTEM SHALL include fields for new password and confirm password
+
+WHEN a user clicks the close button or clicks outside the change password modal 
+THE SYSTEM SHALL close the change password modal
+
+---
+
+Change Password Form Validation:
+WHEN a user enters a new password that doesn't meet complexity requirements 
+THE SYSTEM SHALL display "Password must be at least 8 characters, contain uppercase, lowercase, number, and symbol." error message
+
+WHEN a user enters passwords that don't match 
+THE SYSTEM SHALL display "Passwords do not match." error message
+
+WHEN a user submits valid change password form data 
+THE SYSTEM SHALL send PUT request to backend API to update the user's password
+
+WHEN password change succeeds 
+THE SYSTEM SHALL close the modal and display "Password changed successfully!" alert
+
+WHEN password change fails 
+THE SYSTEM SHALL display the backend error message in the modal
+
+---
+
+Navigation and Profile Dropdown:
+WHEN a user clicks the profile avatar 
+THE SYSTEM SHALL toggle the profile dropdown menu visibility
+
+WHEN a user clicks anywhere outside the profile dropdown 
+THE SYSTEM SHALL hide the profile dropdown menu
+
+WHEN a user clicks the "Settings" option in the profile dropdown 
+THE SYSTEM SHALL hide the dropdown and display "Settings functionality coming soon!" alert
+
+WHEN a user clicks the "Logout" option in the profile dropdown 
+THE SYSTEM SHALL clear authentication data from localStorage and redirect to login page
+
+WHEN a user clicks any sidebar navigation item 
+THE SYSTEM SHALL navigate to the corresponding page (Dashboard, Appointments, Patients, Laboratory, Prescriptions, Doctors, Accounts)
+
+---
+
+Error Handling and User Feedback:
+WHEN any API call fails due to server error 
+THE SYSTEM SHALL display "Server error." message in the appropriate error container
+
+WHEN the create account form is submitted 
+THE SYSTEM SHALL prevent double submission by handling the form submit event
+
+WHEN the change password form is submitted 
+THE SYSTEM SHALL prevent double submission by handling the form submit event
+
+WHEN any modal form has validation errors 
+THE SYSTEM SHALL display error messages in red color within the modal
+
+WHEN any successful action occurs 
+THE SYSTEM SHALL provide appropriate user feedback (alerts, page reload, modal closure)
