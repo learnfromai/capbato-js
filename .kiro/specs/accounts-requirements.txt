@@ -1,0 +1,150 @@
+Page Display and Authentication:
+WHEN a user navigates to the accounts page 
+THE SYSTEM SHALL display the accounts management interface with navigation sidebar, header with user info, and main content area
+
+WHEN the accounts page loads 
+THE SYSTEM SHALL verify user authentication by checking localStorage for loggedInRole and loggedInUsername
+
+WHEN the accounts page loads with valid authentication 
+THE SYSTEM SHALL display the logged-in user's role in uppercase and username in the top-right header area
+
+WHEN the accounts page loads with valid authentication 
+THE SYSTEM SHALL generate a colored profile avatar with the first letter of the username
+
+WHEN a user clicks the profile avatar 
+THE SYSTEM SHALL display a dropdown menu with "Settings" and "Logout" options
+
+WHEN a user clicks anywhere outside the profile dropdown 
+THE SYSTEM SHALL close the profile dropdown menu
+
+WHEN a user selects "Settings" from the profile dropdown 
+THE SYSTEM SHALL display "Settings functionality coming soon!" alert message
+
+WHEN a user selects "Logout" from the profile dropdown 
+THE SYSTEM SHALL clear authentication data from localStorage and redirect to login.html
+
+---
+
+Accounts List Display:
+WHEN the accounts page loads 
+THE SYSTEM SHALL display "Accounts Management" as the page title
+
+WHEN the accounts page loads 
+THE SYSTEM SHALL fetch user accounts from the '/users' API endpoint
+
+WHEN the accounts API request is in progress 
+THE SYSTEM SHALL display "Loading..." in the accounts table
+
+WHEN the accounts API request succeeds 
+THE SYSTEM SHALL display a table with columns for Name, Role, and Action
+
+WHEN displaying user accounts in the table 
+THE SYSTEM SHALL show each user's full_name, role, and a "Change Password" button
+
+WHEN the accounts API request fails 
+THE SYSTEM SHALL display "Failed to load users." message in the table
+
+WHEN displaying account names in the table 
+THE SYSTEM SHALL left-align the names with left padding
+
+WHEN displaying roles and actions in the table 
+THE SYSTEM SHALL center-align the content
+
+---
+
+Create Account Form Display:
+WHEN the accounts page loads 
+THE SYSTEM SHALL display a "Create Account" button in the header area
+
+WHEN a user clicks the "Create Account" button 
+THE SYSTEM SHALL display a modal dialog with a create account form and clear any previous error messages
+
+WHEN the create account modal opens 
+THE SYSTEM SHALL display form fields for Full Name, Username, Password, Role, Email, and Phone
+
+WHEN the create account modal opens 
+THE SYSTEM SHALL provide a dropdown for Role selection with options: Admin, Receptionist, Doctor
+
+WHEN the create account modal opens 
+THE SYSTEM SHALL set the Phone input field with maxlength="11" and pattern="09[0-9]{9}"
+
+WHEN a user clicks the modal close button or clicks outside the modal 
+THE SYSTEM SHALL close the create account modal
+
+---
+
+Create Account Form Validation:
+WHEN a user submits the create account form with any phone value that doesn't start with "09" or isn't exactly 11 digits 
+THE SYSTEM SHALL display "Phone number must start with 09 and be exactly 11 digits." error message
+
+WHEN a user enters a password in the create account form 
+THE SYSTEM SHALL validate that it contains at least 8 characters, uppercase, lowercase, number, and symbol
+
+WHEN a user submits the create account form with missing required fields (Full Name, Username, Password, Role, or Email) 
+THE SYSTEM SHALL display "All fields except phone are required." error message
+
+WHEN a user submits the create account form with invalid password format 
+THE SYSTEM SHALL display "Password must be at least 8 characters, contain uppercase, lowercase, number, and symbol." error message
+
+---
+
+Create Account Submission:
+WHEN a user submits the create account form with valid data 
+THE SYSTEM SHALL send a POST request to '/users' endpoint with full_name, username, password, role, email, and phone
+
+WHEN the create account API request succeeds 
+THE SYSTEM SHALL close the modal, reset the form, and reload the page to show the new account
+
+WHEN the create account API request fails due to duplicate username or email 
+THE SYSTEM SHALL display the server error message in the modal
+
+WHEN the create account API request fails due to server error 
+THE SYSTEM SHALL display "Server error." message in the modal
+
+---
+
+Change Password Functionality:
+WHEN a user clicks a "Change Password" button for an account 
+THE SYSTEM SHALL display a change password modal with the username displayed and clear any previous form data and error messages
+
+WHEN the change password modal opens 
+THE SYSTEM SHALL display fields for "New Password" and "Confirm Password"
+
+WHEN a user enters passwords in the change password form 
+THE SYSTEM SHALL validate that the new password meets the complexity requirements
+
+WHEN a user enters non-matching passwords in the change password form 
+THE SYSTEM SHALL display "Passwords do not match." error message
+
+WHEN a user enters an invalid password format in the change password form 
+THE SYSTEM SHALL display "Password must be at least 8 characters, contain uppercase, lowercase, number, and symbol." error message
+
+WHEN a user submits the change password form with valid data 
+THE SYSTEM SHALL send a PUT request to '/users/{id}/password' endpoint
+
+WHEN the change password API request succeeds 
+THE SYSTEM SHALL close the modal and display "Password changed successfully!" alert
+
+WHEN the change password API request fails 
+THE SYSTEM SHALL display the server error message or "Server error." in the modal
+
+---
+
+Navigation Integration:
+WHEN a user clicks any sidebar navigation item 
+THE SYSTEM SHALL navigate to the corresponding page (Dashboard, Appointments, Patients, Laboratory, Prescriptions, Doctors, Accounts)
+
+WHEN the accounts page is active 
+THE SYSTEM SHALL highlight the "Accounts" navigation item with the "active" class
+
+---
+
+Error Handling and User Feedback:
+WHEN any API request encounters a network error 
+THE SYSTEM SHALL display appropriate error messages to inform the user
+
+WHEN form validation fails 
+THE SYSTEM SHALL display error messages below the respective forms in red color
+
+WHEN operations complete successfully 
+THE SYSTEM SHALL provide clear feedback through page reloads, modal closures, or success alerts
