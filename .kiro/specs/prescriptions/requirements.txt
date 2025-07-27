@@ -1,0 +1,153 @@
+Page Display and Navigation:
+WHEN a user navigates to the prescriptions page
+THE SYSTEM SHALL display the page header with clinic branding, user role, username, and profile avatar
+
+WHEN the prescriptions page loads
+THE SYSTEM SHALL display the sidebar navigation with "Prescriptions" item marked as active
+
+WHEN the prescriptions page loads
+THE SYSTEM SHALL display the main content area with "Prescriptions" title and prescriptions table
+
+WHEN a user's role is "doctor"
+THE SYSTEM SHALL display the "Add Prescription" button in the page header
+
+WHEN a user's role is not "doctor" 
+THE SYSTEM SHALL hide the "Add Prescription" button
+
+---
+
+Prescriptions Table Display:
+WHEN the prescriptions page loads
+THE SYSTEM SHALL display a table with columns: Patient Number, Patient Name, Doctor, Date Prescribed, Medications, Actions
+
+WHEN the table is displayed
+THE SYSTEM SHALL center-align Patient Number and Date Prescribed columns
+
+WHEN the table is displayed  
+THE SYSTEM SHALL left-align Patient Name, Doctor, and Medications columns
+
+WHEN a user's role is "doctor"
+THE SYSTEM SHALL display the Actions column with View, Edit, and Delete buttons
+
+WHEN a user's role is not "doctor"
+THE SYSTEM SHALL hide the Actions column header and action buttons
+
+WHEN a user hovers over a table row
+THE SYSTEM SHALL highlight the row with a light gray background
+
+---
+
+Search and Filtering:
+WHEN the prescriptions page loads
+THE SYSTEM SHALL display a search input field with placeholder text "Search prescriptions..."
+
+WHEN a user types in the search input
+THE SYSTEM SHALL filter table rows in real-time based on the search term matching any column content
+
+WHEN a user clears the search input
+THE SYSTEM SHALL display all prescription rows again
+
+WHEN search results in no matches
+THE SYSTEM SHALL hide all table rows while keeping the table structure intact
+
+---
+
+Add Prescription Form:
+WHEN a doctor clicks the "Add Prescription" button
+THE SYSTEM SHALL open an overlay containing the add prescription form in an iframe
+
+WHEN the add prescription form loads
+THE SYSTEM SHALL pre-fill the doctor field with the logged-in username
+
+WHEN the add prescription form loads
+THE SYSTEM SHALL set the date prescribed field to today's date
+
+WHEN a user types in the patient name field
+THE SYSTEM SHALL show autocomplete suggestions for patients who have appointments on the selected date
+
+WHEN a user selects a patient from autocomplete
+THE SYSTEM SHALL fill the patient name field and display the patient number below
+
+WHEN a user changes the date prescribed
+THE SYSTEM SHALL refresh the patient autocomplete suggestions for the new date
+
+WHEN a user submits the add prescription form with valid data
+THE SYSTEM SHALL add the prescription to the table and close the overlay
+
+WHEN a user clicks the Cancel button in the form
+THE SYSTEM SHALL close the overlay without saving
+
+WHEN a user clicks the close button (X) on the overlay
+THE SYSTEM SHALL close the overlay without saving
+
+WHEN a user clicks outside the form overlay
+THE SYSTEM SHALL close the overlay without saving
+
+---
+
+Action Buttons and Confirmations:
+WHEN a doctor clicks the View button for a prescription
+THE SYSTEM SHALL display a toast notification indicating viewing functionality
+
+WHEN a doctor clicks the Edit button for a prescription  
+THE SYSTEM SHALL display a toast notification indicating editing functionality
+
+WHEN a doctor clicks the Delete button for a prescription
+THE SYSTEM SHALL display a confirmation modal asking "Are you sure you want to delete this prescription?"
+
+WHEN a user clicks "Yes" in the delete confirmation modal
+THE SYSTEM SHALL remove the prescription from the table and show a success toast notification
+
+WHEN a user clicks "No" in the delete confirmation modal
+THE SYSTEM SHALL close the modal without deleting the prescription
+
+WHEN a user clicks outside the confirmation modal
+THE SYSTEM SHALL close the modal without performing the action
+
+---
+
+Profile and Navigation:
+WHEN a user clicks their profile avatar
+THE SYSTEM SHALL display a dropdown menu with Settings and Logout options
+
+WHEN a user clicks "Settings" in the profile dropdown
+THE SYSTEM SHALL display an alert indicating "Settings functionality coming soon!"
+
+WHEN a user clicks "Logout" in the profile dropdown
+THE SYSTEM SHALL clear user session data and redirect to the login page
+
+WHEN a user clicks any sidebar navigation item
+THE SYSTEM SHALL navigate to the corresponding page
+
+WHEN the logged-in user has "admin" role
+THE SYSTEM SHALL add an "Accounts" navigation item to the sidebar
+
+---
+
+System Feedback and Notifications:
+WHEN a prescription is successfully added
+THE SYSTEM SHALL display a green toast notification saying "Prescription added!"
+
+WHEN a prescription is successfully deleted
+THE SYSTEM SHALL display a green toast notification saying "Prescription [ID] deleted successfully!"
+
+WHEN any system action is performed
+THE SYSTEM SHALL automatically hide toast notifications after 3 seconds
+
+WHEN an error occurs during any operation
+THE SYSTEM SHALL display a red toast notification with the error message
+
+WHEN toast notifications are displayed
+THE SYSTEM SHALL position them in the top-right corner of the screen
+
+---
+
+Responsive Behavior:
+WHEN the screen width is less than 768px
+THE SYSTEM SHALL adjust the main content to full width and hide the sidebar by default
+
+WHEN on mobile devices
+THE SYSTEM SHALL stack the prescriptions header elements vertically
+
+WHEN on mobile devices
+THE SYSTEM SHALL maintain table functionality with horizontal scrolling if needed
