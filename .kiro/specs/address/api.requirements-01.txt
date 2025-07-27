@@ -1,0 +1,67 @@
+Core Address Data Retrieval:
+WHEN a client sends GET request to /address/provinces
+THE SYSTEM SHALL return HTTP 200 with JSON array containing all Philippine provinces with code and name properties
+
+WHEN a client sends GET request to /address/cities/{provinceCode} with valid province code
+THE SYSTEM SHALL return HTTP 200 with JSON array containing all cities/municipalities for the specified province
+
+WHEN a client sends GET request to /address/barangays/{cityCode} with valid city code  
+THE SYSTEM SHALL return HTTP 200 with JSON array containing all barangays for the specified city/municipality
+
+---
+
+Response Format:
+WHEN the system returns province data
+THE SYSTEM SHALL return each province with code property in uppercase format with underscores and name property with original province name
+
+WHEN the system returns city data
+THE SYSTEM SHALL return each city with code property in lowercase format with underscores and name property with original city name
+
+WHEN the system returns barangay data
+THE SYSTEM SHALL return each barangay with code property in B### format (B001, B002, etc.) and name property with original barangay name
+
+WHEN the system returns any address data
+THE SYSTEM SHALL sort all results alphabetically by name property
+
+---
+
+Request Validation:
+WHEN a client sends request to /address/cities/{provinceCode} with non-existent province code
+THE SYSTEM SHALL return HTTP 200 with empty JSON array
+
+WHEN a client sends request to /address/barangays/{cityCode} with non-existent city code
+THE SYSTEM SHALL return HTTP 200 with empty JSON array
+
+WHEN a client sends request with malformed URL parameters
+THE SYSTEM SHALL process the request using the provided parameter value and return appropriate results or empty array
+
+---
+
+Error Handling:
+WHEN the system encounters file system errors while loading Philippine address data
+THE SYSTEM SHALL return HTTP 500 with JSON error object containing message "Failed to fetch provinces"
+
+WHEN the system encounters errors while processing cities request
+THE SYSTEM SHALL return HTTP 500 with JSON error object containing message "Failed to fetch cities"
+
+WHEN the system encounters errors while processing barangays request  
+THE SYSTEM SHALL return HTTP 500 with JSON error object containing message "Failed to fetch barangays"
+
+WHEN any server error occurs
+THE SYSTEM SHALL log the error details to console for debugging purposes
+
+---
+
+Data Consistency:
+THE SYSTEM SHALL load Philippine address data from static JSON file at system startup
+THE SYSTEM SHALL maintain consistent province code generation by converting province names to uppercase with spaces replaced by underscores
+THE SYSTEM SHALL maintain consistent city code generation by converting city names to lowercase with spaces replaced by underscores
+THE SYSTEM SHALL maintain consistent barangay code generation using sequential B### pattern starting from B001
+
+---
+
+Performance Requirements:
+THE SYSTEM SHALL return province data within 2 seconds under normal load conditions
+THE SYSTEM SHALL return city data within 2 seconds under normal load conditions  
+THE SYSTEM SHALL return barangay data within 2 seconds under normal load conditions
+THE SYSTEM SHALL handle concurrent requests to address endpoints without data corruption
