@@ -1,0 +1,165 @@
+Page Display and Navigation:
+WHEN a user navigates to the accounts page 
+THE SYSTEM SHALL display the accounts management interface with navigation bar, sidebar, and main content area
+
+WHEN the accounts page loads 
+THE SYSTEM SHALL display the logged-in user's role and username in the navigation bar
+
+WHEN the accounts page is displayed 
+THE SYSTEM SHALL highlight the "Accounts" item in the sidebar navigation as active
+
+WHEN the accounts page loads 
+THE SYSTEM SHALL display the "Accounts Management" title and "Create Account" button in the header
+
+---
+
+Accounts Table Display:
+WHEN the accounts page loads 
+THE SYSTEM SHALL fetch all user accounts from the backend API and display them in a table
+
+WHEN the accounts table is displayed 
+THE SYSTEM SHALL show columns for Name (left-aligned), Role (center-aligned), and Action (center-aligned)
+
+WHEN user accounts are loaded successfully 
+THE SYSTEM SHALL display each user's full name, role (admin/receptionist/doctor), and a "Change Password" button
+
+WHEN the accounts API call is in progress 
+THE SYSTEM SHALL display "Loading..." message in the table body
+
+WHEN the accounts API call fails 
+THE SYSTEM SHALL display "Failed to load users." message in the table body
+
+---
+
+Create Account Modal Display:
+WHEN a user clicks the "Create Account" button 
+THE SYSTEM SHALL display the create account modal with overlay background
+
+WHEN the create account modal is displayed 
+THE SYSTEM SHALL show form fields for Full Name, Username, Password, Role, Email, and Phone
+
+WHEN the create account modal is displayed 
+THE SYSTEM SHALL provide a role dropdown with options: admin, receptionist, doctor
+
+WHEN the create account modal is displayed 
+THE SYSTEM SHALL include a close button (×) in the top right corner
+
+WHEN a user clicks the close button or clicks outside the modal 
+THE SYSTEM SHALL close the create account modal
+
+---
+
+Create Account Form Validation:
+WHEN a user enters a password in the create account form 
+THE SYSTEM SHALL validate that the password contains at least 8 characters, uppercase letter, lowercase letter, number, and symbol
+
+WHEN a user enters a phone number in the create account form 
+THE SYSTEM SHALL validate that the phone number starts with "09" and contains exactly 11 digits
+
+WHEN a user submits the create account form with missing required fields 
+THE SYSTEM SHALL display "All fields except phone are required." error message
+
+WHEN a user submits the create account form with invalid password format 
+THE SYSTEM SHALL display "Password must be at least 8 characters, contain uppercase, lowercase, number, and symbol." error message
+
+WHEN a user submits the create account form with invalid phone format 
+THE SYSTEM SHALL display "Phone number must start with 09 and be exactly 11 digits." error message
+
+---
+
+Create Account Submission:
+WHEN a user submits the create account form with valid data 
+THE SYSTEM SHALL send a POST request to the backend API with user details
+
+WHEN account creation succeeds 
+THE SYSTEM SHALL close the modal, reset the form, and reload the accounts table
+
+WHEN account creation fails due to duplicate username or email 
+THE SYSTEM SHALL display "Username or email already exists." error message
+
+WHEN account creation fails due to server error 
+THE SYSTEM SHALL display "Server error." error message
+
+---
+
+Change Password Modal Display:
+WHEN a user clicks a "Change Password" button 
+THE SYSTEM SHALL display the change password modal with the target username
+
+WHEN the change password modal is displayed 
+THE SYSTEM SHALL show fields for New Password and Confirm Password
+
+WHEN the change password modal is displayed 
+THE SYSTEM SHALL include a close button and modal overlay
+
+WHEN a user clicks the close button or outside the change password modal 
+THE SYSTEM SHALL close the modal and clear the form fields
+
+---
+
+Change Password Form Validation:
+WHEN a user enters a new password in the change password form 
+THE SYSTEM SHALL validate that the password meets complexity requirements (8+ chars, uppercase, lowercase, number, symbol)
+
+WHEN a user submits the change password form with invalid password format 
+THE SYSTEM SHALL display "Password must be at least 8 characters, contain uppercase, lowercase, number, and symbol." error message
+
+WHEN a user submits the change password form with non-matching passwords 
+THE SYSTEM SHALL display "Passwords do not match." error message
+
+---
+
+Change Password Submission:
+WHEN a user submits the change password form with valid matching passwords 
+THE SYSTEM SHALL send a PUT request to the backend API to update the user's password
+
+WHEN password change succeeds 
+THE SYSTEM SHALL close the modal and display "Password changed successfully!" alert
+
+WHEN password change fails due to user not found 
+THE SYSTEM SHALL display "Failed to change password." error message
+
+WHEN password change fails due to server error 
+THE SYSTEM SHALL display "Server error." error message
+
+---
+
+Profile Management and Logout:
+WHEN a user clicks the profile avatar 
+THE SYSTEM SHALL toggle the profile dropdown menu visibility
+
+WHEN the profile dropdown is displayed 
+THE SYSTEM SHALL show "Settings" and "Logout" options with appropriate icons
+
+WHEN a user clicks anywhere outside the profile dropdown 
+THE SYSTEM SHALL close the dropdown menu
+
+WHEN a user clicks the "Settings" option 
+THE SYSTEM SHALL close the dropdown and display "Settings functionality coming soon!" alert
+
+WHEN a user clicks the "Logout" option 
+THE SYSTEM SHALL clear localStorage (loggedInRole, loggedInUsername, isLoggedIn) and redirect to login.html
+
+---
+
+Sidebar Navigation:
+WHEN a user clicks on a sidebar navigation item 
+THE SYSTEM SHALL navigate to the corresponding page (dashboard, appointments, patients, laboratory, prescriptions, doctors, accounts)
+
+WHEN the accounts page is active 
+THE SYSTEM SHALL display the "Accounts" sidebar item with active styling
+
+---
+
+Authentication and Authorization:
+WHEN the accounts page loads 
+THE SYSTEM SHALL check localStorage for logged-in user information
+
+WHEN no valid authentication is found 
+THE SYSTEM SHALL redirect to the login page
+
+WHEN authentication is valid 
+THE SYSTEM SHALL display the user's role and username in the navigation bar
+
+WHEN the profile avatar is displayed 
+THE SYSTEM SHALL generate a colored avatar with the first letter of the username using a consistent color algorithm
