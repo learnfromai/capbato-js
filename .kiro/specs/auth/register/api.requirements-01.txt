@@ -1,42 +1,54 @@
 Core Registration Processing:
-WHEN a client sends POST request to /api/auth/register with firstName, lastName, email, and password 
-THE SYSTEM SHALL validate all required fields, generate username from email prefix, create user account, and return HTTP 201 with user ID
+WHEN a client sends POST request to /auth/register with valid role, username, password, fullName, and email in JSON format
+THE SYSTEM SHALL validate all required fields, hash the password, create user account, and return HTTP 201 with success message
+
+WHEN a client sends registration request with valid data 
+THE SYSTEM SHALL hash password using bcrypt with minimum 10 rounds before storing in database
+
+WHEN user account is created successfully 
+THE SYSTEM SHALL store user with role, username, hashed password, full_name, and email in users table
 
 ---
 
-Username Generation Logic:
-WHEN processing registration with email address 
-THE SYSTEM SHALL extract the portion before @ symbol as base username (e.g., "john.doe@example.com" → "john.doe")
+Request Validation:
+WHEN a client sends registration request missing role field 
+THE SYSTEM SHALL return HTTP 400 with error code REG_MISSING_ROLE and message "All fields are required"
 
-WHEN generated username already exists in system 
-THE SYSTEM SHALL append incremental number to make it unique (e.g., "john.doe" → "john.doe1", "john.doe2")
+WHEN a client sends registration request missing username field 
+THE SYSTEM SHALL return HTTP 400 with error code REG_MISSING_USERNAME and message "All fields are required"
 
----
+WHEN a client sends registration request missing password field 
+THE SYSTEM SHALL return HTTP 400 with error code REG_MISSING_PASSWORD and message "All fields are required"
 
-Input Validation:
-WHEN registration request is missing firstName field 
-THE SYSTEM SHALL return HTTP 400 with error code REG_MISSING_FIRSTNAME and message "First name is required"
+WHEN a client sends registration request missing fullName field 
+THE SYSTEM SHALL return HTTP 400 with error code REG_MISSING_FULLNAME and message "All fields are required"
 
-WHEN registration request is missing lastName field 
-THE SYSTEM SHALL return HTTP 400 with error code REG_MISSING_LASTNAME and message "Last name is required"
+WHEN a client sends registration request missing email field 
+THE SYSTEM SHALL return HTTP 400 with error code REG_MISSING_EMAIL and message "All fields are required"
 
-WHEN registration request is missing email field 
-THE SYSTEM SHALL return HTTP 400 with error code REG_MISSING_EMAIL and message "Email address is required"
-
-WHEN registration request is missing password field 
-THE SYSTEM SHALL return HTTP 400 with error code REG_MISSING_PASSWORD and message "Password is required"
-
-WHEN registration request contains invalid email format 
-THE SYSTEM SHALL return HTTP 400 with error code REG_INVALID_EMAIL and message "Please provide a valid email address"
+WHEN a client sends registration request with invalid role value 
+THE SYSTEM SHALL return HTTP 400 with error code REG_INVALID_ROLE and message "Role must be admin, doctor, or receptionist"
 
 ---
 
 Business Rule Validation:
+WHEN registration request contains username that already exists 
+THE SYSTEM SHALL return HTTP 400 with error code REG_USERNAME_EXISTS and message "Username or Email already exists"
+
 WHEN registration request contains email that already exists 
-THE SYSTEM SHALL return HTTP 409 with error code REG_EMAIL_EXISTS and message "This email address is already registered"
+THE SYSTEM SHALL return HTTP 400 with error code REG_EMAIL_EXISTS and message "Username or Email already exists"
 
-WHEN password doesn't meet security requirements (minimum 8 characters, at least one uppercase, one lowercase, one number) 
-THE SYSTEM SHALL return HTTP 400 with error code REG_WEAK_PASSWORD and detailed requirement messages
+WHEN database constraint violation occurs during registration 
+THE SYSTEM SHALL return HTTP 400 with error code REG_DUPLICATE_ENTRY and message "Username or Email already exists"
 
-WHEN firstName or lastName contains invalid characters (numbers, special characters except ñ) 
-THE SYSTEM SHALL return HTTP 400 with error code REG_INVALID_NAME and message "Names can only contain letters, spaces, and hyphens"
+WHEN database error occurs during user creation 
+THE SYSTEM SHALL return HTTP 500 with error code REG_SERVER_ERROR and message "Server error"
+
+---
+
+Security Requirements:
+THE SYSTEM SHALL hash all passwords using bcrypt with minimum 10 rounds before storing in database
+THE SYSTEM SHALL never log or store passwords in plaintext anywhere in the system
+THE SYSTEM SHALL enforce unique constraints on username and email fields
+THE SYSTEM SHALL validate role field against allowed values: admin, doctor, receptionist
+THE SYSTEM SHALL log all registration attempts with error details for troubleshooting
