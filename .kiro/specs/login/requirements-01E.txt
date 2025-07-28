@@ -1,9 +1,9 @@
 Authentication Response Handling:
 WHEN authentication succeeds and user role is "admin"
-THE SYSTEM SHALL store role and username in localStorage and redirect to "index.html"
+THE SYSTEM SHALL store admin role and username in localStorage and redirect to "index.html" dashboard
 
 WHEN authentication succeeds and user role is "receptionist"
-THE SYSTEM SHALL store role and username in localStorage and redirect to "index.html"
+THE SYSTEM SHALL store receptionist role and username in localStorage and redirect to "index.html" dashboard
 
 WHEN authentication succeeds and user role is "doctor"
 THE SYSTEM SHALL store role and username in localStorage and redirect to "prescriptions.html"
