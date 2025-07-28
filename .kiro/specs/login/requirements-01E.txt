@@ -1,0 +1,18 @@
+Authentication Response Handling:
+WHEN authentication succeeds and user role is "admin"
+THE SYSTEM SHALL store role and username in localStorage and redirect to "index.html"
+
+WHEN authentication succeeds and user role is "receptionist"
+THE SYSTEM SHALL store role and username in localStorage and redirect to "index.html"
+
+WHEN authentication succeeds and user role is "doctor"
+THE SYSTEM SHALL store role and username in localStorage and redirect to "prescriptions.html"
+
+WHEN authentication succeeds but user role is unknown
+THE SYSTEM SHALL display "Unknown role." message in the error message area
+
+WHEN authentication fails due to server error or invalid credentials
+THE SYSTEM SHALL display the server error message or "Login failed." in the error message area
+
+WHEN network error occurs during authentication
+THE SYSTEM SHALL display "Login failed." message in the error message area
