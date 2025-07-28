@@ -92,11 +92,20 @@ THE SYSTEM SHALL clear any previous error messages
 WHEN the create account form is displayed
 THE SYSTEM SHALL provide a dropdown for Role with options: Admin, Receptionist, Doctor
 
-WHEN a user clicks the close button on the create account modal
+---
+
+Modal Behavior:
+WHEN a user clicks the close button on any modal or clicks outside the modal
 THE SYSTEM SHALL close the modal
 
-WHEN a user clicks outside the create account modal
-THE SYSTEM SHALL close the modal
+---
+
+Create Account Form Validation:
+WHEN a user enters a password in any form
+THE SYSTEM SHALL validate password contains at least 8 characters, uppercase, lowercase, number, and symbol
+
+WHEN a user enters an invalid password format in any form
+THE SYSTEM SHALL display error message about password requirements
 
 ---
 
@@ -113,12 +122,6 @@ THE SYSTEM SHALL display error message "Phone number must start with 09 and be e
 WHEN a user submits form with missing required fields
 THE SYSTEM SHALL display error message "All fields except phone are required."
 
-WHEN a user enters a password
-THE SYSTEM SHALL validate password contains at least 8 characters, uppercase, lowercase, number, and symbol
-
-WHEN a user enters an invalid password format
-THE SYSTEM SHALL display error message about password requirements
-
 ---
 
 Create Account Submission:
@@ -127,12 +130,6 @@ THE SYSTEM SHALL send POST request to /users endpoint with form data
 
 WHEN account creation is successful
 THE SYSTEM SHALL close the modal, reset the form, and reload the page
-
-WHEN account creation fails due to duplicate username or email
-THE SYSTEM SHALL display the returned error message
-
-WHEN account creation fails due to server error
-THE SYSTEM SHALL display "Server error." message
 
 ---
 
@@ -149,21 +146,9 @@ THE SYSTEM SHALL display the username of the user whose password is being change
 WHEN the change password modal opens
 THE SYSTEM SHALL create form fields for New Password and Confirm Password
 
-WHEN a user clicks the close button on the change password modal
-THE SYSTEM SHALL close the modal
-
-WHEN a user clicks outside the change password modal
-THE SYSTEM SHALL close the modal
-
 ---
 
 Change Password Form Validation:
-WHEN a user enters a new password
-THE SYSTEM SHALL validate password contains at least 8 characters, uppercase, lowercase, number, and symbol
-
-WHEN a user enters an invalid password format
-THE SYSTEM SHALL display error message about password requirements
-
 WHEN a user enters passwords that don't match
 THE SYSTEM SHALL display error message "Passwords do not match."
 
@@ -176,11 +161,14 @@ THE SYSTEM SHALL send PUT request to /users/:id/password endpoint with new passw
 WHEN password change is successful
 THE SYSTEM SHALL close the modal and display success alert message
 
-WHEN password change fails
-THE SYSTEM SHALL display the returned error message
+---
 
-WHEN password change fails due to server error
+Error Handling:
+WHEN any form submission fails due to server error
 THE SYSTEM SHALL display "Server error." message
+
+WHEN any API operation returns an error response
+THE SYSTEM SHALL display the returned error message
 
 ---
 
@@ -193,9 +181,6 @@ THE SYSTEM SHALL call POST /users with full_name, username, password, role, emai
 
 WHEN the system changes a user password
 THE SYSTEM SHALL call PUT /users/:id/password with password field
-
-WHEN any API call fails
-THE SYSTEM SHALL handle errors gracefully and display appropriate user messages
 
 ---
 
