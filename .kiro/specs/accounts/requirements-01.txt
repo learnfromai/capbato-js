@@ -1,0 +1,216 @@
+Page Load and Authentication:
+WHEN a user navigates to the accounts page
+THE SYSTEM SHALL verify authentication status and redirect to login page if user is not authenticated
+
+WHEN an authenticated user loads the accounts page
+THE SYSTEM SHALL display the user's role and username in the header area
+
+WHEN the accounts page loads for an authenticated user
+THE SYSTEM SHALL set the appropriate page title to "Accounts Management"
+
+WHEN a user has a valid authentication token stored
+THE SYSTEM SHALL automatically display the accounts page without requiring re-authentication
+
+---
+
+Header Display and Profile Management:
+WHEN the accounts page loads
+THE SYSTEM SHALL display a fixed header with clinic logo, clinic name, user role, username, and profile avatar
+
+WHEN the accounts page displays user information
+THE SYSTEM SHALL show the user role in uppercase and username below it in the header area
+
+WHEN the accounts page creates a profile avatar
+THE SYSTEM SHALL generate first letter of username and assign a consistent color based on username hash
+
+WHEN a user clicks on the profile avatar
+THE SYSTEM SHALL display a dropdown menu with "Settings" and "Logout" options
+
+WHEN a user clicks outside the profile dropdown
+THE SYSTEM SHALL close the dropdown menu
+
+WHEN a user selects "Settings" from the profile dropdown
+THE SYSTEM SHALL close the dropdown and display a placeholder message for future settings functionality
+
+WHEN a user selects "Logout" from the profile dropdown
+THE SYSTEM SHALL clear all stored authentication data and redirect to the login page
+
+---
+
+Sidebar Navigation:
+WHEN the accounts page loads
+THE SYSTEM SHALL display a fixed sidebar with navigation menu items for Dashboard, Appointments, Patients, Laboratory, Prescriptions, Doctors, and Accounts
+
+WHEN the current page is the accounts page
+THE SYSTEM SHALL highlight the Accounts menu item as active with special styling and color
+
+WHEN a user hovers over any sidebar menu item
+THE SYSTEM SHALL change the background color and text color to indicate hover state
+
+WHEN a user clicks on any sidebar menu item
+THE SYSTEM SHALL navigate to the corresponding page
+
+---
+
+Accounts Table Display:
+WHEN the accounts page loads
+THE SYSTEM SHALL display an accounts management table with columns for Name, Role, and Action
+
+WHEN loading user accounts data
+THE SYSTEM SHALL fetch user data from the API endpoint GET /users
+
+WHEN the accounts table loads
+THE SYSTEM SHALL display "Loading..." message while fetching data
+
+WHEN user data is successfully fetched
+THE SYSTEM SHALL populate the table with user full names, roles, and action buttons
+
+WHEN user data fails to load
+THE SYSTEM SHALL display "Failed to load users." message in the table
+
+WHEN displaying user names in the table
+THE SYSTEM SHALL align names to the left with appropriate padding
+
+WHEN displaying user roles and actions in the table
+THE SYSTEM SHALL center-align the content
+
+---
+
+Create Account Functionality:
+WHEN the accounts page loads
+THE SYSTEM SHALL display a "Create Account" button with user-plus icon in the header area
+
+WHEN a user clicks the "Create Account" button
+THE SYSTEM SHALL open a modal overlay with create account form
+
+WHEN the create account modal opens
+THE SYSTEM SHALL display form fields for Full Name, Username, Password, Role, Email, and Phone
+
+WHEN the create account modal opens
+THE SYSTEM SHALL clear any previous error messages
+
+WHEN the create account form is displayed
+THE SYSTEM SHALL provide a dropdown for Role with options: Admin, Receptionist, Doctor
+
+WHEN a user clicks the close button on the create account modal
+THE SYSTEM SHALL close the modal
+
+WHEN a user clicks outside the create account modal
+THE SYSTEM SHALL close the modal
+
+---
+
+Create Account Form Validation:
+WHEN a user submits the create account form
+THE SYSTEM SHALL validate that Full Name, Username, Password, Role, and Email are required fields
+
+WHEN a user enters a phone number
+THE SYSTEM SHALL validate that phone starts with "09" and is exactly 11 digits
+
+WHEN a user enters an invalid phone number format
+THE SYSTEM SHALL display error message "Phone number must start with 09 and be exactly 11 digits."
+
+WHEN a user submits form with missing required fields
+THE SYSTEM SHALL display error message "All fields except phone are required."
+
+WHEN a user enters a password
+THE SYSTEM SHALL validate password contains at least 8 characters, uppercase, lowercase, number, and symbol
+
+WHEN a user enters an invalid password format
+THE SYSTEM SHALL display error message about password requirements
+
+---
+
+Create Account Submission:
+WHEN a user submits a valid create account form
+THE SYSTEM SHALL send POST request to /users endpoint with form data
+
+WHEN account creation is successful
+THE SYSTEM SHALL close the modal, reset the form, and reload the page
+
+WHEN account creation fails due to duplicate username or email
+THE SYSTEM SHALL display the returned error message
+
+WHEN account creation fails due to server error
+THE SYSTEM SHALL display "Server error." message
+
+---
+
+Change Password Functionality:
+WHEN the accounts table displays user data
+THE SYSTEM SHALL show a "Change Password" button with key icon for each user
+
+WHEN a user clicks a "Change Password" button
+THE SYSTEM SHALL open a change password modal for that specific user
+
+WHEN the change password modal opens
+THE SYSTEM SHALL display the username of the user whose password is being changed
+
+WHEN the change password modal opens
+THE SYSTEM SHALL create form fields for New Password and Confirm Password
+
+WHEN a user clicks the close button on the change password modal
+THE SYSTEM SHALL close the modal
+
+WHEN a user clicks outside the change password modal
+THE SYSTEM SHALL close the modal
+
+---
+
+Change Password Form Validation:
+WHEN a user enters a new password
+THE SYSTEM SHALL validate password contains at least 8 characters, uppercase, lowercase, number, and symbol
+
+WHEN a user enters an invalid password format
+THE SYSTEM SHALL display error message about password requirements
+
+WHEN a user enters passwords that don't match
+THE SYSTEM SHALL display error message "Passwords do not match."
+
+---
+
+Change Password Submission:
+WHEN a user submits a valid change password form
+THE SYSTEM SHALL send PUT request to /users/:id/password endpoint with new password
+
+WHEN password change is successful
+THE SYSTEM SHALL close the modal and display success alert message
+
+WHEN password change fails
+THE SYSTEM SHALL display the returned error message
+
+WHEN password change fails due to server error
+THE SYSTEM SHALL display "Server error." message
+
+---
+
+API Integration:
+WHEN the system fetches user accounts
+THE SYSTEM SHALL call GET /users and expect response with id, full_name, and role fields
+
+WHEN the system creates a new account
+THE SYSTEM SHALL call POST /users with full_name, username, password, role, email, and phone fields
+
+WHEN the system changes a user password
+THE SYSTEM SHALL call PUT /users/:id/password with password field
+
+WHEN any API call fails
+THE SYSTEM SHALL handle errors gracefully and display appropriate user messages
+
+---
+
+UI Styling and Responsive Design:
+WHEN the accounts page is displayed
+THE SYSTEM SHALL apply consistent styling with rounded corners, shadows, and color scheme
+
+WHEN form elements are displayed
+THE SYSTEM SHALL use Bootstrap form classes for consistent appearance
+
+WHEN buttons are hovered
+THE SYSTEM SHALL provide visual feedback with color changes and scale transformations
+
+WHEN modals are displayed
+THE SYSTEM SHALL overlay the page with semi-transparent background and centered modal content
+
+WHEN tables are displayed
+THE SYSTEM SHALL apply alternating row styles and proper spacing for readability
