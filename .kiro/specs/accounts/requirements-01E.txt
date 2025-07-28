@@ -1,0 +1,63 @@
+Create Account Form Validation:
+WHEN a user submits the create account form with empty required fields
+THE SYSTEM SHALL display "All fields except phone are required." error message
+
+WHEN a user enters a phone number in the create account form
+THE SYSTEM SHALL validate that it starts with "09" and is exactly 11 digits
+
+WHEN a user enters an invalid phone number format
+THE SYSTEM SHALL display "Phone number must start with 09 and be exactly 11 digits." error message
+
+WHEN a user enters a password in the create account form
+THE SYSTEM SHALL validate that it contains at least 8 characters, uppercase, lowercase, number, and symbol
+
+WHEN a user enters a password that doesn't meet complexity requirements
+THE SYSTEM SHALL display "Password must be at least 8 characters, contain uppercase, lowercase, number, and symbol." error message
+
+---
+
+Change Password Form Validation:
+WHEN a user enters a new password in the change password form
+THE SYSTEM SHALL validate that it contains at least 8 characters, uppercase, lowercase, number, and symbol
+
+WHEN a user enters a new password that doesn't meet complexity requirements
+THE SYSTEM SHALL display "Password must be at least 8 characters, contain uppercase, lowercase, number, and symbol." error message
+
+WHEN a user enters different values in new password and confirm password fields
+THE SYSTEM SHALL display "Passwords do not match." error message
+
+WHEN a user submits the change password form without entering passwords
+THE SYSTEM SHALL require both password fields to be filled
+
+---
+
+Error Display and Handling:
+WHEN form validation fails in create account modal
+THE SYSTEM SHALL display error messages in red color (#d32f2f) below the form
+
+WHEN form validation fails in change password modal
+THE SYSTEM SHALL display error messages in red color (#d32f2f) below the form
+
+WHEN API requests fail with server errors
+THE SYSTEM SHALL display "Server error." message in the appropriate error area
+
+WHEN API requests fail with specific error responses
+THE SYSTEM SHALL display the error message from the server response
+
+WHEN displaying error messages
+THE SYSTEM SHALL ensure text wraps properly using word-break: break-word
+
+---
+
+Input Field Constraints:
+WHEN the phone input field is displayed
+THE SYSTEM SHALL restrict input to numeric characters only using inputmode="numeric"
+
+WHEN the phone input field is displayed
+THE SYSTEM SHALL limit input to maximum 11 characters
+
+WHEN the email input field is displayed
+THE SYSTEM SHALL use HTML5 email type for built-in browser validation
+
+WHEN form fields are required
+THE SYSTEM SHALL mark them with the HTML required attribute for browser validation

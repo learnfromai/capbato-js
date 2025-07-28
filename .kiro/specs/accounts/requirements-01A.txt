@@ -1,0 +1,60 @@
+Page Display and Navigation:
+WHEN a user navigates to the accounts page
+THE SYSTEM SHALL display the accounts management interface with navigation bar, sidebar, and main content area
+
+WHEN the accounts page loads
+THE SYSTEM SHALL display "Accounts Management" as the page title in the header section
+
+WHEN the accounts page loads
+THE SYSTEM SHALL display the user's role in uppercase format in the navigation bar
+
+WHEN the accounts page loads
+THE SYSTEM SHALL display the logged-in username in the navigation bar below the role
+
+WHEN the accounts page loads
+THE SYSTEM SHALL highlight the "Accounts" menu item as active in the sidebar navigation
+
+---
+
+Profile Avatar and Dropdown:
+WHEN the accounts page loads
+THE SYSTEM SHALL display a profile avatar with the first letter of the username
+
+WHEN the accounts page loads
+THE SYSTEM SHALL set the profile avatar background color based on a hash of the username
+
+WHEN a user clicks the profile avatar
+THE SYSTEM SHALL toggle the visibility of the profile dropdown menu
+
+WHEN the profile dropdown is displayed
+THE SYSTEM SHALL show "Settings" and "Logout" options
+
+WHEN a user clicks outside the profile dropdown
+THE SYSTEM SHALL hide the profile dropdown menu
+
+---
+
+Sidebar Navigation:
+WHEN a user clicks the "Dashboard" menu item
+THE SYSTEM SHALL navigate to index.html page
+
+WHEN a user clicks the "Appointments" menu item
+THE SYSTEM SHALL navigate to appointments.html page
+
+WHEN a user clicks the "Patients" menu item
+THE SYSTEM SHALL navigate to patients.html page
+
+WHEN a user clicks the "Laboratory" menu item
+THE SYSTEM SHALL navigate to laboratory.html page
+
+WHEN a user clicks the "Prescriptions" menu item
+THE SYSTEM SHALL navigate to prescriptions.html page
+
+WHEN a user clicks the "Doctors" menu item
+THE SYSTEM SHALL navigate to doctor-schedule.html page
+
+WHEN a user clicks the "Settings" option in profile dropdown
+THE SYSTEM SHALL display an alert "Settings functionality coming soon!"
+
+WHEN a user clicks the "Logout" option in profile dropdown
+THE SYSTEM SHALL clear local storage authentication data and redirect to login.html

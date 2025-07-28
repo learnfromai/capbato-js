@@ -1,0 +1,48 @@
+User List Loading and Display:
+WHEN the accounts page loads
+THE SYSTEM SHALL fetch user data from the GET /users API endpoint
+
+WHEN the accounts page is loading user data
+THE SYSTEM SHALL display "Loading..." in the accounts table body
+
+WHEN user data is successfully loaded
+THE SYSTEM SHALL display users in a table with columns: Name, Role, Action
+
+WHEN user data is successfully loaded
+THE SYSTEM SHALL populate each row with the user's full name, role, and change password button
+
+WHEN user data fails to load
+THE SYSTEM SHALL display "Failed to load users." message in the table body
+
+---
+
+Table Structure and Formatting:
+WHEN displaying the user list table
+THE SYSTEM SHALL align the Name column text to the left with 20px left padding
+
+WHEN displaying the user list table
+THE SYSTEM SHALL center-align the Role and Action column text
+
+WHEN displaying the user list table
+THE SYSTEM SHALL use blue header background (#dbeeff) with blue text (#0047ab)
+
+WHEN displaying the user list table
+THE SYSTEM SHALL add horizontal borders between table rows
+
+WHEN displaying the user list table
+THE SYSTEM SHALL apply rounded corners (12px) and shadow effects to the table
+
+---
+
+User Data Display:
+WHEN displaying user information in the table
+THE SYSTEM SHALL show the user's full_name from the database in the Name column
+
+WHEN displaying user information in the table
+THE SYSTEM SHALL show the user's role from the database in the Role column
+
+WHEN displaying user information in the table
+THE SYSTEM SHALL include a "Change Password" button with key icon for each user in the Action column
+
+WHEN displaying the Change Password button
+THE SYSTEM SHALL include the user's ID and username as data attributes for modal functionality

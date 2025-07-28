@@ -1,0 +1,66 @@
+Create Account Button and Modal:
+WHEN the accounts page loads
+THE SYSTEM SHALL display a "Create Account" button with user-plus icon in the header
+
+WHEN a user clicks the "Create Account" button
+THE SYSTEM SHALL display the create account modal overlay
+
+WHEN the create account modal opens
+THE SYSTEM SHALL clear any previous error messages
+
+WHEN the create account modal is displayed
+THE SYSTEM SHALL show the modal title "Create Account"
+
+WHEN a user clicks the close button (×) in the create account modal
+THE SYSTEM SHALL hide the create account modal
+
+WHEN a user clicks outside the create account modal content area
+THE SYSTEM SHALL hide the create account modal
+
+---
+
+Create Account Form Fields:
+WHEN the create account modal is displayed
+THE SYSTEM SHALL show required fields: Full Name, Username, Password, Role, Email
+
+WHEN the create account modal is displayed
+THE SYSTEM SHALL show optional field: Phone
+
+WHEN the create account modal is displayed
+THE SYSTEM SHALL provide a role dropdown with options: Admin, Receptionist, Doctor
+
+WHEN the create account modal is displayed
+THE SYSTEM SHALL set the email field type to email for proper input validation
+
+WHEN the create account modal is displayed
+THE SYSTEM SHALL set the phone field with maxlength of 11 and pattern for 09xxxxxxxxx format
+
+WHEN the create account modal is displayed
+THE SYSTEM SHALL set the phone field to numeric input mode
+
+---
+
+Create Account Form Submission:
+WHEN a user submits the create account form
+THE SYSTEM SHALL prevent the default form submission behavior
+
+WHEN a user submits the create account form
+THE SYSTEM SHALL clear any existing error messages
+
+WHEN a user submits the create account form
+THE SYSTEM SHALL trim whitespace from text input fields
+
+WHEN a user submits the create account form with valid data
+THE SYSTEM SHALL send a POST request to /users endpoint with user data
+
+WHEN account creation is successful
+THE SYSTEM SHALL hide the create account modal and reset the form
+
+WHEN account creation is successful
+THE SYSTEM SHALL reload the page to refresh the user list
+
+WHEN account creation fails due to server error
+THE SYSTEM SHALL display the error message in the modal error area
+
+WHEN account creation fails due to duplicate username or email
+THE SYSTEM SHALL display "Username or email already exists" error message

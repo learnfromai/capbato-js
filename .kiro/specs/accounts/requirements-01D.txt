@@ -1,0 +1,66 @@
+Change Password Modal Creation:
+WHEN a user clicks a "Change Password" button in the user table
+THE SYSTEM SHALL create and display a change password modal if it doesn't exist
+
+WHEN the change password modal is created
+THE SYSTEM SHALL position it as a fixed overlay covering the full viewport
+
+WHEN the change password modal is created
+THE SYSTEM SHALL apply a semi-transparent black background (rgba(0,0,0,0.3))
+
+WHEN the change password modal is created
+THE SYSTEM SHALL center the modal content with white background and rounded corners
+
+WHEN the change password modal is displayed
+THE SYSTEM SHALL show the modal title "Change Password"
+
+WHEN the change password modal is displayed
+THE SYSTEM SHALL include the username in the new password field label
+
+---
+
+Change Password Form Fields:
+WHEN the change password modal is displayed
+THE SYSTEM SHALL show a "New Password" field with the associated username
+
+WHEN the change password modal is displayed
+THE SYSTEM SHALL show a "Confirm Password" field for password confirmation
+
+WHEN the change password modal opens
+THE SYSTEM SHALL clear any previous error messages and input values
+
+WHEN the change password modal is displayed
+THE SYSTEM SHALL include a "Change Password" button with key icon
+
+---
+
+Change Password Modal Controls:
+WHEN a user clicks the close button (×) in the change password modal
+THE SYSTEM SHALL hide the change password modal
+
+WHEN a user clicks outside the change password modal content area
+THE SYSTEM SHALL hide the change password modal
+
+WHEN the change password modal already exists and user clicks another change password button
+THE SYSTEM SHALL reuse the existing modal and update it with new user information
+
+---
+
+Change Password Form Submission:
+WHEN a user submits the change password form
+THE SYSTEM SHALL prevent the default form submission behavior
+
+WHEN a user submits the change password form with valid passwords
+THE SYSTEM SHALL send a PUT request to /users/{userId}/password endpoint
+
+WHEN password change is successful
+THE SYSTEM SHALL hide the change password modal
+
+WHEN password change is successful
+THE SYSTEM SHALL display "Password changed successfully!" alert message
+
+WHEN password change fails due to server error
+THE SYSTEM SHALL display the error message in the modal error area
+
+WHEN password change fails due to user not found
+THE SYSTEM SHALL display the appropriate error message from the server response
