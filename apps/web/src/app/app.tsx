@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { TodoPage } from '../presentation/features/todo';
-import { AboutPage } from '../presentation/features/about';
 import { LoginPage } from '../presentation/features/login';
 import { DashboardPage } from '../presentation/features/dashboard';
 import { AppointmentsPage } from '../presentation/features/appointments';
