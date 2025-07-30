@@ -1,6 +1,6 @@
 Page Display and Loading:
 WHEN a user navigates to the doctor-schedule page
-THE SYSTEM SHALL display the page with header, sidebar, doctors table, and calendar components
+THE SYSTEM SHALL display the page with header containing clinic logo, user role, username, and profile avatar
 
 WHEN the doctor-schedule page loads
 THE SYSTEM SHALL fetch and display user role and username from localStorage in the header
@@ -78,7 +78,7 @@ WHEN the contact number is not available for a doctor
 THE SYSTEM SHALL display "N/A" in the Contact Number column
 
 WHEN the doctors API call fails
-THE SYSTEM SHALL load and display fallback static doctor data
+THE SYSTEM SHALL load and display fallback static doctor data with sample doctors (Maria Santos, Juan Cruz, Anna Reyes)
 
 WHEN displaying the doctors table
 THE SYSTEM SHALL left-align doctor names, center-align specialization and contact numbers
@@ -87,7 +87,7 @@ THE SYSTEM SHALL left-align doctor names, center-align specialization and contac
 
 Calendar Display and Navigation:
 WHEN the calendar is rendered
-THE SYSTEM SHALL display the month and year label in the format "MONTH YEAR" (e.g., "AUGUST 2025")
+THE SYSTEM SHALL display the month and year label in the format "MONTH YEAR" (e.g., "AUGUST 2025") in uppercase
 
 WHEN the calendar is rendered
 THE SYSTEM SHALL display day headers (Sun, Mon, Tue, Wed, Thu, Fri, Sat) above the calendar grid
@@ -99,7 +99,7 @@ WHEN the calendar displays dates
 THE SYSTEM SHALL show date numbers in bold formatting within each calendar cell
 
 WHEN a calendar cell represents a date outside the current month
-THE SYSTEM SHALL display the cell as inactive with no background
+THE SYSTEM SHALL display the cell as inactive with transparent background
 
 WHEN a date has a scheduled doctor
 THE SYSTEM SHALL display the doctor's name in bold and the time below it within the calendar cell
@@ -122,11 +122,11 @@ THE SYSTEM SHALL show a close button (X) in the top-right corner
 WHEN a user clicks the close button on the edit overlay
 THE SYSTEM SHALL hide the overlay and clear the iframe source
 
-WHEN the edit schedule form is displayed
-THE SYSTEM SHALL show form fields for Doctor Name, Date, and Time
+WHEN the edit schedule form loads in the iframe
+THE SYSTEM SHALL display form fields for Doctor Name (text input), Date (date picker), and Time (text input with placeholder "e.g. 9AM - 5PM")
 
 WHEN a user submits a valid schedule in the edit form
-THE SYSTEM SHALL send a POST request to /schedules endpoint with the schedule data
+THE SYSTEM SHALL send a POST request to /schedules endpoint with doctor, date, and time parameters
 
 WHEN a schedule is successfully saved from the edit form
 THE SYSTEM SHALL send a "scheduleUpdated" message to the parent window
@@ -154,18 +154,18 @@ THE SYSTEM SHALL cache the schedules data and render them on the calendar
 
 ---
 
-User Interaction and Accessibility:
+User Interaction and Visual Feedback:
 WHEN hovering over the profile avatar
-THE SYSTEM SHALL apply a scale transformation and enhanced shadow effect
+THE SYSTEM SHALL apply a scale transformation (1.05) and enhanced shadow effect
 
 WHEN hovering over navigation items in the sidebar
-THE SYSTEM SHALL highlight the item with background color change and color transition
+THE SYSTEM SHALL highlight the item with background color change and color transition to teal
 
 WHEN hovering over doctors table rows
 THE SYSTEM SHALL apply a light gray background color for better visibility
 
 WHEN the edit schedule overlay is open
-THE SYSTEM SHALL prevent interaction with the underlying page content
+THE SYSTEM SHALL prevent interaction with the underlying page content by displaying overlay background
 
 WHEN form submission is in progress
 THE SYSTEM SHALL prevent double submission through proper event handling
