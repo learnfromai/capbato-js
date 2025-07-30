@@ -1,0 +1,167 @@
+Page Layout and Initial Display:
+WHEN a user navigates to the patients page
+THE SYSTEM SHALL display the page header with clinic logo "M.G. Amores Medical Clinic", user role in uppercase, and username from localStorage
+
+WHEN the patients page loads
+THE SYSTEM SHALL display the sidebar navigation with "Patients" item marked as active
+
+WHEN the patients page is displayed
+THE SYSTEM SHALL show the main content area with "Patient Records" title centered and "Add New Patient" button positioned on the right
+
+WHEN the patients page loads
+THE SYSTEM SHALL display a search bar with placeholder text "Search patients..." above the patient table
+
+WHEN the patients page is displayed
+THE SYSTEM SHALL display a table with column headers "Patient #" and "Patient's Name"
+
+---
+
+User Authentication and Profile Management:
+WHEN the patients page loads
+THE SYSTEM SHALL retrieve and display user role and username from localStorage
+
+WHEN the patients page loads
+THE SYSTEM SHALL generate a profile avatar with the first letter of the username and assign a consistent background color based on username hash
+
+WHEN a user clicks the profile avatar
+THE SYSTEM SHALL toggle the profile dropdown menu with "Settings" and "Logout" options
+
+WHEN a user clicks outside the profile dropdown
+THE SYSTEM SHALL close the dropdown menu
+
+WHEN a user clicks "Settings" in the profile dropdown
+THE SYSTEM SHALL close the dropdown and display "Settings functionality coming soon!" alert
+
+WHEN a user clicks "Logout" in the profile dropdown
+THE SYSTEM SHALL clear localStorage (loggedInRole, loggedInUsername, isLoggedIn) and redirect to "login.html"
+
+---
+
+Admin Features:
+WHEN a user with admin role accesses the patients page
+THE SYSTEM SHALL dynamically inject an "Accounts" navigation item into the sidebar
+
+WHEN an admin user clicks the "Accounts" navigation item
+THE SYSTEM SHALL navigate to "accounts.html" page
+
+WHEN a user with non-admin role accesses the patients page
+THE SYSTEM SHALL NOT display the "Accounts" navigation item
+
+---
+
+Patient Data Loading and Display:
+WHEN the patients page loads
+THE SYSTEM SHALL fetch patient data from the backend API endpoint "http://localhost:3001/patients"
+
+WHEN patient data is successfully loaded
+THE SYSTEM SHALL display patients in the table with PatientID and formatted full name
+
+WHEN displaying patient names
+THE SYSTEM SHALL convert names to title case (first letter uppercase, rest lowercase) for FirstName, MiddleName, and LastName
+
+WHEN formatting patient names with middle names
+THE SYSTEM SHALL display as "FirstName MiddleName LastName" with proper spacing
+
+WHEN formatting patient names without middle names
+THE SYSTEM SHALL display as "FirstName LastName" without extra spaces
+
+WHEN no patient data is available or returned empty
+THE SYSTEM SHALL display "No patients found." message centered across both table columns
+
+WHEN patient data fails to load from the API
+THE SYSTEM SHALL log error messages to the console for debugging purposes
+
+WHEN displaying patient names in the table
+THE SYSTEM SHALL create clickable links that navigate to "patientInfo.html" with patient_id parameter
+
+---
+
+Search Functionality:
+WHEN a user types in the search input field
+THE SYSTEM SHALL filter displayed patients in real-time based on the search text
+
+WHEN performing a search
+THE SYSTEM SHALL match against PatientID and full name fields (LastName, FirstName, MiddleName) using case-insensitive comparison
+
+WHEN search results are found
+THE SYSTEM SHALL update the table to show only matching patients
+
+WHEN no search results are found
+THE SYSTEM SHALL display "No patients found." message in the table
+
+WHEN the user clears the search field
+THE SYSTEM SHALL restore the full patient list display
+
+---
+
+Navigation and User Interactions:
+WHEN a user clicks on a patient's name link
+THE SYSTEM SHALL navigate to "patientInfo.html" with the patient_id parameter
+
+WHEN a user clicks the "Add New Patient" button
+THE SYSTEM SHALL navigate to "add-new-patient.html" page
+
+WHEN a user clicks on sidebar navigation items
+THE SYSTEM SHALL navigate to the corresponding pages:
+- Dashboard → "index.html"
+- Appointments → "appointments.html"  
+- Laboratory → "laboratory.html"
+- Prescriptions → "prescriptions.html"
+- Doctors → "doctor-schedule.html"
+
+WHEN a user clicks the "Patients" sidebar item
+THE SYSTEM SHALL remain on the current patients page (already active)
+
+---
+
+Visual Design and Styling:
+WHEN the patients page is displayed
+THE SYSTEM SHALL apply a gradient background (blue to teal) with blur effect
+
+WHEN displaying the search input field
+THE SYSTEM SHALL highlight with accent color border (#4db6ac) when focused
+
+WHEN a user hovers over a patient name link
+THE SYSTEM SHALL change the text color to gray to indicate it's clickable
+
+WHEN displaying the "Add New Patient" button
+THE SYSTEM SHALL use teal background color (#4db6ac) with white text and shadow effect
+
+WHEN a user hovers over the "Add New Patient" button
+THE SYSTEM SHALL darken the background color (#3ba69c) and scale the button to 1.05x
+
+WHEN displaying the patient table
+THE SYSTEM SHALL use alternating styling with proper borders and padding
+
+WHEN displaying table columns
+THE SYSTEM SHALL center-align the "Patient #" column and left-align the "Patient's Name" column with left padding
+
+---
+
+Data Structure and Backend Integration:
+WHEN the backend API returns patient data
+THE SYSTEM SHALL process records containing PatientID, FirstName, MiddleName, LastName, and DateOfBirth fields
+
+WHEN receiving patient data from the API
+THE SYSTEM SHALL handle patients ordered alphabetically by LastName in ascending order
+
+WHEN API returns patient data with null or undefined name fields
+THE SYSTEM SHALL handle gracefully without displaying "null" or "undefined" text
+
+WHEN constructing full names from API data
+THE SYSTEM SHALL concatenate First + Middle (if present) + Last names with appropriate spacing
+
+---
+
+Error Handling and Edge Cases:
+WHEN the API request to "/patients" endpoint fails
+THE SYSTEM SHALL catch the error and log it to console without breaking page functionality
+
+WHEN patient data is undefined or not an array
+THE SYSTEM SHALL handle gracefully and display "No patients found." message
+
+WHEN localStorage lacks required user authentication data
+THE SYSTEM SHALL still load the page but display empty strings for missing role/username information
+
+WHEN patient data contains empty or null values
+THE SYSTEM SHALL handle missing data without showing extra spaces or null values in the display
