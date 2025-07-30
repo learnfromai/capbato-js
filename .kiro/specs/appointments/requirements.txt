@@ -101,6 +101,12 @@ THE SYSTEM SHALL populate doctor selection dropdown with available doctors
 WHEN form fields are incomplete
 THE SYSTEM SHALL disable the submit button and show field validation errors
 
+WHEN patient is not selected from autocomplete suggestions
+THE SYSTEM SHALL display "Please select a patient from the suggestions." error message
+
+WHEN required form fields are empty
+THE SYSTEM SHALL display "Please fill in all fields." error message
+
 WHEN appointment form is submitted with valid data
 THE SYSTEM SHALL disable submit button and show loading state to prevent double submission
 
@@ -115,6 +121,12 @@ THE SYSTEM SHALL display only a "Reconfirm" action button for that appointment
 
 WHEN a user clicks the "Modify" button
 THE SYSTEM SHALL open the appointment form overlay pre-populated with the existing appointment data
+
+WHEN appointment form is opened in edit mode
+THE SYSTEM SHALL change form title to "Update Appointment" and button text to "Update Appointment"
+
+WHEN appointment form is opened in edit mode
+THE SYSTEM SHALL populate all fields with existing appointment data including patient name, reason, date, time, and doctor
 
 WHEN a user clicks the "Cancel" button
 THE SYSTEM SHALL display a confirmation modal asking "Are you sure you want to cancel this appointment?"
