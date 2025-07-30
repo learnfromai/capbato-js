@@ -1,0 +1,165 @@
+Page Display and Authentication:
+WHEN a user navigates to the doctor-schedule page
+THE SYSTEM SHALL display the page header with clinic logo, title "M.G. Amores Medical Clinic", user role display, username display, and profile avatar
+
+WHEN the doctor-schedule page loads
+THE SYSTEM SHALL retrieve and display the logged-in user's role in uppercase and username from localStorage
+
+WHEN the profile avatar is displayed
+THE SYSTEM SHALL show the first letter of the username in uppercase with a consistently assigned color based on username hash
+
+WHEN a user clicks on the profile avatar
+THE SYSTEM SHALL toggle a dropdown menu with "Settings" and "Logout" options
+
+WHEN a user clicks outside the profile dropdown
+THE SYSTEM SHALL hide the dropdown menu
+
+WHEN a user clicks "Settings" in the profile dropdown
+THE SYSTEM SHALL hide the dropdown and show "Settings functionality coming soon!" alert
+
+WHEN a user clicks "Logout" in the profile dropdown
+THE SYSTEM SHALL clear localStorage data (loggedInRole, loggedInUsername, isLoggedIn) and redirect to login.html
+
+---
+
+Sidebar Navigation:
+WHEN the doctor-schedule page loads
+THE SYSTEM SHALL display sidebar navigation with Dashboard, Appointments, Patients, Laboratory, Prescriptions, and Doctors menu items with "Doctors" highlighted as active
+
+WHEN the logged-in user role is 'admin'
+THE SYSTEM SHALL dynamically inject an "Accounts" navigation item in the sidebar
+
+WHEN a user clicks Dashboard nav item
+THE SYSTEM SHALL navigate to index.html
+
+WHEN a user clicks Appointments nav item
+THE SYSTEM SHALL navigate to appointments.html
+
+WHEN a user clicks Patients nav item
+THE SYSTEM SHALL navigate to patients.html
+
+WHEN a user clicks Laboratory nav item
+THE SYSTEM SHALL navigate to laboratory.html
+
+WHEN a user clicks Prescriptions nav item
+THE SYSTEM SHALL navigate to prescriptions.html
+
+WHEN a user clicks Doctors nav item
+THE SYSTEM SHALL navigate to doctor-schedule.html
+
+WHEN an admin user clicks Accounts nav item
+THE SYSTEM SHALL navigate to accounts.html
+
+---
+
+Doctors Table Display:
+WHEN the doctor-schedule page loads
+THE SYSTEM SHALL display a "Doctors" title and table with columns: "Doctor's Name", "Specialization", "Contact Number"
+
+WHEN the page loads
+THE SYSTEM SHALL fetch doctors data from the /doctors API endpoint
+
+WHEN the doctors API call succeeds
+THE SYSTEM SHALL populate the table with doctor information formatted as "Dr. [FirstName] [LastName]", specialization, and contact number
+
+WHEN the contact number is not available for a doctor
+THE SYSTEM SHALL display "N/A" in the Contact Number column
+
+WHEN the doctors API call fails
+THE SYSTEM SHALL log the error to console and display fallback static data with sample doctors (Maria Santos - General Medicine, Juan Cruz - Cardiology, Anna Reyes - Pediatrics)
+
+WHEN displaying the doctors table
+THE SYSTEM SHALL left-align doctor names, center-align specialization and contact number columns
+
+WHEN a user hovers over a doctor table row
+THE SYSTEM SHALL highlight the row with a light gray background
+
+---
+
+Calendar Display and Navigation:
+WHEN the doctor-schedule page loads
+THE SYSTEM SHALL display a "Doctor's Schedule" title with an "Edit" button positioned at the top right
+
+WHEN the calendar section loads
+THE SYSTEM SHALL show the current month and year in uppercase format with previous and next month navigation buttons
+
+WHEN the calendar displays
+THE SYSTEM SHALL show day headers (Sun, Mon, Tue, Wed, Thu, Fri, Sat) above a calendar grid
+
+WHEN the calendar is rendered
+THE SYSTEM SHALL display dates in zero-padded format (e.g., "01", "02") in bold within each calendar cell
+
+WHEN a calendar cell represents a date outside the current month
+THE SYSTEM SHALL display the cell as inactive with transparent background
+
+WHEN the page loads
+THE SYSTEM SHALL fetch schedule data from the /schedules API endpoint
+
+WHEN schedule data is available for a date
+THE SYSTEM SHALL display the doctor's name in bold and the time below it within the calendar cell
+
+WHEN there is no schedule data for a date
+THE SYSTEM SHALL display only the date number in the calendar cell
+
+WHEN a user clicks the previous month button
+THE SYSTEM SHALL navigate to the previous month and re-render the calendar using cached schedule data
+
+WHEN a user clicks the next month button
+THE SYSTEM SHALL navigate to the next month and re-render the calendar using cached schedule data
+
+---
+
+Schedule Management and Edit Functionality:
+WHEN a user clicks the "Edit" button
+THE SYSTEM SHALL display an overlay with an iframe loading edit-sched.html
+
+WHEN the edit schedule overlay opens
+THE SYSTEM SHALL display a close button (X) in the top-right corner
+
+WHEN a user clicks the close button on the edit overlay
+THE SYSTEM SHALL hide the overlay and clear the iframe source
+
+WHEN the edit schedule form loads in the iframe
+THE SYSTEM SHALL display input fields for Doctor Name (text), Date (date picker), and Time (text with placeholder "e.g. 9AM - 5PM")
+
+WHEN a user submits the edit schedule form with valid data
+THE SYSTEM SHALL send a POST request to /schedules endpoint with doctor, date, and time
+
+WHEN the schedule submission succeeds
+THE SYSTEM SHALL send a "scheduleUpdated" message to the parent window
+
+WHEN the schedule submission fails
+THE SYSTEM SHALL display "Failed to save schedule." alert and log the error to console
+
+WHEN the parent window receives a "scheduleUpdated" message
+THE SYSTEM SHALL hide the edit overlay, clear the iframe source, and reload the page to refresh the calendar
+
+---
+
+API Integration and Error Handling:
+WHEN fetching doctors data from the API fails
+THE SYSTEM SHALL log the error to console and fallback to displaying static doctor data
+
+WHEN fetching schedules data from the API fails
+THE SYSTEM SHALL log the error to console with message "Failed to load schedules:" and continue displaying calendar without schedule data
+
+WHEN schedules API responds successfully
+THE SYSTEM SHALL cache the schedules data for use during calendar navigation
+
+WHEN doctors API responds successfully
+THE SYSTEM SHALL render the doctors table with the received data
+
+---
+
+User Interface Interactions:
+WHEN hovering over the profile avatar
+THE SYSTEM SHALL apply a scale transformation to 1.05 and enhanced shadow effect
+
+WHEN hovering over navigation items in the sidebar
+THE SYSTEM SHALL change background color to light gray and text color to teal
+
+WHEN the current navigation item is active
+THE SYSTEM SHALL display green background, teal text, and left border indicator
+
+WHEN the edit schedule overlay is open
+THE SYSTEM SHALL prevent interaction with the underlying page content through modal overlay
