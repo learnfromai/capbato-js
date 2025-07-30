@@ -1,0 +1,204 @@
+Page Display and Initial Loading:
+WHEN a user navigates to the doctor-schedule page
+THE SYSTEM SHALL display the header with clinic logo, title "M.G. Amores Medical Clinic", user role and username displays, and profile avatar
+
+WHEN the doctor-schedule page loads
+THE SYSTEM SHALL retrieve and display the logged-in user's role (in uppercase) and username from localStorage
+
+WHEN the doctor-schedule page loads
+THE SYSTEM SHALL display the sidebar navigation with menu items: Dashboard, Appointments, Patients, Laboratory, Prescriptions, and Doctors (highlighted as active)
+
+WHEN the doctor-schedule page loads
+THE SYSTEM SHALL display the main content area with doctors table section and calendar section
+
+WHEN the doctor-schedule page loads
+THE SYSTEM SHALL make API calls to fetch doctors data from "/doctors" endpoint and schedules data from "/schedules" endpoint
+
+---
+
+Profile Avatar and Dropdown Management:
+WHEN the profile avatar is displayed
+THE SYSTEM SHALL show the first letter of the username in a colored circle with color determined by username hash
+
+WHEN a user clicks on the profile avatar
+THE SYSTEM SHALL toggle the visibility of the profile dropdown menu with "Settings" and "Logout" options
+
+WHEN a user clicks outside the profile dropdown
+THE SYSTEM SHALL hide the dropdown menu
+
+WHEN a user clicks "Settings" in the profile dropdown
+THE SYSTEM SHALL close the dropdown and display "Settings functionality coming soon!" alert
+
+WHEN a user clicks "Logout" in the profile dropdown
+THE SYSTEM SHALL clear localStorage data (loggedInRole, loggedInUsername, isLoggedIn) and redirect to login.html
+
+---
+
+Admin Role and Sidebar Navigation:
+WHEN the logged-in user role is "admin"
+THE SYSTEM SHALL dynamically inject an "Accounts" menu item in the sidebar navigation
+
+WHEN a user clicks "Dashboard" in the sidebar
+THE SYSTEM SHALL navigate to index.html
+
+WHEN a user clicks "Appointments" in the sidebar
+THE SYSTEM SHALL navigate to appointments.html
+
+WHEN a user clicks "Patients" in the sidebar
+THE SYSTEM SHALL navigate to patients.html
+
+WHEN a user clicks "Laboratory" in the sidebar
+THE SYSTEM SHALL navigate to laboratory.html
+
+WHEN a user clicks "Prescriptions" in the sidebar
+THE SYSTEM SHALL navigate to prescriptions.html
+
+WHEN a user clicks "Doctors" in the sidebar
+THE SYSTEM SHALL navigate to doctor-schedule.html (current page)
+
+WHEN an admin user clicks "Accounts" in the sidebar
+THE SYSTEM SHALL navigate to accounts.html
+
+---
+
+Doctors Table Display and Data Management:
+WHEN the doctors API call succeeds
+THE SYSTEM SHALL display a table with columns "Doctor's Name", "Specialization", and "Contact Number"
+
+WHEN rendering doctor names in the table
+THE SYSTEM SHALL format names as "Dr. [FirstName] [LastName]"
+
+WHEN a doctor's contact number is not available
+THE SYSTEM SHALL display "N/A" in the Contact Number column
+
+WHEN the doctors API call fails
+THE SYSTEM SHALL log the error to console and display fallback static data with sample doctors (Maria Santos - General Medicine, Juan Cruz - Cardiology, Anna Reyes - Pediatrics)
+
+WHEN the doctors table is displayed
+THE SYSTEM SHALL left-align doctor names and center-align specialization and contact number columns
+
+WHEN a user hovers over a doctor table row
+THE SYSTEM SHALL highlight the row with a light gray background
+
+---
+
+Calendar Display and Navigation:
+WHEN the calendar section loads
+THE SYSTEM SHALL display "Doctor's Schedule" title with an "Edit" button positioned at the top right
+
+WHEN the calendar is rendered
+THE SYSTEM SHALL display the current month and year in uppercase format above the calendar grid
+
+WHEN the calendar is displayed
+THE SYSTEM SHALL show day headers (Sun, Mon, Tue, Wed, Thu, Fri, Sat) above a monthly grid
+
+WHEN the calendar renders dates
+THE SYSTEM SHALL display dates with zero-padded formatting (e.g., "01", "02") in bold within each calendar cell
+
+WHEN a calendar cell represents a date outside the current month
+THE SYSTEM SHALL display the cell as inactive with transparent background
+
+WHEN a user clicks the previous month button (left chevron)
+THE SYSTEM SHALL navigate to the previous month and re-render the calendar using cached schedule data
+
+WHEN a user clicks the next month button (right chevron)
+THE SYSTEM SHALL navigate to the next month and re-render the calendar using cached schedule data
+
+---
+
+Schedule Data Display:
+WHEN schedule data is successfully loaded from the API
+THE SYSTEM SHALL cache the schedules data and render them on the calendar
+
+WHEN a calendar cell has schedule data for that date
+THE SYSTEM SHALL display the doctor name in bold and the time below it within the calendar cell
+
+WHEN a calendar cell has no schedule data
+THE SYSTEM SHALL display only the date number without additional schedule information
+
+WHEN multiple schedules exist for the same date
+THE SYSTEM SHALL display the first matching schedule for that date
+
+---
+
+Schedule Edit Functionality:
+WHEN a user clicks the "Edit" button
+THE SYSTEM SHALL display an overlay modal containing an iframe loading edit-sched.html
+
+WHEN the edit schedule overlay is displayed
+THE SYSTEM SHALL show a close button (X) in the top-right corner of the overlay
+
+WHEN a user clicks the close button on the edit overlay
+THE SYSTEM SHALL hide the overlay and clear the iframe source
+
+WHEN the edit schedule form loads in the iframe
+THE SYSTEM SHALL display form fields for Doctor Name (text input), Date (date picker), and Time (text input with placeholder "e.g. 9AM - 5PM")
+
+WHEN the edit schedule form loads
+THE SYSTEM SHALL display a "Save" button with save icon for form submission
+
+WHEN a user submits the edit schedule form with valid data
+THE SYSTEM SHALL send a POST request to "/schedules" endpoint with doctor, date, and time data
+
+WHEN the schedule form submission succeeds
+THE SYSTEM SHALL send a postMessage with type "scheduleUpdated" to the parent window
+
+WHEN the parent window receives a "scheduleUpdated" message
+THE SYSTEM SHALL close the overlay, clear the iframe source, and reload the page to refresh the calendar
+
+WHEN the schedule form submission fails
+THE SYSTEM SHALL display "Failed to save schedule." alert and log the error to console
+
+---
+
+API Integration and Error Handling:
+WHEN the "/doctors" API call succeeds
+THE SYSTEM SHALL receive data with fields: DoctorID, FirstName, LastName, Specialization, ContactNumber
+
+WHEN the "/schedules" API call succeeds
+THE SYSTEM SHALL receive data with fields: id, doctor_name, date, time ordered by date
+
+WHEN the "/schedules" API call fails
+THE SYSTEM SHALL log the error message "Failed to load schedules:" to console and continue displaying empty calendar
+
+WHEN the "/doctors" API call fails
+THE SYSTEM SHALL log the error to console and fallback to displaying static doctor data
+
+WHEN a POST request to "/schedules" is made
+THE SYSTEM SHALL send data with fields: doctor, date, time
+
+WHEN the POST request to "/schedules" succeeds
+THE SYSTEM SHALL receive response with message "Schedule added" and the new schedule ID
+
+---
+
+User Interface and Visual Feedback:
+WHEN hovering over navigation items in the sidebar
+THE SYSTEM SHALL change background color to light gray and text color to teal
+
+WHEN hovering over the profile avatar
+THE SYSTEM SHALL apply scale transformation (1.05) and enhanced shadow effect
+
+WHEN the "Doctors" navigation item is active
+THE SYSTEM SHALL display green background, teal text color, and left border indicator
+
+WHEN the edit schedule overlay is open
+THE SYSTEM SHALL prevent interaction with the underlying page content through the overlay background
+
+WHEN form fields are required in the edit schedule form
+THE SYSTEM SHALL prevent form submission until all required fields (doctor name, date, time) are completed
+
+---
+
+Responsive Design and Accessibility:
+WHEN the page is viewed on smaller screens (max-width: 768px)
+THE SYSTEM SHALL adjust doctors table padding and font sizes while maintaining readability
+
+WHEN the page is viewed on tablets (max-width: 1024px)
+THE SYSTEM SHALL maintain proper layout spacing for both doctors table and calendar sections
+
+WHEN the calendar grid is displayed
+THE SYSTEM SHALL use CSS grid layout with 7 columns for consistent day alignment
+
+WHEN calendar cells contain schedule information
+THE SYSTEM SHALL ensure text wraps properly and maintains readability within cell boundaries
