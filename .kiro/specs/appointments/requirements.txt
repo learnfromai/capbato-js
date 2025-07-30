@@ -1,0 +1,192 @@
+Page Display and Navigation:
+WHEN a user navigates to the appointments page
+THE SYSTEM SHALL display the appointments page with header navigation, sidebar menu, and main content area
+
+WHEN the appointments page loads
+THE SYSTEM SHALL display the page title "Appointments" and an "Add Appointment" button in the appointments header
+
+WHEN the appointments page loads
+THE SYSTEM SHALL set the date input to today's date and load today's appointments by default
+
+WHEN the appointments page loads
+THE SYSTEM SHALL highlight the "Appointments" menu item as active in the sidebar navigation
+
+WHEN a user clicks any sidebar navigation item (Dashboard, Patients, Laboratory, Prescriptions, Doctors)
+THE SYSTEM SHALL navigate to the corresponding page
+
+WHEN a user with admin role accesses the appointments page
+THE SYSTEM SHALL inject an "Accounts" menu item into the sidebar navigation
+
+---
+
+Appointments Table Display:
+WHEN appointments data is loaded successfully
+THE SYSTEM SHALL display appointments in a table with columns: Patient #, Patient Name, Reason for Visit, Date, Time, Doctor, Status, Action
+
+WHEN appointments are displayed in the table
+THE SYSTEM SHALL format patient names in proper case (first letter of each word capitalized)
+
+WHEN appointments are displayed in the table
+THE SYSTEM SHALL format time in 12-hour format with AM/PM (e.g., "2:30 PM")
+
+WHEN appointments are displayed in the table
+THE SYSTEM SHALL format dates in readable format (e.g., "Jul 15, 2025")
+
+WHEN appointments are displayed in the table
+THE SYSTEM SHALL show status with color-coded styling: green background for "Confirmed", red background for "Cancelled"
+
+WHEN appointments are loaded
+THE SYSTEM SHALL display an appointment count showing total appointments with breakdown of confirmed and cancelled statuses
+
+WHEN no appointments are found for today's date
+THE SYSTEM SHALL display "No upcoming appointments for today." message in the table
+
+WHEN no appointments are found for other selected dates
+THE SYSTEM SHALL display "No appointments found." message in the table
+
+WHEN appointments data fails to load
+THE SYSTEM SHALL display "Error loading appointments." message in red color in the table and set appointment count to 0
+
+---
+
+Date Filtering and Display Controls:
+WHEN the appointments page loads
+THE SYSTEM SHALL display filter controls with date picker labeled "Select Date:" and "Show All" checkbox
+
+WHEN a user changes the selected date in the date picker
+THE SYSTEM SHALL automatically uncheck the "Show All" checkbox and load appointments for the selected date
+
+WHEN a user checks the "Show All" checkbox
+THE SYSTEM SHALL load all appointments regardless of date and sort them from latest to oldest by date and time
+
+WHEN a user unchecks the "Show All" checkbox
+THE SYSTEM SHALL load appointments for the currently selected date
+
+---
+
+Add Appointment Functionality:
+WHEN a user clicks the "Add Appointment" button
+THE SYSTEM SHALL display an overlay with iframe containing the add appointment form
+
+WHEN the add appointment overlay opens
+THE SYSTEM SHALL display a close button (X) and send a "resetForm" message to clear any previous form data
+
+WHEN a user clicks the close button on the overlay
+THE SYSTEM SHALL close the overlay and clear the iframe source
+
+WHEN an appointment is successfully added
+THE SYSTEM SHALL close the overlay, refresh the appointments list based on current filter state, and show a success toast notification
+
+WHEN an appointment is added with a specific date
+THE SYSTEM SHALL set the date picker to that date, uncheck "Show All", and display appointments for that date
+
+---
+
+Appointment Status Management:
+WHEN an appointment has "Confirmed" status
+THE SYSTEM SHALL display "Modify" and "Cancel" action buttons for that appointment
+
+WHEN an appointment has "Cancelled" status
+THE SYSTEM SHALL display only a "Reconfirm" action button for that appointment
+
+WHEN a user clicks the "Cancel" button
+THE SYSTEM SHALL display a confirmation modal asking "Are you sure you want to cancel this appointment?"
+
+WHEN a user confirms appointment cancellation
+THE SYSTEM SHALL update the appointment status to "Cancelled", refresh the appointments list, and show a success toast notification
+
+WHEN a user clicks the "Reconfirm" button and the time slot has less than 4 confirmed appointments
+THE SYSTEM SHALL display a confirmation modal asking "Reconfirm this appointment?"
+
+WHEN a user clicks the "Reconfirm" button and the time slot has 4 or more confirmed appointments  
+THE SYSTEM SHALL open the appointment form overlay for rescheduling to a different time
+
+WHEN a user confirms appointment reconfirmation
+THE SYSTEM SHALL update the appointment status to "Confirmed", refresh the appointments list, and show a success toast notification
+
+---
+
+Appointment Modification:
+WHEN a user clicks the "Modify" button
+THE SYSTEM SHALL open the appointment form overlay pre-populated with the existing appointment data
+
+WHEN the modify appointment overlay loads
+THE SYSTEM SHALL send an "editAppointment" message with appointment data to the iframe
+
+WHEN an appointment is successfully modified
+THE SYSTEM SHALL close the overlay, refresh the appointments list based on current filter state, and show a success toast notification
+
+---
+
+Confirmation Modal Interactions:
+WHEN a confirmation modal is displayed
+THE SYSTEM SHALL show "Yes" and "No" buttons with appropriate icons and prevent interaction with background elements
+
+WHEN a user clicks "Yes" in a confirmation modal
+THE SYSTEM SHALL execute the confirmed action and close the modal
+
+WHEN a user clicks "No" in a confirmation modal
+THE SYSTEM SHALL cancel the action and close the modal without making changes
+
+---
+
+User Profile and Authentication:
+WHEN the appointments page loads
+THE SYSTEM SHALL display the logged-in user's role and username in the header with profile avatar containing first letter of username
+
+WHEN the appointments page loads  
+THE SYSTEM SHALL generate a consistent background color for the profile avatar based on username hash
+
+WHEN a user clicks the profile avatar
+THE SYSTEM SHALL display a dropdown menu with "Settings" and "Logout" options
+
+WHEN a user clicks "Settings" in the profile dropdown  
+THE SYSTEM SHALL display "Settings functionality coming soon!" message
+
+WHEN a user clicks "Logout" in the profile dropdown
+THE SYSTEM SHALL clear localStorage authentication data and redirect to the login page
+
+WHEN a user clicks outside the profile dropdown
+THE SYSTEM SHALL automatically close the dropdown menu
+
+---
+
+Toast Notifications and User Feedback:
+WHEN appointment operations complete successfully
+THE SYSTEM SHALL display toast notifications with success messages for 2 seconds at the top of the page
+
+WHEN appointment operations fail due to validation or server errors
+THE SYSTEM SHALL display error messages via toast notifications
+
+WHEN toast notifications are displayed
+THE SYSTEM SHALL automatically hide them after 2 seconds and use consistent styling
+
+---
+
+Backend Integration and Data Management:
+WHEN loading appointments data
+THE SYSTEM SHALL make HTTP GET request to "http://localhost:3001/appointments" endpoint
+
+WHEN updating appointment status
+THE SYSTEM SHALL make HTTP PUT request to "http://localhost:3001/appointments/cancel/{id}" endpoint with new status
+
+WHEN appointment operations complete
+THE SYSTEM SHALL refresh the appointments list based on current filter state (date-specific or show all)
+
+WHEN API requests fail
+THE SYSTEM SHALL log errors to console and display user-friendly error messages
+
+---
+
+Data Persistence and State Management:
+WHEN appointments are filtered by a specific date
+THE SYSTEM SHALL remember the last viewed date for maintaining context during operations
+
+WHEN the "Show All" checkbox is active
+THE SYSTEM SHALL set lastViewedDate to null and sort appointments from latest to oldest
+
+WHEN appointment operations complete
+THE SYSTEM SHALL maintain the user's current filter selection while refreshing data
+
+WHEN the appointments button in sidebar is clicked
+THE SYSTEM SHALL reset to today's date, uncheck "Show All", and load today's appointments
