@@ -1,9 +1,15 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { TodoPage } from '../presentation/features/todo';
-import { AboutPage } from '../presentation/features/about';
 import { LoginPage } from '../presentation/features/login';
 import { AuthGuard } from '../presentation/components/auth';
+import { Layout } from '../presentation/components/layout';
+import { DashboardPage } from '../presentation/features/dashboard';
+import { AppointmentsPage } from '../presentation/features/appointments';
+import { PatientsPage } from '../presentation/features/patients';
+import { LaboratoryPage } from '../presentation/features/laboratory';
+import { PrescriptionsPage } from '../presentation/features/prescriptions';
+import { DoctorsPage } from '../presentation/features/doctors';
+import { AccountsPage } from '../presentation/features/accounts';
 import { useAuthStore } from '../infrastructure/state/AuthStore';
 import '../styles.css';
 
@@ -21,12 +27,51 @@ function App() {
         {/* Protected routes - require authentication */}
         <Route path="/" element={
           <AuthGuard requireAuth={true}>
-            <TodoPage />
+            <Layout>
+              <DashboardPage />
+            </Layout>
           </AuthGuard>
         } />
-        <Route path="/about" element={
+        <Route path="/appointments" element={
           <AuthGuard requireAuth={true}>
-            <AboutPage />
+            <Layout>
+              <AppointmentsPage />
+            </Layout>
+          </AuthGuard>
+        } />
+        <Route path="/patients" element={
+          <AuthGuard requireAuth={true}>
+            <Layout>
+              <PatientsPage />
+            </Layout>
+          </AuthGuard>
+        } />
+        <Route path="/laboratory" element={
+          <AuthGuard requireAuth={true}>
+            <Layout>
+              <LaboratoryPage />
+            </Layout>
+          </AuthGuard>
+        } />
+        <Route path="/prescriptions" element={
+          <AuthGuard requireAuth={true}>
+            <Layout>
+              <PrescriptionsPage />
+            </Layout>
+          </AuthGuard>
+        } />
+        <Route path="/doctors" element={
+          <AuthGuard requireAuth={true}>
+            <Layout>
+              <DoctorsPage />
+            </Layout>
+          </AuthGuard>
+        } />
+        <Route path="/accounts" element={
+          <AuthGuard requireAuth={true}>
+            <Layout>
+              <AccountsPage />
+            </Layout>
           </AuthGuard>
         } />
         
