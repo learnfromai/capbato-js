@@ -1,0 +1,144 @@
+Page Display and Initial Loading:
+WHEN a user navigates to the patients page
+THE SYSTEM SHALL display the page header with clinic logo, clinic name "M.G. Amores Medical Clinic", user role in uppercase, and username
+
+WHEN the patients page loads
+THE SYSTEM SHALL display the sidebar navigation with "Patients" item marked as active
+
+WHEN the patients page loads
+THE SYSTEM SHALL display the main content area with "Patient Records" title centered and "Add New Patient" button positioned on the right
+
+WHEN the patients page loads
+THE SYSTEM SHALL display a search bar with placeholder text "Search patients..."
+
+WHEN the patients page loads
+THE SYSTEM SHALL display a table with column headers "Patient #" and "Patient's Name"
+
+---
+
+Patient Data Loading and Display:
+WHEN the patients page loads
+THE SYSTEM SHALL fetch patient data from the backend API endpoint "http://localhost:3001/patients"
+
+WHEN patient data is successfully loaded
+THE SYSTEM SHALL populate the table with PatientID in the first column and formatted full name in the second column
+
+WHEN displaying patient names
+THE SYSTEM SHALL convert names to title case and format as "FirstName MiddleName LastName" with proper spacing
+
+WHEN displaying patient names without middle names
+THE SYSTEM SHALL format as "FirstName LastName" without extra spaces
+
+WHEN no patient data is available or array is empty
+THE SYSTEM SHALL display "No patients found." message in the table body centered across both columns
+
+WHEN patient data fails to load from the API
+THE SYSTEM SHALL log error messages to the console with "Error fetching data:" prefix
+
+---
+
+Search Functionality:
+WHEN a user types in the search input field
+THE SYSTEM SHALL filter displayed patients in real-time based on the search text (case-insensitive)
+
+WHEN performing a search
+THE SYSTEM SHALL match against PatientID and full name (LastName, FirstName, MiddleName concatenated)
+
+WHEN search results are found
+THE SYSTEM SHALL update the table to show only matching patients
+
+WHEN no search results are found
+THE SYSTEM SHALL display "No patients found." message in the table
+
+WHEN the user clears the search field
+THE SYSTEM SHALL restore the full patient list display
+
+---
+
+Navigation and User Interactions:
+WHEN a user clicks on a patient's name link
+THE SYSTEM SHALL navigate to "patientInfo.html" with the patient_id parameter in the URL query string
+
+WHEN a user clicks the "Add New Patient" button
+THE SYSTEM SHALL navigate to "add-new-patient.html" page
+
+WHEN a user clicks on sidebar navigation items
+THE SYSTEM SHALL navigate to the corresponding pages (Dashboard→index.html, Appointments→appointments.html, Laboratory→laboratory.html, Prescriptions→prescriptions.html, Doctors→doctor-schedule.html)
+
+---
+
+Profile Management:
+WHEN the patients page loads
+THE SYSTEM SHALL display user role and username from localStorage in the header area
+
+WHEN the patients page loads
+THE SYSTEM SHALL generate a profile avatar with the first letter of the username and assign a consistent color based on username hash using the predefined color array
+
+WHEN a user clicks the profile avatar
+THE SYSTEM SHALL toggle the profile dropdown menu with "Settings" and "Logout" options
+
+WHEN a user clicks outside the profile dropdown
+THE SYSTEM SHALL close the dropdown menu
+
+WHEN a user clicks "Settings" in the profile dropdown
+THE SYSTEM SHALL close the dropdown and display "Settings functionality coming soon!" alert message
+
+WHEN a user clicks "Logout" in the profile dropdown
+THE SYSTEM SHALL clear localStorage (loggedInRole, loggedInUsername, isLoggedIn) and redirect to "login.html"
+
+---
+
+Admin Features:
+WHEN a user with role "admin" (case-insensitive) accesses the patients page
+THE SYSTEM SHALL dynamically inject an "Accounts" navigation item into the sidebar with users-cog icon
+
+WHEN an admin user clicks the "Accounts" menu item
+THE SYSTEM SHALL navigate to "accounts.html" page
+
+WHEN a user with non-admin role accesses the patients page
+THE SYSTEM SHALL NOT display the "Accounts" menu item in the sidebar
+
+---
+
+Visual Styling and User Experience:
+WHEN displaying patient name links in the table
+THE SYSTEM SHALL style them as black text with no underline by default
+
+WHEN a user hovers over patient name links
+THE SYSTEM SHALL change the text color to gray to indicate clickability
+
+WHEN displaying the "Add New Patient" button
+THE SYSTEM SHALL style it with teal background (#4db6ac), white text, and shadow effect
+
+WHEN a user hovers over the "Add New Patient" button
+THE SYSTEM SHALL darken the background color (#3ba69c) and scale the button to 1.05x
+
+WHEN the search input field receives focus
+THE SYSTEM SHALL highlight the input field with teal border color (#4db6ac)
+
+---
+
+Data Formatting and Table Display:
+WHEN displaying the table
+THE SYSTEM SHALL center-align the "Patient #" column content
+
+WHEN displaying the table
+THE SYSTEM SHALL left-align the "Patient's Name" column content with 20px left padding
+
+WHEN displaying patient names as links
+THE SYSTEM SHALL create clickable anchor elements that link to "patientInfo.html?patient_id={PatientID}"
+
+WHEN table content overflows
+THE SYSTEM SHALL apply text-overflow ellipsis and maintain table structure with fixed layout
+
+---
+
+Error Handling:
+WHEN the API request to fetch patients fails
+THE SYSTEM SHALL catch the error and log it to console without breaking page functionality
+
+WHEN patient data is undefined or not an array
+THE SYSTEM SHALL handle gracefully and display "No patients found." message
+
+WHEN formatting names with null or undefined values
+THE SYSTEM SHALL handle missing data gracefully using empty strings and proper concatenation logic
