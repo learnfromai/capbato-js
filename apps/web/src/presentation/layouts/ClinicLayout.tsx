@@ -28,7 +28,7 @@ export const ClinicLayout: React.FC<ClinicLayoutProps> = ({ children }) => {
   ];
 
   return (
-    <div className="min-h-screen relative" style={{ 
+    <div className="min-h-screen relative font-sans" style={{ 
       background: 'linear-gradient(to bottom right, rgb(109, 174, 218), #4db6ac)',
       paddingTop: '100px'
     }}>
@@ -42,14 +42,14 @@ export const ClinicLayout: React.FC<ClinicLayoutProps> = ({ children }) => {
       />
 
       {/* Header/Navbar */}
-      <nav className="fixed top-0 left-0 w-full bg-white px-5 py-2.5 shadow-md z-[1000] flex items-center gap-4">
+      <nav className="fixed top-0 left-0 w-full bg-white px-5 py-2.5 z-[1000] flex items-center gap-4" style={{
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+      }}>
         <Link to="/dashboard" className="flex items-center gap-4 no-underline">
-          <img 
-            src="/api/placeholder/70/70" 
-            alt="Logo" 
-            className="w-[70px] h-[70px] object-cover rounded-lg"
+          <div 
+            className="w-[70px] h-[70px] bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 font-bold text-xl border-2 border-blue-200"
           />
-          <h1 className="text-[22px] text-[#0b4f6c] m-0 font-normal">
+          <h1 className="text-[22px] m-0 font-normal" style={{ color: '#0b4f6c' }}>
             M.G. Amores Medical Clinic
           </h1>
         </Link>
@@ -61,7 +61,20 @@ export const ClinicLayout: React.FC<ClinicLayoutProps> = ({ children }) => {
           </div>
           <div className="relative">
             <div 
-              className="w-[45px] h-[45px] rounded-full flex items-center justify-center font-medium text-2xl text-white bg-blue-600 shadow-sm cursor-pointer hover:scale-105 hover:shadow-md transition-all duration-200"
+              className="w-[45px] h-[45px] rounded-full flex items-center justify-center font-medium text-2xl text-white cursor-pointer transition-all duration-200"
+              style={{
+                backgroundColor: '#4db6ac',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                transform: 'scale(1)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.05)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.15)';
+              }}
             >
               A
             </div>
@@ -70,35 +83,61 @@ export const ClinicLayout: React.FC<ClinicLayoutProps> = ({ children }) => {
       </nav>
 
       {/* Sidebar */}
-      <div className="fixed top-[100px] left-0 w-[200px] h-full bg-white py-5 shadow-sm z-[999]">
+      <div className="fixed top-[100px] left-0 w-[200px] h-full bg-white py-5 z-[999]" style={{
+        boxShadow: '2px 0 10px rgba(0, 0, 0, 0.1)'
+      }}>
         <ul className="list-none p-0 m-0">
-          {navItems.map(({ path, label, icon: Icon }) => (
-            <li key={path}>
-              <Link
-                to={path}
-                className={`flex items-center px-5 py-3 cursor-pointer transition-all duration-300 text-gray-600 border-l-[3px] border-l-transparent relative no-underline ${
-                  location.pathname === path
-                    ? 'bg-[#e8f5e8] text-[#4db6ac] border-l-[#4db6ac] font-semibold'
-                    : 'hover:bg-gray-50 hover:text-[#4db6ac]'
-                }`}
-              >
-                {location.pathname === path && (
-                  <div className="absolute right-0 top-0 bottom-0 w-[3px] bg-[#4db6ac]" />
-                )}
-                <Icon size={18} className="mr-3 flex-shrink-0" />
-                <span className="text-sm font-medium whitespace-nowrap">
-                  {label}
-                </span>
-              </Link>
-            </li>
-          ))}
+          {navItems.map(({ path, label, icon: Icon }) => {
+            const isActive = location.pathname === path;
+            return (
+              <li key={path}>
+                <Link
+                  to={path}
+                  className="flex items-center px-5 py-3 cursor-pointer transition-all duration-300 text-gray-600 relative no-underline border-l-[3px] border-l-transparent"
+                  style={{
+                    backgroundColor: isActive ? '#e8f5e8' : 'transparent',
+                    color: isActive ? '#4db6ac' : '#666',
+                    borderLeftColor: isActive ? '#4db6ac' : 'transparent',
+                    fontWeight: isActive ? '600' : '500'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = '#f8f9fa';
+                      e.currentTarget.style.color = '#4db6ac';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.color = '#666';
+                    }
+                  }}
+                >
+                  {isActive && (
+                    <div 
+                      className="absolute right-0 top-0 bottom-0 w-[3px]" 
+                      style={{ backgroundColor: '#4db6ac' }}
+                    />
+                  )}
+                  <Icon size={18} className="mr-3 flex-shrink-0" />
+                  <span className="text-sm font-medium whitespace-nowrap">
+                    {label}
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </div>
 
       {/* Main Content */}
       <div className="ml-[200px]">
         <div className="max-w-[1200px] mx-auto p-5">
-          {children}
+          <div className="bg-white rounded-2xl p-8 min-h-[300px]" style={{
+            boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)'
+          }}>
+            {children}
+          </div>
         </div>
       </div>
     </div>
