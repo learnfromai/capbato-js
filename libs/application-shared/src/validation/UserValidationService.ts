@@ -1,9 +1,10 @@
 import { injectable, inject } from 'tsyringe';
-import { ValidationService, IValidationService } from './ValidationService';
+import { ValidationService, IValidationService, ValidationError } from './ValidationService';
 import { RegisterUserCommandSchema, LoginUserCommandSchema } from './UserValidationSchemas';
 import { RegisterUserCommand, LoginUserCommand } from '../dto/UserCommands';
 import { LoginUserRequestDto } from '../dto/UserRequestDtos';
 import { TOKENS } from '../di/tokens';
+import { z } from 'zod';
 
 /**
  * Validation service for RegisterUserCommand
@@ -51,35 +52,48 @@ export class UserValidationService {
   validateLoginCommand(data: unknown): LoginUserCommand {
     // First validate that the data has the required structure
     if (!data || typeof data !== 'object') {
-      throw new Error('Invalid login data');
+      throw new ValidationError(
+        [{ code: 'invalid_type', path: [], message: 'Invalid login data' }],
+        'Invalid login data'
+      );
     }
 
     const request = data as any;
 
-    // Check that password is provided
-    if (!request.password || typeof request.password !== 'string') {
-      throw new Error('Password is required');
-    }
-
     // Transform LoginUserRequestDto to LoginUserCommand
     // The API expects either email OR username, we convert to unified identifier
-    let identifier: string;
+    let identifier: string | undefined;
 
-    if (request.email && typeof request.email === 'string') {
-      identifier = request.email;
-    } else if (request.username && typeof request.username === 'string') {
+    if (request.email !== undefined) {
+      // If email is provided, validate its format (but only if it's a non-empty string)
+      if (typeof request.email === 'string' && request.email.trim() !== '') {
+        if (!z.string().email().safeParse(request.email).success) {
+          throw new ValidationError(
+            [{ code: 'invalid_email', path: ['email'], message: 'Please provide a valid email address' }],
+            'Please provide a valid email address'
+          );
+        }
+        identifier = request.email;
+      } else {
+        // Let Zod handle empty strings and type validation
+        identifier = request.email;
+      }
+    } else if (request.username !== undefined) {
       identifier = request.username;
-    } else {
-      throw new Error('Email or username is required');
     }
 
-    // Create the command object and validate it
+    // If neither email nor username is provided, let Zod handle it
+    if (identifier === undefined) {
+      identifier = '';
+    }
+
+    // Create the command object and validate it using the schema
     const command = {
-      identifier: identifier.trim(),
+      identifier: typeof identifier === 'string' ? identifier.trim() : identifier,
       password: request.password
     };
 
-    // Validate the transformed command using the schema
+    // Let the schema validation handle all validation including missing fields
     return this.loginValidator.validate(command);
   }
 

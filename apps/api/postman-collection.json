@@ -248,7 +248,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\",\n  \"email\": \"test.user.{{$randomInt}}@example.com\",\n  \"password\": \"SecurePass123\"\n}"
+              "raw": "{\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\",\n  \"email\": \"test.user.{{$randomInt}}@example.com\",\n  \"password\": \"SecurePass123\",\n  \"role\": \"doctor\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
@@ -891,7 +891,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Login\",\n  \"lastName\": \"Test\",\n  \"email\": \"login.test.{{$randomInt}}@example.com\",\n  \"password\": \"{{loginTestPassword}}\"\n}"
+              "raw": "{\n  \"firstName\": \"Login\",\n  \"lastName\": \"Test\",\n  \"email\": \"login.test.{{$randomInt}}@example.com\",\n  \"password\": \"{{loginTestPassword}}\",\n  \"role\": \"receptionist\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
@@ -937,7 +937,7 @@
                   "    pm.expect(user).to.have.property('id');",
                   "    pm.expect(user).to.have.property('firstName', 'Login');",
                   "    pm.expect(user).to.have.property('lastName', 'Test');",
-                  "    pm.expect(user).to.have.property('email', pm.collectionVariables.get('loginTestEmail'));",
+                  "    pm.expect(user).to.have.property('email', pm.collectionVariables.get('actualLoginTestEmail'));",
                   "    pm.expect(user).to.have.property('username');",
                   "    // Note: login response doesn't include createdAt, only registration does",
                   "});",
@@ -1027,7 +1027,7 @@
                   "    pm.expect(user).to.have.property('id');",
                   "    pm.expect(user).to.have.property('firstName', 'Login');",
                   "    pm.expect(user).to.have.property('lastName', 'Test');",
-                  "    pm.expect(user).to.have.property('email', pm.collectionVariables.get('loginTestEmail'));",
+                  "    pm.expect(user).to.have.property('email', pm.collectionVariables.get('actualLoginTestEmail'));",
                   "    pm.expect(user).to.have.property('username');",
                   "    // Note: login response doesn't include createdAt, only registration does",
                   "});",
@@ -1668,7 +1668,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Duplicate\",\n  \"lastName\": \"Test\",\n  \"email\": \"{{testEmail}}\",\n  \"password\": \"SecurePass123\"\n}"
+              "raw": "{\n  \"firstName\": \"Duplicate\",\n  \"lastName\": \"Test\",\n  \"email\": \"{{testEmail}}\",\n  \"password\": \"SecurePass123\",\n  \"role\": \"admin\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
