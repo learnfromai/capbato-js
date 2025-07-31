@@ -22,6 +22,7 @@ export {
 // Re-export user validation schemas for convenience
 export {
   RegisterUserCommandSchema,
+  LoginUserRequestSchema,
   LoginUserCommandSchema,
   LoginFormSchema,
   FirstNameSchema,

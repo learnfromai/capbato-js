@@ -77,6 +77,26 @@ export const RegisterUserCommandSchema = z.object({
   role: RoleSchema,
 });
 
+// Login user request transformation schema (transforms DTO to Command)
+export const LoginUserRequestSchema = z.object({
+  email: z.string().optional(),
+  username: z.string().optional(),
+  password: z.string(),
+}).refine((data) => {
+  // Either email or username must be provided
+  return data.email || data.username;
+}, {
+  message: USER_VALIDATION_ERRORS.AUTH_MISSING_IDENTIFIER,
+  path: ['email'], // Point to email field for the error
+}).transform((data) => {
+  // Transform to LoginUserCommand format
+  const identifier = data.email || data.username || '';
+  return {
+    identifier,
+    password: data.password
+  };
+});
+
 // Login user command validation schema (matches DTO interface)
 export const LoginUserCommandSchema = z.object({
   identifier: z
