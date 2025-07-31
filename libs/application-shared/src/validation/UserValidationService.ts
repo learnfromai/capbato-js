@@ -1,9 +1,10 @@
 import { injectable, inject } from 'tsyringe';
-import { ValidationService, IValidationService } from './ValidationService';
+import { ValidationService, IValidationService, ValidationError } from './ValidationService';
 import { RegisterUserCommandSchema, LoginUserCommandSchema } from './UserValidationSchemas';
 import { RegisterUserCommand, LoginUserCommand } from '../dto/UserCommands';
 import { LoginUserRequestDto } from '../dto/UserRequestDtos';
 import { TOKENS } from '../di/tokens';
+import { z } from 'zod';
 
 /**
  * Validation service for RegisterUserCommand
@@ -51,14 +52,20 @@ export class UserValidationService {
   validateLoginCommand(data: unknown): LoginUserCommand {
     // First validate that the data has the required structure
     if (!data || typeof data !== 'object') {
-      throw new Error('Invalid login data');
+      throw new ValidationError(
+        [{ code: 'invalid_type', path: [], message: 'Invalid login data' }],
+        'Invalid login data'
+      );
     }
 
     const request = data as any;
 
     // Check that password is provided
     if (!request.password || typeof request.password !== 'string') {
-      throw new Error('Password is required');
+      throw new ValidationError(
+        [{ code: 'required', path: ['password'], message: 'Password is required' }],
+        'Password is required'
+      );
     }
 
     // Transform LoginUserRequestDto to LoginUserCommand
@@ -66,11 +73,21 @@ export class UserValidationService {
     let identifier: string;
 
     if (request.email && typeof request.email === 'string') {
+      // If email is provided, validate its format
+      if (!z.string().email().safeParse(request.email).success) {
+        throw new ValidationError(
+          [{ code: 'invalid_email', path: ['email'], message: 'Please provide a valid email address' }],
+          'Please provide a valid email address'
+        );
+      }
       identifier = request.email;
     } else if (request.username && typeof request.username === 'string') {
       identifier = request.username;
     } else {
-      throw new Error('Email or username is required');
+      throw new ValidationError(
+        [{ code: 'required', path: ['identifier'], message: 'Email or username is required' }],
+        'Email or username is required'
+      );
     }
 
     // Create the command object and validate it
