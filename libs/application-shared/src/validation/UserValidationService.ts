@@ -1,5 +1,5 @@
 import { injectable, inject } from 'tsyringe';
-import { ValidationService, IValidationService } from './ValidationService';
+import { ValidationService, IValidationService, ValidationError } from './ValidationService';
 import { RegisterUserCommandSchema, LoginUserCommandSchema } from './UserValidationSchemas';
 import { RegisterUserCommand, LoginUserCommand } from '../dto/UserCommands';
 import { LoginUserRequestDto } from '../dto/UserRequestDtos';
@@ -51,35 +51,39 @@ export class UserValidationService {
   validateLoginCommand(data: unknown): LoginUserCommand {
     // First validate that the data has the required structure
     if (!data || typeof data !== 'object') {
-      throw new Error('Invalid login data');
+      throw new ValidationError(
+        [{ code: 'invalid_type', path: [], message: 'Invalid login data' }],
+        'Validation failed for LoginUserValidationService'
+      );
     }
 
     const request = data as any;
 
-    // Check that password is provided
-    if (!request.password || typeof request.password !== 'string') {
-      throw new Error('Password is required');
-    }
-
     // Transform LoginUserRequestDto to LoginUserCommand
     // The API expects either email OR username, we convert to unified identifier
-    let identifier: string;
+    let identifier: string | undefined;
 
     if (request.email && typeof request.email === 'string') {
       identifier = request.email;
     } else if (request.username && typeof request.username === 'string') {
       identifier = request.username;
-    } else {
-      throw new Error('Email or username is required');
+    } else if (!request.email && !request.username) {
+      // Only throw custom error if both are missing/empty, let Zod handle undefined values
+      throw new ValidationError(
+        [{ code: 'invalid_type', path: ['email'], message: 'Email or username is required' }],
+        'Validation failed for LoginUserValidationService'
+      );
     }
 
-    // Create the command object and validate it
+    // Create the command object and let Zod validate it
+    // This allows Zod to generate proper "expected string, received undefined" messages
     const command = {
-      identifier: identifier.trim(),
+      identifier: identifier?.trim(),
       password: request.password
     };
 
     // Validate the transformed command using the schema
+    // This will handle missing password with proper Zod error messages
     return this.loginValidator.validate(command);
   }
 
