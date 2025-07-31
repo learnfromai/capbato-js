@@ -248,7 +248,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\",\n  \"email\": \"test.user.{{$randomInt}}@example.com\",\n  \"password\": \"SecurePass123\"\n}"
+              "raw": "{\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\",\n  \"email\": \"test.user.{{$randomInt}}@example.com\",\n  \"password\": \"SecurePass123\",\n  \"role\": \"admin\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
@@ -544,6 +544,74 @@
           }
         },
         {
+          "name": "Register User - Missing Role (Validation Error)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test('Response has correct content type', function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "});",
+                  "",
+                  "pm.test('Response has error structure', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('success', false);",
+                  "    pm.expect(responseJson).to.have.property('error', 'Validation failed');",
+                  "    pm.expect(responseJson).to.have.property('code', 'VALIDATION_ERROR');",
+                  "    pm.expect(responseJson).to.have.property('details');",
+                  "});",
+                  "",
+                  "pm.test('Error details have correct structure', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.details).to.have.property('issues');",
+                  "    pm.expect(responseJson.details.issues).to.be.an('array');",
+                  "    pm.expect(responseJson.details.issues.length).to.be.greaterThan(0);",
+                  "});",
+                  "",
+                  "pm.test('Error details indicate role is required', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    const issues = responseJson.details.issues;",
+                  "    const roleIssue = issues.find(issue => issue.path && issue.path.includes('role'));",
+                  "    pm.expect(roleIssue).to.not.be.undefined;",
+                  "});",
+                  "",
+                  "pm.test('Response time is reasonable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Test validation error when role is missing"
+          }
+        },
+        {
           "name": "Register User - Invalid Email Format (Validation Error)",
           "event": [
             {
@@ -601,7 +669,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"invalid-email-format\",\n  \"password\": \"SecurePass123\"\n}"
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"invalid-email-format\",\n  \"password\": \"SecurePass123\",\n  \"role\": \"admin\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
@@ -609,6 +677,74 @@
               "path": ["api", "auth", "register"]
             },
             "description": "Test validation error when email format is invalid"
+          }
+        },
+        {
+          "name": "Register User - Invalid Role (Validation Error)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test('Response has correct content type', function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "});",
+                  "",
+                  "pm.test('Response has error structure', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('success', false);",
+                  "    pm.expect(responseJson).to.have.property('error', 'Validation failed');",
+                  "    pm.expect(responseJson).to.have.property('code', 'VALIDATION_ERROR');",
+                  "    pm.expect(responseJson).to.have.property('details');",
+                  "});",
+                  "",
+                  "pm.test('Error details have correct structure', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.details).to.have.property('issues');",
+                  "    pm.expect(responseJson.details.issues).to.be.an('array');",
+                  "    pm.expect(responseJson.details.issues.length).to.be.greaterThan(0);",
+                  "});",
+                  "",
+                  "pm.test('Error details indicate invalid role', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    const issues = responseJson.details.issues;",
+                  "    const roleIssue = issues.find(issue => issue.path && issue.path.includes('role'));",
+                  "    pm.expect(roleIssue).to.not.be.undefined;",
+                  "});",
+                  "",
+                  "pm.test('Response time is reasonable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123\",\n  \"role\": \"invalid_role\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Test validation error when role has invalid value"
           }
         },
         {
@@ -669,7 +805,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"weak\"\n}"
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"weak\",\n  \"role\": \"admin\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
@@ -739,7 +875,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"John123\",\n  \"lastName\": \"Doe@#$\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123\"\n}"
+              "raw": "{\n  \"firstName\": \"John123\",\n  \"lastName\": \"Doe@#$\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePass123\",\n  \"role\": \"admin\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
@@ -891,7 +1027,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Login\",\n  \"lastName\": \"Test\",\n  \"email\": \"login.test.{{$randomInt}}@example.com\",\n  \"password\": \"{{loginTestPassword}}\"\n}"
+              "raw": "{\n  \"firstName\": \"Login\",\n  \"lastName\": \"Test\",\n  \"email\": \"{{loginTestEmail}}\",\n  \"password\": \"{{loginTestPassword}}\",\n  \"role\": \"doctor\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
@@ -1668,7 +1804,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Duplicate\",\n  \"lastName\": \"Test\",\n  \"email\": \"{{testEmail}}\",\n  \"password\": \"SecurePass123\"\n}"
+              "raw": "{\n  \"firstName\": \"Duplicate\",\n  \"lastName\": \"Test\",\n  \"email\": \"{{testEmail}}\",\n  \"password\": \"SecurePass123\",\n  \"role\": \"receptionist\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
