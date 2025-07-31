@@ -78,7 +78,7 @@ export class User extends AggregateRoot<string> {
     email: string,
     username: string,
     hashedPassword: string,
-    role: string
+    role?: string
   ): User {
     return new User(id, {
       firstName: Name.create(firstName),

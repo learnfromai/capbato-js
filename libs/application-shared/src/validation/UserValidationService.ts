@@ -1,6 +1,6 @@
 import { injectable, inject } from 'tsyringe';
-import { ValidationService, IValidationService } from './ValidationService';
-import { RegisterUserCommandSchema, LoginUserCommandSchema } from './UserValidationSchemas';
+import { ValidationService, IValidationService, ValidationError } from './ValidationService';
+import { RegisterUserCommandSchema, LoginUserRequestSchema } from './UserValidationSchemas';
 import { RegisterUserCommand, LoginUserCommand } from '../dto/UserCommands';
 import { LoginUserRequestDto } from '../dto/UserRequestDtos';
 import { TOKENS } from '../di/tokens';
@@ -20,7 +20,7 @@ export class RegisterUserValidationService extends ValidationService<unknown, Re
  */
 @injectable()
 export class LoginUserValidationService extends ValidationService<unknown, LoginUserCommand> {
-  protected schema = LoginUserCommandSchema;
+  protected schema = LoginUserRequestSchema;
 }
 
 
@@ -46,41 +46,10 @@ export class UserValidationService {
 
   /**
    * Validates data for logging in a user
-   * Transforms LoginUserRequestDto (email? | username?) to LoginUserCommand (identifier)
+   * Uses Zod schema to transform LoginUserRequestDto to LoginUserCommand
    */
   validateLoginCommand(data: unknown): LoginUserCommand {
-    // First validate that the data has the required structure
-    if (!data || typeof data !== 'object') {
-      throw new Error('Invalid login data');
-    }
-
-    const request = data as any;
-
-    // Check that password is provided
-    if (!request.password || typeof request.password !== 'string') {
-      throw new Error('Password is required');
-    }
-
-    // Transform LoginUserRequestDto to LoginUserCommand
-    // The API expects either email OR username, we convert to unified identifier
-    let identifier: string;
-
-    if (request.email && typeof request.email === 'string') {
-      identifier = request.email;
-    } else if (request.username && typeof request.username === 'string') {
-      identifier = request.username;
-    } else {
-      throw new Error('Email or username is required');
-    }
-
-    // Create the command object and validate it
-    const command = {
-      identifier: identifier.trim(),
-      password: request.password
-    };
-
-    // Validate the transformed command using the schema
-    return this.loginValidator.validate(command);
+    return this.loginValidator.validate(data);
   }
 
   /**

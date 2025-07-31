@@ -8,7 +8,7 @@ export interface RegisterUserCommand {
   lastName: string;
   email: string;
   password: string;
-  role: string;
+  role: string; // This should remain required after validation applies the default
 }
 
 export interface LoginUserCommand {

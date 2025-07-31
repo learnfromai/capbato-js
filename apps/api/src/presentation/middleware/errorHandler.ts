@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { ValidationError } from '@nx-starter/application-shared';
 
 /**
  * Global error handling middleware
@@ -14,6 +15,17 @@ export const errorHandler = (
   // If response already sent, delegate to default Express error handler
   if (res.headersSent) {
     return next(error);
+  }
+
+  // Handle validation errors
+  if (error instanceof ValidationError) {
+    res.status(400).json({
+      success: false,
+      error: 'Validation failed',
+      message: error.message,
+      issues: error.issues,
+    });
+    return;
   }
 
   // Handle JSON parsing errors
