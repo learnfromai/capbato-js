@@ -62,7 +62,8 @@ export const PasswordSchema = z
 // Role validation schema
 export const RoleSchema = z
   .string()
-  .min(1, USER_VALIDATION_ERRORS.REG_MISSING_ROLE)
+  .optional()
+  .default('receptionist')
   .refine((value) => ['admin', 'doctor', 'receptionist'].includes(value.toLowerCase()), {
     message: USER_VALIDATION_ERRORS.REG_INVALID_ROLE,
   });

@@ -8,7 +8,7 @@ export interface RegisterUserRequestDto {
   lastName: string;
   email: string;
   password: string;
-  role: string;
+  role?: string;
 }
 
 export interface LoginUserRequestDto {

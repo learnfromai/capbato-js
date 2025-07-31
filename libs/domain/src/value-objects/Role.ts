@@ -26,8 +26,9 @@ export class Role extends ValueObject<string> {
     }
   }
 
-  public static create(value: string): Role {
-    const normalizedRole = value.toLowerCase().trim();
+  public static create(value?: string): Role {
+    const roleValue = value || 'receptionist'; // Default to receptionist if no role provided
+    const normalizedRole = roleValue.toLowerCase().trim();
     return new Role(normalizedRole);
   }
 

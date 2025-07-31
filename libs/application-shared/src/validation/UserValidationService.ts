@@ -1,5 +1,5 @@
 import { injectable, inject } from 'tsyringe';
-import { ValidationService, IValidationService } from './ValidationService';
+import { ValidationService, IValidationService, ValidationError } from './ValidationService';
 import { RegisterUserCommandSchema, LoginUserCommandSchema } from './UserValidationSchemas';
 import { RegisterUserCommand, LoginUserCommand } from '../dto/UserCommands';
 import { LoginUserRequestDto } from '../dto/UserRequestDtos';
@@ -51,14 +51,20 @@ export class UserValidationService {
   validateLoginCommand(data: unknown): LoginUserCommand {
     // First validate that the data has the required structure
     if (!data || typeof data !== 'object') {
-      throw new Error('Invalid login data');
+      throw new ValidationError(
+        [{ code: 'invalid_type', path: [], message: 'Invalid login data' }],
+        'Invalid login data'
+      );
     }
 
     const request = data as any;
 
     // Check that password is provided
     if (!request.password || typeof request.password !== 'string') {
-      throw new Error('Password is required');
+      throw new ValidationError(
+        [{ code: 'invalid_type', path: ['password'], message: 'Password is required' }],
+        'Password is required'
+      );
     }
 
     // Transform LoginUserRequestDto to LoginUserCommand
@@ -70,7 +76,10 @@ export class UserValidationService {
     } else if (request.username && typeof request.username === 'string') {
       identifier = request.username;
     } else {
-      throw new Error('Email or username is required');
+      throw new ValidationError(
+        [{ code: 'invalid_type', path: ['email', 'username'], message: 'Email or username is required' }],
+        'Email or username is required'
+      );
     }
 
     // Create the command object and validate it
