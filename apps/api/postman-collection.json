@@ -1201,7 +1201,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"{{loginTestUsername}}\",\n  \"password\": \"{{loginTestPassword}}\"\n}"
+              "raw": "{\n  \"username\": \"login.test\",\n  \"password\": \"{{loginTestPassword}}\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
@@ -1650,13 +1650,13 @@
                   "    const responseJson = pm.response.json();",
                   "    pm.expect(responseJson.details.issues.length).to.be.above(0);",
                   "    ",
-                  "    const emailError = responseJson.details.issues.find(issue => issue.path && issue.path.includes('email'));",
-                  "    pm.expect(emailError).to.exist;",
-                  "    pm.expect(emailError.message).to.equal('Please provide a valid email address');",
+                  "    const identifierError = responseJson.details.issues.find(issue => issue.path && issue.path.includes('identifier'));",
+                  "    pm.expect(identifierError).to.exist;",
+                  "    pm.expect(identifierError.message).to.equal('Please provide a valid email address');",
                   "    ",
-                  "    pm.expect(responseJson.details.fieldErrors).to.have.property('email');",
-                  "    pm.expect(responseJson.details.fieldErrors.email).to.be.an('array');",
-                  "    pm.expect(responseJson.details.fieldErrors.email).to.include('Please provide a valid email address');",
+                  "    pm.expect(responseJson.details.fieldErrors).to.have.property('identifier');",
+                  "    pm.expect(responseJson.details.fieldErrors.identifier).to.be.an('array');",
+                  "    pm.expect(responseJson.details.fieldErrors.identifier).to.include('Please provide a valid email address');",
                   "});",
                   "",
                   "pm.test('Response time is reasonable', function () {",
