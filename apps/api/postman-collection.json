@@ -891,7 +891,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Login\",\n  \"lastName\": \"Test\",\n  \"email\": \"login.test.{{$randomInt}}@example.com\",\n  \"password\": \"{{loginTestPassword}}\"\n}"
+              "raw": "{\n  \"firstName\": \"Login\",\n  \"lastName\": \"Test\",\n  \"email\": \"{{loginTestEmail}}\",\n  \"password\": \"{{loginTestPassword}}\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
@@ -981,7 +981,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{actualLoginTestEmail}}\",\n  \"password\": \"{{loginTestPassword}}\"\n}"
+              "raw": "{\n  \"email\": \"{{loginTestEmail}}\",\n  \"password\": \"{{loginTestPassword}}\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
@@ -1341,7 +1341,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{actualLoginTestEmail}}\",\n  \"password\": \"WrongPassword123\"\n}"
+              "raw": "{\n  \"email\": \"{{loginTestEmail}}\",\n  \"password\": \"WrongPassword123\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
