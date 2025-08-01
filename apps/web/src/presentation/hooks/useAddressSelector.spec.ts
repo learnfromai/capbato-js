@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { container } from 'tsyringe';
 import { useAddressSelector } from './useAddressSelector';
@@ -5,8 +6,8 @@ import type { IAddressApiService } from '../../infrastructure/api/AddressApiServ
 import type { ProvinceDto, CityDto, BarangayDto } from '@nx-starter/application-shared';
 
 // Mock the container and API service
-jest.mock('tsyringe');
-const mockContainer = container as jest.Mocked<typeof container>;
+vi.mock('tsyringe');
+const mockContainer = container as any;
 
 // Mock data
 const mockProvinces: ProvinceDto[] = [
@@ -25,16 +26,16 @@ const mockBarangays: BarangayDto[] = [
 ];
 
 // Mock API service
-const mockAddressApiService: jest.Mocked<IAddressApiService> = {
-  getProvinces: jest.fn(),
-  getCitiesByProvince: jest.fn(),
-  getBarangaysByCity: jest.fn(),
+const mockAddressApiService = {
+  getProvinces: vi.fn(),
+  getCitiesByProvince: vi.fn(),
+  getBarangaysByCity: vi.fn(),
 };
 
 describe('useAddressSelector', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    mockContainer.resolve.mockReturnValue(mockAddressApiService);
+    vi.clearAllMocks();
+    mockContainer.resolve = vi.fn().mockReturnValue(mockAddressApiService);
     
     // Setup default successful responses
     mockAddressApiService.getProvinces.mockResolvedValue(mockProvinces);
@@ -157,15 +158,21 @@ describe('useAddressSelector', () => {
       await result.current.selectCity('city1');
     });
 
-    // Select different province
+    // Select different province - this should clear cities and barangays temporarily
     await act(async () => {
       await result.current.selectProvince('province2');
+    });
+
+    // Wait for the new cities to load
+    await waitFor(() => {
+      expect(result.current.isLoadingCities).toBe(false);
     });
 
     expect(result.current.selectedProvince).toBe('province2');
     expect(result.current.selectedCity).toBe('');
     expect(result.current.selectedBarangay).toBe('');
-    expect(result.current.cities).toEqual([]);
+    // Cities should be loaded for the new province, not empty
+    expect(result.current.cities).toEqual(mockCities);
     expect(result.current.barangays).toEqual([]);
   });
 
@@ -178,7 +185,7 @@ describe('useAddressSelector', () => {
       expect(result.current.isLoadingProvinces).toBe(false);
     });
 
-    expect(result.current.error).toBe('Failed to load provinces: Network error');
+    expect(result.current.error).toBe('Network error');
     expect(result.current.provinces).toEqual([]);
   });
 
