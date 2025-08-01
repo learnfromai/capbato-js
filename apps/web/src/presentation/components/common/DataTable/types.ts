@@ -17,6 +17,7 @@ export interface DataTableProps<T> {
   searchFields?: (keyof T)[];
   isLoading?: boolean;
   emptyStateMessage?: string;
+  onRowClick?: (record: T) => void;
 }
 
 export interface SearchableItem {
