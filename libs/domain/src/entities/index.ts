@@ -10,3 +10,5 @@ export * from './Entity';
 export * from './Todo';
 export * from './User';
 export * from './Doctor';
+export * from './LabRequest';
+export * from './BloodChemistry';
