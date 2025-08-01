@@ -23,7 +23,8 @@ export class InMemoryAddressRepository implements IAddressRepository {
 
     try {
       // Load the comprehensive Philippine address data
-      const dataPath = join(__dirname, '../../../../data/philippines-complete.json');
+      // Use absolute path since webpack doesn't copy the data file to dist
+      const dataPath = join(process.cwd(), 'apps/api/src/data/philippines-complete.json');
       this.philippinesData = JSON.parse(readFileSync(dataPath, 'utf8'));
       
       // Extract and create provinces
