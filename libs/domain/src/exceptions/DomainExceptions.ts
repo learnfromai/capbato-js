@@ -48,6 +48,45 @@ export class UserNotFoundException extends DomainException {
   }
 }
 
+/**
+ * Schedule-specific domain exceptions
+ */
+export class ScheduleNotFoundException extends DomainException {
+  constructor(id: string) {
+    super(`Schedule with ID ${id} not found`, 'SCHEDULE_NOT_FOUND', 404);
+  }
+}
+
+export class InvalidScheduleDoctorNameException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid schedule doctor name: ${reason}`, 'INVALID_SCHEDULE_DOCTOR_NAME');
+  }
+}
+
+export class InvalidScheduleDateException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid schedule date: ${reason}`, 'INVALID_SCHEDULE_DATE');
+  }
+}
+
+export class InvalidScheduleTimeException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid schedule time: ${reason}`, 'INVALID_SCHEDULE_TIME');
+  }
+}
+
+export class ScheduleConflictException extends DomainException {
+  constructor(doctorName: string, date: string, time: string) {
+    super(`Schedule conflict: Doctor ${doctorName} already has a schedule on ${date} at ${time}`, 'SCHEDULE_CONFLICT', 409);
+  }
+}
+
+export class InvalidScheduleException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid schedule: ${reason}`, 'INVALID_SCHEDULE');
+  }
+}
+
 export class UserEmailAlreadyExistsException extends DomainException {
   constructor(email: string) {
     super(`This email address is already registered`, 'REG_EMAIL_EXISTS', 409);

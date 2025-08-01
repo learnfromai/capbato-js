@@ -20,3 +20,7 @@ export * from './DoctorId';
 export * from './DoctorName';
 export * from './Specialization';
 export * from './ContactNumber';
+export * from './ScheduleId';
+export * from './ScheduleDoctorName';
+export * from './ScheduleDate';
+export * from './ScheduleTime';

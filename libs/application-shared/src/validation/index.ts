@@ -51,3 +51,22 @@ export * from './PatientValidationService';
 // Export doctor validation schemas and services
 export * from './DoctorValidationSchemas';
 export * from './DoctorValidationService';
+
+// Export schedule validation schemas and services
+export * from './ScheduleValidationSchemas';
+export * from './ScheduleValidationService';
+
+// Re-export schedule validation schemas for convenience
+export {
+  CreateScheduleCommandSchema,
+  UpdateScheduleCommandSchema,
+  DeleteScheduleCommandSchema,
+  RescheduleCommandSchema,
+  CreateScheduleRequestSchema,
+  UpdateScheduleRequestSchema,
+  RescheduleRequestSchema,
+  ScheduleIdSchema,
+  ScheduleDoctorNameSchema,
+  ScheduleDateSchema,
+  ScheduleTimeSchema,
+} from './ScheduleValidationSchemas';
