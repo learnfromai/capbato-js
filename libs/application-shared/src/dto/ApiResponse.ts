@@ -1,5 +1,6 @@
 import { TodoDto, TodoStatsDto } from './TodoDto';
 import { LoginUserResponseDto, RegisterUserResponseDto } from './UserDto';
+import { AppointmentDto, WeeklyAppointmentSummaryDto } from './AppointmentDto';
 
 /**
  * API Response Interfaces
@@ -68,6 +69,12 @@ export type TodoOperationResponse = ApiSuccessMessageResponse;
 export type LoginResponse = ApiSuccessResponse<LoginUserResponseDto>;
 export type RegisterResponse = ApiSuccessResponse<RegisterUserResponseDto>;
 
+// Specific response types for Appointment endpoints
+export type AppointmentResponse = ApiSuccessResponse<AppointmentDto>;
+export type AppointmentListResponse = ApiSuccessResponse<AppointmentDto[]>;
+export type WeeklyAppointmentSummaryResponse = ApiSuccessResponse<WeeklyAppointmentSummaryDto[]>;
+export type AppointmentOperationResponse = ApiSuccessMessageResponse;
+
 // Union type for all possible responses
 export type TodoApiResponse = 
   | TodoResponse 
@@ -80,4 +87,11 @@ export type AuthApiResponse =
   | LoginResponse
   | RegisterResponse
   | AuthErrorResponse
+  | ApiErrorResponse;
+
+export type AppointmentApiResponse = 
+  | AppointmentResponse 
+  | AppointmentListResponse 
+  | WeeklyAppointmentSummaryResponse
+  | AppointmentOperationResponse 
   | ApiErrorResponse;

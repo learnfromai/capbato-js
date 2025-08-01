@@ -9,6 +9,12 @@ import { InMemoryPatientRepository } from '../patient/persistence/in-memory/InMe
 import { TypeOrmPatientRepository } from '../patient/persistence/typeorm/TypeOrmPatientRepository';
 import { InMemoryDoctorRepository } from '../doctor/persistence/in-memory/InMemoryDoctorRepository';
 import { TypeOrmDoctorRepository } from '../doctor/persistence/typeorm/TypeOrmDoctorRepository';
+import { 
+  InMemoryAppointmentRepository,
+  TypeOrmAppointmentRepository,
+  SqliteAppointmentRepository,
+  MongooseAppointmentRepository
+} from '../appointment/persistence';
 import {
   CreateTodoUseCase,
   UpdateTodoUseCase,
@@ -41,6 +47,27 @@ import {
   DoctorValidationService,
   GetDoctorByIdValidationService,
   GetDoctorsBySpecializationValidationService,
+  // Appointment Use Cases
+  CreateAppointmentUseCase,
+  UpdateAppointmentUseCase,
+  CancelAppointmentUseCase,
+  ConfirmAppointmentUseCase,
+  DeleteAppointmentUseCase,
+  GetAllAppointmentsQueryHandler,
+  GetAppointmentByIdQueryHandler,
+  GetAppointmentsByPatientIdQueryHandler,
+  GetTodayAppointmentsQueryHandler,
+  GetTodayConfirmedAppointmentsQueryHandler,
+  GetWeeklyAppointmentSummaryQueryHandler,
+  // Appointment Validation Services
+  AppointmentValidationService,
+  CreateAppointmentValidationService,
+  UpdateAppointmentValidationService,
+  CancelAppointmentValidationService,
+  ConfirmAppointmentValidationService,
+  DeleteAppointmentValidationService,
+  GetAppointmentByIdValidationService,
+  GetAppointmentsByPatientIdValidationService,
 } from '@nx-starter/application-shared';
 import {
   RegisterUserUseCase,
@@ -59,7 +86,7 @@ import {
   GetDoctorByUserIdQueryHandler,
   CheckDoctorProfileExistsQueryHandler,
 } from '@nx-starter/application-shared';
-import type { ITodoRepository, IUserRepository, IDoctorRepository } from '@nx-starter/domain';
+import type { ITodoRepository, IUserRepository, IDoctorRepository, IAppointmentRepository } from '@nx-starter/domain';
 import type { IPatientRepository } from '@nx-starter/application-shared';
 import { UserDomainService } from '@nx-starter/domain';
 import { getTypeOrmDataSource } from '../database/connections/TypeOrmConnection';
@@ -93,6 +120,12 @@ export const configureDI = async () => {
     doctorRepositoryImplementation
   );
 
+  const appointmentRepositoryImplementation = await getAppointmentRepositoryImplementation();
+  container.registerInstance<IAppointmentRepository>(
+    TOKENS.AppointmentRepository,
+    appointmentRepositoryImplementation
+  );
+
   // Infrastructure Layer - Services  
   container.registerSingleton(
     TOKENS.PasswordHashingService,
@@ -123,6 +156,13 @@ export const configureDI = async () => {
   container.registerSingleton(TOKENS.ChangeUserPasswordUseCase, ChangeUserPasswordUseCase);
   container.registerSingleton(TOKENS.CreatePatientUseCase, CreatePatientUseCase);
   container.registerSingleton(TOKENS.CreateDoctorProfileCommandHandler, CreateDoctorProfileCommandHandler);
+  
+  // Appointment Use Cases (Commands)
+  container.registerSingleton(TOKENS.CreateAppointmentUseCase, CreateAppointmentUseCase);
+  container.registerSingleton(TOKENS.UpdateAppointmentUseCase, UpdateAppointmentUseCase);
+  container.registerSingleton(TOKENS.CancelAppointmentUseCase, CancelAppointmentUseCase);
+  container.registerSingleton(TOKENS.ConfirmAppointmentUseCase, ConfirmAppointmentUseCase);
+  container.registerSingleton(TOKENS.DeleteAppointmentUseCase, DeleteAppointmentUseCase);
 
   // Application Layer - Use Cases (Queries)
   container.registerSingleton(
@@ -182,6 +222,32 @@ export const configureDI = async () => {
     CheckDoctorProfileExistsQueryHandler
   );
 
+  // Appointment Query Handlers
+  container.registerSingleton(
+    TOKENS.GetAllAppointmentsQueryHandler,
+    GetAllAppointmentsQueryHandler
+  );
+  container.registerSingleton(
+    TOKENS.GetAppointmentByIdQueryHandler,
+    GetAppointmentByIdQueryHandler
+  );
+  container.registerSingleton(
+    TOKENS.GetAppointmentsByPatientIdQueryHandler,
+    GetAppointmentsByPatientIdQueryHandler
+  );
+  container.registerSingleton(
+    TOKENS.GetTodayAppointmentsQueryHandler,
+    GetTodayAppointmentsQueryHandler
+  );
+  container.registerSingleton(
+    TOKENS.GetTodayConfirmedAppointmentsQueryHandler,
+    GetTodayConfirmedAppointmentsQueryHandler
+  );
+  container.registerSingleton(
+    TOKENS.GetWeeklyAppointmentSummaryQueryHandler,
+    GetWeeklyAppointmentSummaryQueryHandler
+  );
+
   // Application Layer - Validation Services
   container.registerSingleton(
     TOKENS.CreateTodoValidationService,
@@ -238,6 +304,40 @@ export const configureDI = async () => {
   container.registerSingleton(
     TOKENS.DoctorValidationService,
     DoctorValidationService
+  );
+
+  // Appointment Validation Services
+  container.registerSingleton(
+    TOKENS.CreateAppointmentValidationService,
+    CreateAppointmentValidationService
+  );
+  container.registerSingleton(
+    TOKENS.UpdateAppointmentValidationService,
+    UpdateAppointmentValidationService
+  );
+  container.registerSingleton(
+    TOKENS.CancelAppointmentValidationService,
+    CancelAppointmentValidationService
+  );
+  container.registerSingleton(
+    TOKENS.ConfirmAppointmentValidationService,
+    ConfirmAppointmentValidationService
+  );
+  container.registerSingleton(
+    TOKENS.DeleteAppointmentValidationService,
+    DeleteAppointmentValidationService
+  );
+  container.registerSingleton(
+    TOKENS.GetAppointmentByIdValidationService,
+    GetAppointmentByIdValidationService
+  );
+  container.registerSingleton(
+    TOKENS.GetAppointmentsByPatientIdValidationService,
+    GetAppointmentsByPatientIdValidationService
+  );
+  container.registerSingleton(
+    TOKENS.AppointmentValidationService,
+    AppointmentValidationService
   );
 
   // Domain Layer - Domain Services
@@ -404,6 +504,51 @@ async function getDoctorRepositoryImplementation(): Promise<IDoctorRepository> {
       );
       const dataSource = await getTypeOrmDataSource();
       return new TypeOrmDoctorRepository(dataSource);
+    }
+  }
+}
+
+async function getAppointmentRepositoryImplementation(): Promise<IAppointmentRepository> {
+  const dbConfig = getDatabaseConfig();
+  const dbType = dbConfig.type;
+  const ormType = dbConfig.orm || 'native';
+
+  console.log(`📦 Using Appointment repository: ${ormType} ORM with ${dbType} database`);
+
+  // Handle memory database (always uses in-memory repository)
+  if (dbType === 'memory') {
+    console.log('📦 Using in-memory appointment repository');
+    return new InMemoryAppointmentRepository();
+  }
+
+  // Handle MongoDB (always uses Mongoose)
+  if (dbType === 'mongodb') {
+    await connectMongoDB();
+    console.log('📦 Using Mongoose appointment repository with MongoDB');
+    return new MongooseAppointmentRepository();
+  }
+
+  // Handle SQL databases with different ORMs
+  switch (ormType) {
+    case 'typeorm': {
+      const dataSource = await getTypeOrmDataSource();
+      console.log(`📦 Using TypeORM appointment repository with ${dbType}`);
+      return new TypeOrmAppointmentRepository(dataSource);
+    }
+
+    case 'native':
+    default: {
+      if (dbType === 'sqlite') {
+        console.log('📦 Using native SQLite appointment repository');
+        return new SqliteAppointmentRepository();
+      }
+
+      // For other databases without native support, default to TypeORM
+      console.log(
+        `📦 No native support for ${dbType}, falling back to TypeORM for appointment repository`
+      );
+      const dataSource = await getTypeOrmDataSource();
+      return new TypeOrmAppointmentRepository(dataSource);
     }
   }
 }
