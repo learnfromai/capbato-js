@@ -10,6 +10,7 @@ export const TOKENS = {
   UserRepository: 'IUserRepository',
   PatientRepository: 'IPatientRepository',
   DoctorRepository: 'IDoctorRepository',
+  AddressRepository: 'IAddressRepository',
 
   // Infrastructure Layer - Services
   PasswordHashingService: 'IPasswordHashingService',
@@ -49,6 +50,9 @@ export const TOKENS = {
   GetDoctorByUserIdQueryHandler: 'GetDoctorByUserIdQueryHandler',
   GetDoctorsBySpecializationQueryHandler: 'GetDoctorsBySpecializationQueryHandler',
   CheckDoctorProfileExistsQueryHandler: 'CheckDoctorProfileExistsQueryHandler',
+  GetAllProvincesQueryHandler: 'GetAllProvincesQueryHandler',
+  GetCitiesByProvinceCodeQueryHandler: 'GetCitiesByProvinceCodeQueryHandler',
+  GetBarangaysByCityCodeQueryHandler: 'GetBarangaysByCityCodeQueryHandler',
 
   // Domain Layer - Services
   TodoDomainService: 'TodoDomainService',
@@ -72,6 +76,9 @@ export const TOKENS = {
   GetDoctorByIdValidationService: 'GetDoctorByIdValidationService',
   GetDoctorsBySpecializationValidationService: 'GetDoctorsBySpecializationValidationService',
   DoctorValidationService: 'DoctorValidationService',
+  GetCitiesValidationService: 'GetCitiesValidationService',
+  GetBarangaysValidationService: 'GetBarangaysValidationService',
+  AddressValidationService: 'AddressValidationService',
 } as const;
 
 // Type-safe token keys
