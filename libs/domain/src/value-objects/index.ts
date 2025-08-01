@@ -20,3 +20,7 @@ export * from './DoctorId';
 export * from './DoctorName';
 export * from './Specialization';
 export * from './ContactNumber';
+export * from './AppointmentId';
+export * from './AppointmentStatus';
+export * from './ReasonForVisit';
+export * from './PatientName';

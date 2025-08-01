@@ -143,3 +143,60 @@ export class InvalidContactNumberException extends DomainException {
     super(`Invalid contact number: ${reason}`, 'INVALID_CONTACT_NUMBER');
   }
 }
+
+/**
+ * Appointment-specific domain exceptions
+ */
+export class AppointmentNotFoundException extends DomainException {
+  constructor(id: string) {
+    super(`Appointment with ID ${id} not found`, 'APPOINTMENT_NOT_FOUND', 404);
+  }
+}
+
+export class AppointmentAlreadyCancelledException extends DomainException {
+  constructor(reason?: string) {
+    super(reason || 'Appointment is already cancelled', 'APPOINTMENT_ALREADY_CANCELLED');
+  }
+}
+
+export class AppointmentAlreadyConfirmedException extends DomainException {
+  constructor(reason?: string) {
+    super(reason || 'Appointment is already confirmed', 'APPOINTMENT_ALREADY_CONFIRMED');
+  }
+}
+
+export class InvalidAppointmentDateException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid appointment date: ${reason}`, 'INVALID_APPOINTMENT_DATE');
+  }
+}
+
+export class InvalidAppointmentTimeException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid appointment time: ${reason}`, 'INVALID_APPOINTMENT_TIME');
+  }
+}
+
+export class AppointmentTimeSlotUnavailableException extends DomainException {
+  constructor(date: string, time: string) {
+    super(`Time slot ${time} on ${date} is already fully booked`, 'APPOINTMENT_TIMESLOT_UNAVAILABLE', 409);
+  }
+}
+
+export class DuplicateAppointmentException extends DomainException {
+  constructor(patientId: string, date: string) {
+    super(`Patient ${patientId} already has an appointment on ${date}`, 'DUPLICATE_APPOINTMENT', 409);
+  }
+}
+
+export class InvalidReasonForVisitException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid reason for visit: ${reason}`, 'INVALID_REASON_FOR_VISIT');
+  }
+}
+
+export class InvalidPatientNameException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid patient name: ${reason}`, 'INVALID_PATIENT_NAME');
+  }
+}
