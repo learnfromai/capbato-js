@@ -6,8 +6,9 @@ import {
   Select,
   Stack,
   Autocomplete,
-  Text,
+  Title,
   Alert,
+  Text,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { 
@@ -129,9 +130,9 @@ export const AddAppointmentForm: React.FC<AddAppointmentFormProps> = ({
           </Alert>
         )}
 
-        <Text size="lg" fw={600} mb="xs">
+        <Title order={3} mb="xs">
           Add Appointment
-        </Text>
+        </Title>
 
         {/* Patient Name with Autocomplete */}
         <Controller

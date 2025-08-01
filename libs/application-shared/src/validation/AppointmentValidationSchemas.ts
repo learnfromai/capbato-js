@@ -40,10 +40,19 @@ export const PatientNameSchema = z
   .regex(/^[a-zA-ZñÑ\s.-]+$/, APPOINTMENT_VALIDATION_ERRORS.INVALID_PATIENT_NAME);
 
 // Reason for visit validation schema
-export const ReasonForVisitSchema = z
-  .enum(VISIT_REASONS, {
-    message: APPOINTMENT_VALIDATION_ERRORS.INVALID_REASON,
-  });
+export const ReasonForVisitSchema = z.enum([
+  'Consultation',
+  'Laboratory: Blood chemistry',
+  'Laboratory: Hematology',
+  'Laboratory: Serology & Immunology',
+  'Laboratory: Urinalysis',
+  'Laboratory: Fecalysis',
+  'Prescription',
+  'Follow-up check-up',
+  'Medical Certificate'
+], {
+  message: APPOINTMENT_VALIDATION_ERRORS.INVALID_REASON,
+});
 
 // Date validation schema
 export const AppointmentDateSchema = z
