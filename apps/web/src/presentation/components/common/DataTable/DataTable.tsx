@@ -9,7 +9,8 @@ export function DataTable<T extends SearchableItem>({
   searchPlaceholder = 'Search...',
   searchFields,
   isLoading = false,
-  emptyStateMessage = 'No data available'
+  emptyStateMessage = 'No data available',
+  onRowClick
 }: DataTableProps<T>) {
   const [searchQuery, setSearchQuery] = useState('');
 
