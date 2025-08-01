@@ -27,6 +27,29 @@ export interface Patient {
   updatedAt: string; // ISO date string
 }
 
+export interface GuardianDetails {
+  fullName: string;
+  gender: 'Male' | 'Female' | 'Other';
+  relationship: string;
+  contactNumber: string;
+  address: string;
+}
+
+export interface Appointment {
+  id: string;
+  date: string; // YYYY-MM-DD format
+  time: string; // HH:MM format
+  reasonForVisit: string;
+  labTestsDone: string;
+  prescriptions: string;
+  status: 'Confirmed' | 'Pending' | 'Cancelled' | 'Completed';
+}
+
+export interface PatientDetails extends Patient {
+  guardian?: GuardianDetails;
+  appointments?: Appointment[];
+}
+
 export interface PatientFormData {
   firstName: string;
   lastName: string;
