@@ -143,3 +143,84 @@ export class InvalidContactNumberException extends DomainException {
     super(`Invalid contact number: ${reason}`, 'INVALID_CONTACT_NUMBER');
   }
 }
+
+/**
+ * Appointment-specific domain exceptions
+ */
+export class AppointmentNotFoundException extends DomainException {
+  constructor(id: string) {
+    super(`Appointment with ID ${id} not found`, 'APPOINTMENT_NOT_FOUND', 404);
+  }
+}
+
+export class InvalidAppointmentDateException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid appointment date: ${reason}`, 'INVALID_APPOINTMENT_DATE');
+  }
+}
+
+export class InvalidAppointmentTimeException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid appointment time: ${reason}`, 'INVALID_APPOINTMENT_TIME');
+  }
+}
+
+export class InvalidAppointmentStatusException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid appointment status: ${reason}`, 'INVALID_APPOINTMENT_STATUS');
+  }
+}
+
+export class AppointmentAlreadyConfirmedException extends DomainException {
+  constructor() {
+    super('Appointment is already confirmed', 'APPOINTMENT_ALREADY_CONFIRMED');
+  }
+}
+
+export class AppointmentAlreadyCompletedException extends DomainException {
+  constructor() {
+    super('Appointment is already completed', 'APPOINTMENT_ALREADY_COMPLETED');
+  }
+}
+
+export class AppointmentAlreadyCancelledException extends DomainException {
+  constructor() {
+    super('Appointment is already cancelled', 'APPOINTMENT_ALREADY_CANCELLED');
+  }
+}
+
+export class TimeSlotNotAvailableException extends DomainException {
+  constructor(date: string, time: string) {
+    super(`Time slot ${time} on ${date} is not available`, 'TIME_SLOT_NOT_AVAILABLE', 409);
+  }
+}
+
+export class DuplicateAppointmentException extends DomainException {
+  constructor(patientId: string, date: string) {
+    super(`Patient ${patientId} already has an appointment on ${date}`, 'DUPLICATE_APPOINTMENT', 409);
+  }
+}
+
+export class PastAppointmentException extends DomainException {
+  constructor() {
+    super('Cannot book appointment for a past date or time', 'PAST_APPOINTMENT_NOT_ALLOWED');
+  }
+}
+
+export class InvalidAppointmentTransitionException extends DomainException {
+  constructor(from: string, to: string) {
+    super(`Cannot transition appointment from ${from} to ${to}`, 'INVALID_APPOINTMENT_TRANSITION');
+  }
+}
+
+export class PatientNotFoundException extends DomainException {
+  constructor(id: string) {
+    super(`Patient with ID ${id} not found`, 'PATIENT_NOT_FOUND', 404);
+  }
+}
+
+export class InvalidReasonForVisitException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid reason for visit: ${reason}`, 'INVALID_REASON_FOR_VISIT');
+  }
+}
