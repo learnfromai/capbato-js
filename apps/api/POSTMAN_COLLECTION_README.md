@@ -1,8 +1,8 @@
-# Capbato Clinic Management API - Postman Collection
+# Clinic Management System API - Postman Collection
 
 ## Overview
 
-This comprehensive Postman collection provides complete API testing coverage for the Capbato Clinic Management System. The collection follows Clean Architecture principles and includes extensive test scenarios for all API endpoints.
+This comprehensive Postman collection provides complete API testing coverage for the Clinic Management System. The collection follows Clean Architecture principles and includes extensive test scenarios for all API endpoints.
 
 ## Collection Structure
 

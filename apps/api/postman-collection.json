@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "Capbato Clinic Management API - Comprehensive",
-    "description": "Complete API collection for the Capbato Clinic Management System with Clean Architecture. This collection includes comprehensive test scenarios for authentication, patient management, user management, and todos with happy paths, validation errors, and edge cases.\n\n## API Coverage\n\n### Authentication (/api/auth)\n- User registration with role-based access\n- User login with email/username support\n- JWT token management\n\n### Patient Management (/api/patients)\n- Patient CRUD operations\n- Patient statistics and reporting\n- Structured address management\n- Guardian information handling\n\n### User Management (/api/users)\n- User listing and management\n- Password change functionality\n- Role-based operations\n\n### Todo Management (/api/todos)\n- Complete todo CRUD operations\n- Todo filtering and statistics\n- Priority and completion management\n\n## Testing Strategy\n\nThis collection follows comprehensive testing best practices:\n- **Happy Path Testing**: Core functionality validation\n- **Error Handling**: Validation errors, authentication failures, not found scenarios\n- **Schema Validation**: Response structure verification\n- **Dynamic Data**: Variable management for realistic test flows\n- **Performance Testing**: Response time validations\n- **Security Testing**: Authentication and authorization flows",
+    "name": "Clinic Management System API - Comprehensive",
+    "description": "Complete API collection for the Clinic Management System with Clean Architecture. This collection includes comprehensive test scenarios for authentication, patient management, user management, and todos with happy paths, validation errors, and edge cases.\n\n## API Coverage\n\n### Authentication (/api/auth)\n- User registration with role-based access\n- User login with email/username support\n- JWT token management\n\n### Patient Management (/api/patients)\n- Patient CRUD operations\n- Patient statistics and reporting\n- Structured address management\n- Guardian information handling\n\n### User Management (/api/users)\n- User listing and management\n- Password change functionality\n- Role-based operations\n\n### Todo Management (/api/todos)\n- Complete todo CRUD operations\n- Todo filtering and statistics\n- Priority and completion management\n\n## Testing Strategy\n\nThis collection follows comprehensive testing best practices:\n- **Happy Path Testing**: Core functionality validation\n- **Error Handling**: Validation errors, authentication failures, not found scenarios\n- **Schema Validation**: Response structure verification\n- **Dynamic Data**: Variable management for realistic test flows\n- **Performance Testing**: Response time validations\n- **Security Testing**: Authentication and authorization flows",
     "version": "2.1.0",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
@@ -10,7 +10,7 @@
       "key": "baseUrl",
       "value": "http://localhost:4000",
       "type": "string",
-      "description": "Base URL for the Capbato API server"
+      "description": "Base URL for the Clinic Management System API server"
     },
     {
       "key": "authToken",
