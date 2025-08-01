@@ -50,6 +50,20 @@ export const TOKENS = {
   GetDoctorsBySpecializationQueryHandler: 'GetDoctorsBySpecializationQueryHandler',
   CheckDoctorProfileExistsQueryHandler: 'CheckDoctorProfileExistsQueryHandler',
 
+  // Schedule Use Cases and Query Handlers
+  CreateScheduleUseCase: 'CreateScheduleUseCase',
+  UpdateScheduleUseCase: 'UpdateScheduleUseCase',
+  DeleteScheduleUseCase: 'DeleteScheduleUseCase',
+  GetAllSchedulesQueryHandler: 'GetAllSchedulesQueryHandler',
+  GetScheduleByIdQueryHandler: 'GetScheduleByIdQueryHandler',
+  GetSchedulesByDoctorQueryHandler: 'GetSchedulesByDoctorQueryHandler',
+  GetSchedulesByDateQueryHandler: 'GetSchedulesByDateQueryHandler',
+  GetTodaysSchedulesQueryHandler: 'GetTodaysSchedulesQueryHandler',
+  GetTodaysDoctorQueryHandler: 'GetTodaysDoctorQueryHandler',
+
+  // Infrastructure Layer - Repositories
+  ScheduleRepository: 'IScheduleRepository',
+
   // Domain Layer - Services
   TodoDomainService: 'TodoDomainService',
   UserDomainService: 'UserDomainService',
@@ -72,6 +86,11 @@ export const TOKENS = {
   GetDoctorByIdValidationService: 'GetDoctorByIdValidationService',
   GetDoctorsBySpecializationValidationService: 'GetDoctorsBySpecializationValidationService',
   DoctorValidationService: 'DoctorValidationService',
+  CreateScheduleValidationService: 'CreateScheduleValidationService',
+  UpdateScheduleValidationService: 'UpdateScheduleValidationService',
+  DeleteScheduleValidationService: 'DeleteScheduleValidationService',
+  GetScheduleByIdValidationService: 'GetScheduleByIdValidationService',
+  ScheduleValidationService: 'ScheduleValidationService',
 } as const;
 
 // Type-safe token keys
