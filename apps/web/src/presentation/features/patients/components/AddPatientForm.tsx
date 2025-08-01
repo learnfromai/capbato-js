@@ -13,6 +13,8 @@ import {
 import { DateInput } from '@mantine/dates';
 import { CreatePatientCommandSchema } from '@nx-starter/application-shared';
 import { FormTextInput } from '../../../components/ui/FormTextInput';
+import { AddressSelector } from '../../../components/ui/AddressSelector';
+import { useAddressSelector } from '../../../hooks';
 import { Icon } from '../../../components/common';
 import type { CreatePatientCommand } from '@nx-starter/application-shared';
 
@@ -41,6 +43,7 @@ export const AddPatientForm: React.FC<AddPatientFormProps> = ({
     reset,
     control,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<CreatePatientCommand>({
     resolver: zodResolver(CreatePatientCommandSchema),
@@ -68,6 +71,66 @@ export const AddPatientForm: React.FC<AddPatientFormProps> = ({
       guardianBarangay: '',
     },
   });
+
+  // Address selector hooks for patient address
+  const patientAddressSelector = useAddressSelector();
+  
+  // Address selector hooks for guardian address
+  const guardianAddressSelector = useAddressSelector();
+
+  // Handle patient address changes
+  const handlePatientProvinceChange = async (value: string | null) => {
+    if (value) {
+      setValue('province', value);
+      await patientAddressSelector.selectProvince(value);
+      // Clear dependent fields
+      setValue('cityMunicipality', '');
+      setValue('barangay', '');
+    }
+  };
+
+  const handlePatientCityChange = async (value: string | null) => {
+    if (value) {
+      setValue('cityMunicipality', value);
+      await patientAddressSelector.selectCity(value);
+      // Clear dependent field
+      setValue('barangay', '');
+    }
+  };
+
+  const handlePatientBarangayChange = (value: string | null) => {
+    if (value) {
+      setValue('barangay', value);
+      patientAddressSelector.selectBarangay(value);
+    }
+  };
+
+  // Handle guardian address changes
+  const handleGuardianProvinceChange = async (value: string | null) => {
+    if (value) {
+      setValue('guardianProvince', value);
+      await guardianAddressSelector.selectProvince(value);
+      // Clear dependent fields
+      setValue('guardianCityMunicipality', '');
+      setValue('guardianBarangay', '');
+    }
+  };
+
+  const handleGuardianCityChange = async (value: string | null) => {
+    if (value) {
+      setValue('guardianCityMunicipality', value);
+      await guardianAddressSelector.selectCity(value);
+      // Clear dependent field
+      setValue('guardianBarangay', '');
+    }
+  };
+
+  const handleGuardianBarangayChange = (value: string | null) => {
+    if (value) {
+      setValue('guardianBarangay', value);
+      guardianAddressSelector.selectBarangay(value);
+    }
+  };
 
   // Watch form values for button state
   const firstName = watch('firstName');
@@ -236,32 +299,36 @@ export const AddPatientForm: React.FC<AddPatientFormProps> = ({
                         />
                       </Grid.Col>
                     </Grid>
-                    <Grid>
-                      <Grid.Col span={6}>
-                        <FormTextInput
-                          label="Province"
-                          placeholder="Select Province"
-                          error={errors.province}
-                          disabled={isLoading}
-                          {...register('province')}
-                        />
-                      </Grid.Col>
-                      <Grid.Col span={6}>
-                        <FormTextInput
-                          label="City/Municipality"
-                          placeholder="Select province first"
-                          error={errors.cityMunicipality}
-                          disabled={isLoading}
-                          {...register('cityMunicipality')}
-                        />
-                      </Grid.Col>
-                    </Grid>
-                    <FormTextInput
-                      label="Barangay"
-                      placeholder="Select city first"
-                      error={errors.barangay}
-                      disabled={isLoading}
-                      {...register('barangay')}
+                    
+                    {/* Address Selector Component */}
+                    <AddressSelector
+                      provinceProps={{
+                        value: patientAddressSelector.selectedProvince,
+                        onChange: handlePatientProvinceChange,
+                        error: errors.province?.message,
+                        disabled: isLoading,
+                      }}
+                      cityProps={{
+                        value: patientAddressSelector.selectedCity,
+                        onChange: handlePatientCityChange,
+                        error: errors.cityMunicipality?.message,
+                        disabled: isLoading,
+                      }}
+                      barangayProps={{
+                        value: patientAddressSelector.selectedBarangay,
+                        onChange: handlePatientBarangayChange,
+                        error: errors.barangay?.message,
+                        disabled: isLoading,
+                      }}
+                      addressData={{
+                        provinces: patientAddressSelector.provinces,
+                        cities: patientAddressSelector.cities,
+                        barangays: patientAddressSelector.barangays,
+                        isLoadingProvinces: patientAddressSelector.isLoadingProvinces,
+                        isLoadingCities: patientAddressSelector.isLoadingCities,
+                        isLoadingBarangays: patientAddressSelector.isLoadingBarangays,
+                        error: patientAddressSelector.error,
+                      }}
                     />
                   </Stack>
                 </Box>
@@ -359,32 +426,36 @@ export const AddPatientForm: React.FC<AddPatientFormProps> = ({
                         />
                       </Grid.Col>
                     </Grid>
-                    <Grid>
-                      <Grid.Col span={6}>
-                        <FormTextInput
-                          label="Province"
-                          placeholder="Select Province"
-                          error={errors.guardianProvince}
-                          disabled={isLoading}
-                          {...register('guardianProvince')}
-                        />
-                      </Grid.Col>
-                      <Grid.Col span={6}>
-                        <FormTextInput
-                          label="City/Municipality"
-                          placeholder="Select province first"
-                          error={errors.guardianCityMunicipality}
-                          disabled={isLoading}
-                          {...register('guardianCityMunicipality')}
-                        />
-                      </Grid.Col>
-                    </Grid>
-                    <FormTextInput
-                      label="Barangay"
-                      placeholder="Select city first"
-                      error={errors.guardianBarangay}
-                      disabled={isLoading}
-                      {...register('guardianBarangay')}
+                    
+                    {/* Guardian Address Selector Component */}
+                    <AddressSelector
+                      provinceProps={{
+                        value: guardianAddressSelector.selectedProvince,
+                        onChange: handleGuardianProvinceChange,
+                        error: errors.guardianProvince?.message,
+                        disabled: isLoading,
+                      }}
+                      cityProps={{
+                        value: guardianAddressSelector.selectedCity,
+                        onChange: handleGuardianCityChange,
+                        error: errors.guardianCityMunicipality?.message,
+                        disabled: isLoading,
+                      }}
+                      barangayProps={{
+                        value: guardianAddressSelector.selectedBarangay,
+                        onChange: handleGuardianBarangayChange,
+                        error: errors.guardianBarangay?.message,
+                        disabled: isLoading,
+                      }}
+                      addressData={{
+                        provinces: guardianAddressSelector.provinces,
+                        cities: guardianAddressSelector.cities,
+                        barangays: guardianAddressSelector.barangays,
+                        isLoadingProvinces: guardianAddressSelector.isLoadingProvinces,
+                        isLoadingCities: guardianAddressSelector.isLoadingCities,
+                        isLoadingBarangays: guardianAddressSelector.isLoadingBarangays,
+                        error: guardianAddressSelector.error,
+                      }}
                     />
                   </Stack>
                 </Box>
