@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Box, UnstyledButton, Group, Text } from '@mantine/core';
 import { Icon } from '../common';
@@ -53,6 +53,7 @@ interface MedicalClinicSidebarProps {
 
 export const MedicalClinicSidebar: React.FC<MedicalClinicSidebarProps> = ({ className }) => {
   const location = useLocation();
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   return (
     <Box
@@ -67,6 +68,7 @@ export const MedicalClinicSidebar: React.FC<MedicalClinicSidebarProps> = ({ clas
       <Box component="ul" style={{ listStyle: 'none', margin: 0, padding: 0 }}>
         {navigationItems.map((item) => {
           const isActive = location.pathname === item.path;
+          const isHovered = hoveredItem === item.path;
           
           return (
             <Box 
@@ -77,13 +79,15 @@ export const MedicalClinicSidebar: React.FC<MedicalClinicSidebarProps> = ({ clas
               <UnstyledButton
                 component={NavLink}
                 to={item.path}
+                onMouseEnter={() => setHoveredItem(item.path)}
+                onMouseLeave={() => setHoveredItem(null)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   width: '100%',
                   padding: '12px 20px',
-                  color: isActive ? '#4db6ac' : '#666',
-                  backgroundColor: isActive ? '#e8f5e8' : 'transparent',
+                  color: isActive ? '#4db6ac' : (isHovered ? '#4db6ac' : '#666'),
+                  backgroundColor: isActive ? '#e8f5e8' : (isHovered ? '#f8f9fa' : 'transparent'),
                   borderLeft: isActive ? '3px solid #4db6ac' : '3px solid transparent',
                   fontWeight: isActive ? 600 : 500,
                   fontSize: '14px',
@@ -97,7 +101,7 @@ export const MedicalClinicSidebar: React.FC<MedicalClinicSidebarProps> = ({ clas
                   icon={item.icon} 
                   style={{ 
                     fontSize: '16px',
-                    color: isActive ? '#4db6ac' : '#666',
+                    color: isActive ? '#4db6ac' : (isHovered ? '#4db6ac' : '#666'),
                     transition: 'color 0.3s ease'
                   }} 
                 />
@@ -105,7 +109,7 @@ export const MedicalClinicSidebar: React.FC<MedicalClinicSidebarProps> = ({ clas
                   size="sm" 
                   data-text-element="true"
                   style={{ 
-                    color: isActive ? '#4db6ac' : '#666',
+                    color: isActive ? '#4db6ac' : (isHovered ? '#4db6ac' : '#666'),
                     fontSize: '14px',
                     fontWeight: isActive ? 600 : 500,
                     transition: 'color 0.3s ease'
