@@ -137,20 +137,20 @@ export class ScheduleValidationService {
    * Safe validation for create command (non-throwing)
    */
   safeValidateCreateCommand(data: unknown) {
-    return this.createValidator.safeValidate(data);
+    return this.createValidator.safeParse(data);
   }
 
   /**
    * Safe validation for update command (non-throwing)
    */
   safeValidateUpdateCommand(data: unknown) {
-    return this.updateValidator.safeValidate(data);
+    return this.updateValidator.safeParse(data);
   }
 
   /**
    * Safe validation for delete command (non-throwing)
    */
   safeValidateDeleteCommand(data: unknown) {
-    return this.deleteValidator.safeValidate(data);
+    return this.deleteValidator.safeParse(data);
   }
 }

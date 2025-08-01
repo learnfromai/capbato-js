@@ -4,7 +4,7 @@ import { InMemoryScheduleRepository } from './in-memory/InMemoryScheduleReposito
 import { SqliteScheduleRepository } from './sqlite/SqliteScheduleRepository';
 import { TypeOrmScheduleRepository } from './typeorm/TypeOrmScheduleRepository';
 import { MongooseScheduleRepository } from './mongoose/MongooseScheduleRepository';
-import { getConfig } from '../../../config/AppConfig';
+import { getConfig } from '../../../config';
 import { createTypeOrmDataSource } from '../../database/connections/TypeOrmConnection';
 
 /**

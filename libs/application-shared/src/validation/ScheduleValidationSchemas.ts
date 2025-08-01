@@ -40,11 +40,8 @@ const validateDoctorName = (doctorName: string, ctx: z.RefinementCtx) => {
   // Check minimum length (after trimming)
   if (doctorName.trim().length < 2) {
     ctx.addIssue({
-      code: z.ZodIssueCode.too_small,
+      code: z.ZodIssueCode.custom,
       message: 'Doctor name must be at least 2 characters',
-      minimum: 2,
-      type: 'string',
-      inclusive: true,
     });
     return;
   }
@@ -52,11 +49,8 @@ const validateDoctorName = (doctorName: string, ctx: z.RefinementCtx) => {
   // Check maximum length
   if (doctorName.trim().length > 100) {
     ctx.addIssue({
-      code: z.ZodIssueCode.too_big,
+      code: z.ZodIssueCode.custom,
       message: 'Doctor name cannot exceed 100 characters',
-      maximum: 100,
-      type: 'string',
-      inclusive: true,
     });
     return;
   }

@@ -99,7 +99,8 @@ export class GetTodayDoctorQueryHandler {
   ) {}
 
   async execute(query: GetTodayDoctorQuery = {}): Promise<Schedule | null> {
-    return await this.scheduleRepository.getTodayFirstDoctor();
+    const schedule = await this.scheduleRepository.getTodayFirstDoctor();
+    return schedule || null;
   }
 }
 

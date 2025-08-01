@@ -15,7 +15,7 @@ export class MongooseScheduleRepository implements IScheduleRepository {
     
     if (activeOnly) {
       const today = new Date().toISOString().split('T')[0];
-      query = query.where('date').gte(today);
+      query = query.where({ date: { $gte: today } });
     }
     
     const documents = await query
