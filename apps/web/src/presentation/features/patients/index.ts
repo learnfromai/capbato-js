@@ -1,4 +1,5 @@
 export { PatientsPage } from './pages/PatientsPage';
-export { PatientsTable } from './components';
+export { AddPatientPage } from './pages/AddPatientPage';
+export { PatientsTable, AddPatientForm } from './components';
 export type { Patient, PatientFormData } from './types';
-export { usePatientViewModel } from './view-models';
+export { usePatientViewModel, useAddPatientViewModel } from './view-models';

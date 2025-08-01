@@ -1,4 +1,4 @@
-import { PatientListDto } from '@nx-starter/application-shared';
+import { PatientListDto, CreatePatientCommand, PatientDto } from '@nx-starter/application-shared';
 
 export interface PatientStoreState {
   patients: PatientListDto[];
@@ -8,6 +8,7 @@ export interface PatientStoreState {
 
 export interface PatientStoreActions {
   loadPatients(): Promise<void>;
+  createPatient(command: CreatePatientCommand): Promise<PatientDto>;
   clearError(): void;
   getIsLoading(): boolean;
   getIsIdle(): boolean;
