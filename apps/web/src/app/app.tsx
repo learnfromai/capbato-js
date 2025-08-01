@@ -5,7 +5,7 @@ import { AboutPage } from '../presentation/features/about';
 import { LoginPage } from '../presentation/features/login';
 import { DashboardPage } from '../presentation/features/dashboard';
 import { AppointmentsPage } from '../presentation/features/appointments';
-import { PatientsPage } from '../presentation/features/patients';
+import { PatientsPage, PatientDetailsPage } from '../presentation/features/patients';
 import { LaboratoryPage, PrescriptionsPage } from '../presentation/features/medical-records';
 import { DoctorsPage, AccountsPage } from '../presentation/features/staff';
 import { AuthGuard } from '../presentation/features/auth';
