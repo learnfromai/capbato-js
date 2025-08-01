@@ -46,6 +46,7 @@ export function getEnvironmentConfig(): AppConfig {
           base: '/api/patients',
           all: '/api/patients',
           byId: (id: string) => `/api/patients/${id}`,
+          create: '/api/patients',
         },
       },
     },
