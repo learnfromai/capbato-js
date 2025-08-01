@@ -72,6 +72,16 @@ const dummyAppointments: Appointment[] = [
 export const AppointmentsPage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [showAll, setShowAll] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // Simulate loading data - remove this when real API is implemented
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500); // Simulate 1.5 second loading
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleAddAppointment = () => {
     console.log('Add appointment clicked');
@@ -142,6 +152,7 @@ export const AppointmentsPage: React.FC = () => {
           onModifyAppointment={handleModifyAppointment}
           onCancelAppointment={handleCancelAppointment}
           onReconfirmAppointment={handleReconfirmAppointment}
+          isLoading={isLoading}
         />
       </Box>
     </MedicalClinicLayout>

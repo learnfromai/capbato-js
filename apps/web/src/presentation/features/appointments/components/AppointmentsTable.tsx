@@ -8,6 +8,7 @@ interface AppointmentsTableProps {
   onModifyAppointment: (appointmentId: string) => void;
   onCancelAppointment: (appointmentId: string) => void;
   onReconfirmAppointment: (appointmentId: string) => void;
+  isLoading?: boolean;
 }
 
 export const AppointmentsTable: React.FC<AppointmentsTableProps> = ({
@@ -15,6 +16,7 @@ export const AppointmentsTable: React.FC<AppointmentsTableProps> = ({
   onModifyAppointment,
   onCancelAppointment,
   onReconfirmAppointment,
+  isLoading = false
 }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -171,6 +173,7 @@ export const AppointmentsTable: React.FC<AppointmentsTableProps> = ({
       data={appointments}
       columns={columns}
       emptyStateMessage="No appointments found"
+      isLoading={isLoading}
     />
   );
 };

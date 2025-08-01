@@ -35,6 +35,16 @@ const dummyLaboratoryResults: LaboratoryResult[] = [
 ];
 
 export const LaboratoryPage: React.FC = () => {
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
+
+  // Simulate loading data - remove this when real API is implemented
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500); // Simulate 1.5 second loading
+
+    return () => clearTimeout(timer);
+  }, []);
   const handleAddTest = () => {
     console.log('Add laboratory test clicked');
     // TODO: Implement add laboratory test functionality
@@ -131,6 +141,7 @@ export const LaboratoryPage: React.FC = () => {
           searchable={true}
           searchPlaceholder="Search laboratory results by patient or status..."
           emptyStateMessage="No laboratory results found"
+          isLoading={isLoading}
         />
       </Box>
     </MedicalClinicLayout>

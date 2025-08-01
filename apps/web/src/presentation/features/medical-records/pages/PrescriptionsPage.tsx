@@ -42,6 +42,16 @@ const dummyPrescriptions: Prescription[] = [
 ];
 
 export const PrescriptionsPage: React.FC = () => {
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
+
+  // Simulate loading data - remove this when real API is implemented
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500); // Simulate 1.5 second loading
+
+    return () => clearTimeout(timer);
+  }, []);
   const handleAddPrescription = () => {
     console.log('Add prescription clicked');
     // TODO: Implement add prescription functionality
@@ -184,6 +194,7 @@ export const PrescriptionsPage: React.FC = () => {
           searchable={true}
           searchPlaceholder="Search prescriptions by patient, doctor, or medications..."
           emptyStateMessage="No prescriptions found"
+          isLoading={isLoading}
         />
       </Box>
     </MedicalClinicLayout>
