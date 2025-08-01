@@ -10,6 +10,7 @@ export const TOKENS = {
   UserRepository: 'IUserRepository',
   PatientRepository: 'IPatientRepository',
   DoctorRepository: 'IDoctorRepository',
+  AppointmentRepository: 'IAppointmentRepository',
 
   // Infrastructure Layer - Services
   PasswordHashingService: 'IPasswordHashingService',
@@ -32,6 +33,12 @@ export const TOKENS = {
   ChangeUserPasswordUseCase: 'ChangeUserPasswordUseCase',
   CreatePatientUseCase: 'CreatePatientUseCase',
   CreateDoctorProfileCommandHandler: 'CreateDoctorProfileCommandHandler',
+  CreateAppointmentUseCase: 'CreateAppointmentUseCase',
+  UpdateAppointmentUseCase: 'UpdateAppointmentUseCase',
+  ConfirmAppointmentUseCase: 'ConfirmAppointmentUseCase',
+  CancelAppointmentUseCase: 'CancelAppointmentUseCase',
+  CompleteAppointmentUseCase: 'CompleteAppointmentUseCase',
+  RescheduleAppointmentUseCase: 'RescheduleAppointmentUseCase',
 
   // Application Layer - Use Cases (Queries)
   GetAllTodosQueryHandler: 'GetAllTodosQueryHandler',
@@ -49,6 +56,21 @@ export const TOKENS = {
   GetDoctorByUserIdQueryHandler: 'GetDoctorByUserIdQueryHandler',
   GetDoctorsBySpecializationQueryHandler: 'GetDoctorsBySpecializationQueryHandler',
   CheckDoctorProfileExistsQueryHandler: 'CheckDoctorProfileExistsQueryHandler',
+  GetAllAppointmentsQueryHandler: 'GetAllAppointmentsQueryHandler',
+  GetAppointmentByIdQueryHandler: 'GetAppointmentByIdQueryHandler',
+  GetAppointmentsByPatientIdQueryHandler: 'GetAppointmentsByPatientIdQueryHandler',
+  GetAppointmentsByDateQueryHandler: 'GetAppointmentsByDateQueryHandler',
+  GetAppointmentsByDateRangeQueryHandler: 'GetAppointmentsByDateRangeQueryHandler',
+  GetAppointmentsByStatusQueryHandler: 'GetAppointmentsByStatusQueryHandler',
+  GetTodayAppointmentsQueryHandler: 'GetTodayAppointmentsQueryHandler',
+  GetTodayConfirmedAppointmentsCountQueryHandler: 'GetTodayConfirmedAppointmentsCountQueryHandler',
+  GetWeeklyAppointmentSummaryQueryHandler: 'GetWeeklyAppointmentSummaryQueryHandler',
+  CheckTimeSlotAvailabilityQueryHandler: 'CheckTimeSlotAvailabilityQueryHandler',
+  GetAvailableTimeSlotsQueryHandler: 'GetAvailableTimeSlotsQueryHandler',
+  GetAppointmentStatsQueryHandler: 'GetAppointmentStatsQueryHandler',
+  SearchAppointmentsQueryHandler: 'SearchAppointmentsQueryHandler',
+  GetUpcomingAppointmentsQueryHandler: 'GetUpcomingAppointmentsQueryHandler',
+  GetOverdueAppointmentsQueryHandler: 'GetOverdueAppointmentsQueryHandler',
 
   // Domain Layer - Services
   TodoDomainService: 'TodoDomainService',
