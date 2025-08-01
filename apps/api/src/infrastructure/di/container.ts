@@ -9,6 +9,9 @@ import { InMemoryPatientRepository } from '../patient/persistence/in-memory/InMe
 import { TypeOrmPatientRepository } from '../patient/persistence/typeorm/TypeOrmPatientRepository';
 import { InMemoryDoctorRepository } from '../doctor/persistence/in-memory/InMemoryDoctorRepository';
 import { TypeOrmDoctorRepository } from '../doctor/persistence/typeorm/TypeOrmDoctorRepository';
+import { InMemoryProvinceRepository } from '../address/persistence/in-memory/InMemoryProvinceRepository';
+import { InMemoryCityRepository } from '../address/persistence/in-memory/InMemoryCityRepository';
+import { InMemoryBarangayRepository } from '../address/persistence/in-memory/InMemoryBarangayRepository';
 import {
   CreateTodoUseCase,
   UpdateTodoUseCase,
@@ -41,6 +44,12 @@ import {
   DoctorValidationService,
   GetDoctorByIdValidationService,
   GetDoctorsBySpecializationValidationService,
+  GetAllProvincesQueryHandler,
+  GetCitiesByProvinceQueryHandler,
+  GetBarangaysByCityQueryHandler,
+  AddressValidationService,
+  GetCitiesByProvinceValidationService,
+  GetBarangaysByCityValidationService,
 } from '@nx-starter/application-shared';
 import {
   RegisterUserUseCase,
@@ -59,7 +68,7 @@ import {
   GetDoctorByUserIdQueryHandler,
   CheckDoctorProfileExistsQueryHandler,
 } from '@nx-starter/application-shared';
-import type { ITodoRepository, IUserRepository, IDoctorRepository } from '@nx-starter/domain';
+import type { ITodoRepository, IUserRepository, IDoctorRepository, IProvinceRepository, ICityRepository, IBarangayRepository } from '@nx-starter/domain';
 import type { IPatientRepository } from '@nx-starter/application-shared';
 import { UserDomainService } from '@nx-starter/domain';
 import { getTypeOrmDataSource } from '../database/connections/TypeOrmConnection';
@@ -91,6 +100,22 @@ export const configureDI = async () => {
   container.registerInstance<IDoctorRepository>(
     TOKENS.DoctorRepository,
     doctorRepositoryImplementation
+  );
+
+  // Address repositories - using in-memory implementation
+  container.registerInstance<IProvinceRepository>(
+    TOKENS.ProvinceRepository,
+    new InMemoryProvinceRepository()
+  );
+
+  container.registerInstance<ICityRepository>(
+    TOKENS.CityRepository,
+    new InMemoryCityRepository()
+  );
+
+  container.registerInstance<IBarangayRepository>(
+    TOKENS.BarangayRepository,
+    new InMemoryBarangayRepository()
   );
 
   // Infrastructure Layer - Services  
