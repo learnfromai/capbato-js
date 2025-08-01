@@ -26,6 +26,7 @@ export interface ApiConfiguration {
       base: string;
       all: string;
       byId: (id: string) => string;
+      create: string;
     };
   };
 }
