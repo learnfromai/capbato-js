@@ -57,13 +57,13 @@ export class AddressValidationService {
    * Safe validation for getting cities - returns validation result instead of throwing
    */
   safeValidateGetCitiesQuery(data: unknown) {
-    return this.getCitiesValidator.safeValidate(data);
+    return this.getCitiesValidator.safeParse(data);
   }
 
   /**
    * Safe validation for getting barangays - returns validation result instead of throwing
    */
   safeValidateGetBarangaysQuery(data: unknown) {
-    return this.getBarangaysValidator.safeValidate(data);
+    return this.getBarangaysValidator.safeParse(data);
   }
 }
