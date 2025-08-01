@@ -75,7 +75,7 @@ export const usePatientStore = create<PatientStore>()(
             });
 
             try {
-              const response = await getApiService().createPatient(command);
+              await getApiService().createPatient(command);
               set((state) => {
                 state.createStatus = 'succeeded';
                 // Refresh the patients list to include the new patient

@@ -8,7 +8,6 @@ import {
   Grid,
   Title,
   Box,
-  Group,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { CreatePatientCommandSchema, type CreatePatientCommand } from '@nx-starter/application-shared';

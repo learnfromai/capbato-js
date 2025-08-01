@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, LoadingOverlay, Alert, Button } from '@mantine/core';
+import { Box, LoadingOverlay, Alert } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { MedicalClinicLayout } from '../../../components/layout';
 import { PatientsTable } from '../components';
