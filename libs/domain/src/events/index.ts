@@ -6,3 +6,4 @@
 // Domain events
 export * from './TodoEvents';
 export * from './UserEvents';
+export * from './LaboratoryEvents';
