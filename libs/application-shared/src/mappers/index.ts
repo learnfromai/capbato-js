@@ -8,3 +8,5 @@ export * from './TodoMapper';
 export * from './UserMapper';
 export * from './PatientMapper';
 export * from './DoctorMapper';
+export * from './LabRequestMapper';
+export * from './BloodChemistryMapper';
