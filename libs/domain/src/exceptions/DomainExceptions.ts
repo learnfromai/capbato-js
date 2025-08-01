@@ -143,3 +143,60 @@ export class InvalidContactNumberException extends DomainException {
     super(`Invalid contact number: ${reason}`, 'INVALID_CONTACT_NUMBER');
   }
 }
+
+/**
+ * Address-specific domain exceptions
+ */
+export class ProvinceNotFoundException extends DomainException {
+  constructor(code: string) {
+    super(`Province with code ${code} not found`, 'PROVINCE_NOT_FOUND', 404);
+  }
+}
+
+export class CityNotFoundException extends DomainException {
+  constructor(code: string) {
+    super(`City with code ${code} not found`, 'CITY_NOT_FOUND', 404);
+  }
+}
+
+export class BarangayNotFoundException extends DomainException {
+  constructor(code: string) {
+    super(`Barangay with code ${code} not found`, 'BARANGAY_NOT_FOUND', 404);
+  }
+}
+
+export class InvalidProvinceCodeException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid province code: ${reason}`, 'INVALID_PROVINCE_CODE');
+  }
+}
+
+export class InvalidProvinceNameException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid province name: ${reason}`, 'INVALID_PROVINCE_NAME');
+  }
+}
+
+export class InvalidCityCodeException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid city code: ${reason}`, 'INVALID_CITY_CODE');
+  }
+}
+
+export class InvalidCityNameException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid city name: ${reason}`, 'INVALID_CITY_NAME');
+  }
+}
+
+export class InvalidBarangayCodeException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid barangay code: ${reason}`, 'INVALID_BARANGAY_CODE');
+  }
+}
+
+export class InvalidBarangayNameException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid barangay name: ${reason}`, 'INVALID_BARANGAY_NAME');
+  }
+}

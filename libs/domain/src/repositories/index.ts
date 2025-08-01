@@ -7,3 +7,6 @@
 export * from './ITodoRepository';
 export * from './IUserRepository';
 export * from './IDoctorRepository';
+export * from './IProvinceRepository';
+export * from './ICityRepository';
+export * from './IBarangayRepository';
