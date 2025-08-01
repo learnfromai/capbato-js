@@ -10,6 +10,7 @@ export const TOKENS = {
   UserRepository: 'IUserRepository',
   PatientRepository: 'IPatientRepository',
   DoctorRepository: 'IDoctorRepository',
+  ScheduleRepository: 'IScheduleRepository',
 
   // Infrastructure Layer - Services
   PasswordHashingService: 'IPasswordHashingService',
@@ -32,6 +33,9 @@ export const TOKENS = {
   ChangeUserPasswordUseCase: 'ChangeUserPasswordUseCase',
   CreatePatientUseCase: 'CreatePatientUseCase',
   CreateDoctorProfileCommandHandler: 'CreateDoctorProfileCommandHandler',
+  CreateScheduleUseCase: 'CreateScheduleUseCase',
+  UpdateScheduleUseCase: 'UpdateScheduleUseCase',
+  DeleteScheduleUseCase: 'DeleteScheduleUseCase',
 
   // Application Layer - Use Cases (Queries)
   GetAllTodosQueryHandler: 'GetAllTodosQueryHandler',
@@ -49,6 +53,14 @@ export const TOKENS = {
   GetDoctorByUserIdQueryHandler: 'GetDoctorByUserIdQueryHandler',
   GetDoctorsBySpecializationQueryHandler: 'GetDoctorsBySpecializationQueryHandler',
   CheckDoctorProfileExistsQueryHandler: 'CheckDoctorProfileExistsQueryHandler',
+  GetAllSchedulesQueryHandler: 'GetAllSchedulesQueryHandler',
+  GetScheduleByIdQueryHandler: 'GetScheduleByIdQueryHandler',
+  GetSchedulesByDateQueryHandler: 'GetSchedulesByDateQueryHandler',
+  GetTodaySchedulesQueryHandler: 'GetTodaySchedulesQueryHandler',
+  GetSchedulesByDoctorQueryHandler: 'GetSchedulesByDoctorQueryHandler',
+  GetSchedulesByDateRangeQueryHandler: 'GetSchedulesByDateRangeQueryHandler',
+  GetScheduleStatsQueryHandler: 'GetScheduleStatsQueryHandler',
+  GetTodayDoctorQueryHandler: 'GetTodayDoctorQueryHandler',
 
   // Domain Layer - Services
   TodoDomainService: 'TodoDomainService',
@@ -72,6 +84,14 @@ export const TOKENS = {
   GetDoctorByIdValidationService: 'GetDoctorByIdValidationService',
   GetDoctorsBySpecializationValidationService: 'GetDoctorsBySpecializationValidationService',
   DoctorValidationService: 'DoctorValidationService',
+  CreateScheduleValidationService: 'CreateScheduleValidationService',
+  UpdateScheduleValidationService: 'UpdateScheduleValidationService',
+  DeleteScheduleValidationService: 'DeleteScheduleValidationService',
+  RescheduleValidationService: 'RescheduleValidationService',
+  CreateScheduleRequestValidationService: 'CreateScheduleRequestValidationService',
+  UpdateScheduleRequestValidationService: 'UpdateScheduleRequestValidationService',
+  RescheduleRequestValidationService: 'RescheduleRequestValidationService',
+  ScheduleValidationService: 'ScheduleValidationService',
 } as const;
 
 // Type-safe token keys

@@ -17,3 +17,7 @@ export * from './PatientQueries';
 export * from './PatientDto';
 export * from './PatientRequestDtos';
 export * from './DoctorQueries';
+export * from './ScheduleCommands';
+export * from './ScheduleQueries';
+export * from './ScheduleDto';
+export * from './ScheduleRequestDtos';
