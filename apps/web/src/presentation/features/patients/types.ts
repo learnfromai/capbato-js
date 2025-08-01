@@ -45,3 +45,24 @@ export interface PatientFormData {
   allergies?: string;
   bloodType?: string;
 }
+
+export interface PatientAppointment {
+  id: string;
+  date: string;
+  time: string;
+  reasonForVisit: string;
+  labTestsDone: string;
+  prescriptions: string;
+  status: 'Confirmed' | 'Pending' | 'Cancelled' | 'Completed';
+}
+
+export interface PatientDetails extends Patient {
+  guardian?: {
+    fullName: string;
+    gender: 'Male' | 'Female' | 'Other';
+    relationship: string;
+    phoneNumber: string;
+    address: string;
+  };
+  appointments?: PatientAppointment[];
+}
