@@ -10,6 +10,7 @@ export const TOKENS = {
   UserRepository: 'IUserRepository',
   PatientRepository: 'IPatientRepository',
   DoctorRepository: 'IDoctorRepository',
+  AppointmentRepository: 'IAppointmentRepository',
 
   // Infrastructure Layer - Services
   PasswordHashingService: 'IPasswordHashingService',
@@ -32,6 +33,11 @@ export const TOKENS = {
   ChangeUserPasswordUseCase: 'ChangeUserPasswordUseCase',
   CreatePatientUseCase: 'CreatePatientUseCase',
   CreateDoctorProfileCommandHandler: 'CreateDoctorProfileCommandHandler',
+  CreateAppointmentUseCase: 'CreateAppointmentUseCase',
+  UpdateAppointmentUseCase: 'UpdateAppointmentUseCase',
+  CancelAppointmentUseCase: 'CancelAppointmentUseCase',
+  ConfirmAppointmentUseCase: 'ConfirmAppointmentUseCase',
+  DeleteAppointmentUseCase: 'DeleteAppointmentUseCase',
 
   // Application Layer - Use Cases (Queries)
   GetAllTodosQueryHandler: 'GetAllTodosQueryHandler',
@@ -49,6 +55,12 @@ export const TOKENS = {
   GetDoctorByUserIdQueryHandler: 'GetDoctorByUserIdQueryHandler',
   GetDoctorsBySpecializationQueryHandler: 'GetDoctorsBySpecializationQueryHandler',
   CheckDoctorProfileExistsQueryHandler: 'CheckDoctorProfileExistsQueryHandler',
+  GetAllAppointmentsQueryHandler: 'GetAllAppointmentsQueryHandler',
+  GetAppointmentByIdQueryHandler: 'GetAppointmentByIdQueryHandler',
+  GetAppointmentsByPatientIdQueryHandler: 'GetAppointmentsByPatientIdQueryHandler',
+  GetTodayAppointmentsQueryHandler: 'GetTodayAppointmentsQueryHandler',
+  GetTodayConfirmedAppointmentsQueryHandler: 'GetTodayConfirmedAppointmentsQueryHandler',
+  GetWeeklyAppointmentSummaryQueryHandler: 'GetWeeklyAppointmentSummaryQueryHandler',
 
   // Domain Layer - Services
   TodoDomainService: 'TodoDomainService',
@@ -72,6 +84,14 @@ export const TOKENS = {
   GetDoctorByIdValidationService: 'GetDoctorByIdValidationService',
   GetDoctorsBySpecializationValidationService: 'GetDoctorsBySpecializationValidationService',
   DoctorValidationService: 'DoctorValidationService',
+  CreateAppointmentValidationService: 'CreateAppointmentValidationService',
+  UpdateAppointmentValidationService: 'UpdateAppointmentValidationService',
+  CancelAppointmentValidationService: 'CancelAppointmentValidationService',
+  ConfirmAppointmentValidationService: 'ConfirmAppointmentValidationService',
+  DeleteAppointmentValidationService: 'DeleteAppointmentValidationService',
+  GetAppointmentByIdValidationService: 'GetAppointmentByIdValidationService',
+  GetAppointmentsByPatientIdValidationService: 'GetAppointmentsByPatientIdValidationService',
+  AppointmentValidationService: 'AppointmentValidationService',
 } as const;
 
 // Type-safe token keys
