@@ -1,9 +1,9 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Box, Tabs, Button, Grid, Text, Table, Alert } from '@mantine/core';
+import { Box, Tabs, Button, Grid, Text, Table, Alert, Loader } from '@mantine/core';
 import { IconUser, IconNotes, IconCalendar, IconPrescription, IconFlask, IconArrowLeft } from '@tabler/icons-react';
 import { MedicalClinicLayout } from '../../../components/layout';
-import { getPatientDetailsById } from '../../../data/mockPatients';
+import { usePatientDetailsViewModel } from '../view-models/usePatientDetailsViewModel';
 import { PatientDetails, GuardianDetails, Appointment } from '../types';
 
 const PatientInfoCard: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
@@ -185,14 +185,37 @@ const PlaceholderTab: React.FC<{ title: string }> = ({ title }) => (
 export const PatientDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  
-  const patient = id ? getPatientDetailsById(id) : undefined;
+  const { patient, isLoading, error, hasError, clearError } = usePatientDetailsViewModel(id);
 
   const handleGoBack = () => {
     navigate('/patients');
   };
 
-  if (!patient) {
+  if (isLoading) {
+    return (
+      <MedicalClinicLayout>
+        <Box
+          style={{
+            background: 'white',
+            borderRadius: '15px',
+            padding: '30px',
+            boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+            minHeight: 'calc(100vh - 140px)',
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column'
+          }}
+        >
+          <Loader size="lg" />
+          <Text mt="md" style={{ color: '#666' }}>Loading patient details...</Text>
+        </Box>
+      </MedicalClinicLayout>
+    );
+  }
+
+  if (hasError || !patient) {
     return (
       <MedicalClinicLayout>
         <Box
@@ -205,8 +228,13 @@ export const PatientDetailsPage: React.FC = () => {
             position: 'relative'
           }}
         >
-          <Alert color="red" title="Patient Not Found">
-            The patient with ID "{id}" could not be found.
+          <Alert 
+            color="red" 
+            title="Patient Not Found"
+            onClose={clearError}
+            withCloseButton
+          >
+            {error || `The patient with ID "${id}" could not be found.`}
           </Alert>
           <Button 
             leftSection={<IconArrowLeft size={16} />}

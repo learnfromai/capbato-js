@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box } from '@mantine/core';
+import { Box, Anchor, Text } from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
 import { DataTable, DataTableHeader, TableColumn } from '../../../components/common';
 import { PatientListDto } from '@nx-starter/application-shared';
 
@@ -12,11 +13,17 @@ export const PatientsTable: React.FC<PatientsTableProps> = ({
   patients,
   onAddPatient
 }) => {
+  const navigate = useNavigate();
+
   // Transform patients to include fullName for display
   const patientsWithFullName = patients.map(patient => ({
     ...patient,
     fullName: [patient.firstName, patient.middleName, patient.lastName].filter(Boolean).join(' ')
   }));
+
+  const handlePatientClick = (patientId: string) => {
+    navigate(`/patients/${patientId}`);
+  };
 
   const columns: TableColumn<typeof patientsWithFullName[0]>[] = [
     {
@@ -24,14 +31,52 @@ export const PatientsTable: React.FC<PatientsTableProps> = ({
       header: 'Patient #',
       width: '40%',
       align: 'center',
-      searchable: true
+      searchable: true,
+      render: (value, record) => (
+        <Anchor
+          onClick={() => handlePatientClick(record.id)}
+          style={{
+            color: '#0047ab',
+            textDecoration: 'none',
+            cursor: 'pointer',
+            fontWeight: 500
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.textDecoration = 'underline';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.textDecoration = 'none';
+          }}
+        >
+          {value}
+        </Anchor>
+      )
     },
     {
       key: 'fullName',
       header: "Patient's Name",
       width: '60%',
       align: 'left',
-      searchable: true
+      searchable: true,
+      render: (value, record) => (
+        <Anchor
+          onClick={() => handlePatientClick(record.id)}
+          style={{
+            color: '#333',
+            textDecoration: 'none',
+            cursor: 'pointer',
+            fontWeight: 'normal'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.textDecoration = 'underline';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.textDecoration = 'none';
+          }}
+        >
+          {value}
+        </Anchor>
+      )
     }
   ];
 
