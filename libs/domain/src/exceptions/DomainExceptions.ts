@@ -143,3 +143,60 @@ export class InvalidContactNumberException extends DomainException {
     super(`Invalid contact number: ${reason}`, 'INVALID_CONTACT_NUMBER');
   }
 }
+
+/**
+ * Laboratory-specific domain exceptions
+ */
+export class LabRequestNotFoundException extends DomainException {
+  constructor(id: string) {
+    super(`Lab request with ID ${id} not found`, 'LAB_REQUEST_NOT_FOUND', 404);
+  }
+}
+
+export class BloodChemistryNotFoundException extends DomainException {
+  constructor(id: string) {
+    super(`Blood chemistry with ID ${id} not found`, 'BLOOD_CHEMISTRY_NOT_FOUND', 404);
+  }
+}
+
+export class InvalidLabRequestIdException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid lab request ID: ${reason}`, 'INVALID_LAB_REQUEST_ID');
+  }
+}
+
+export class InvalidBloodChemistryIdException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid blood chemistry ID: ${reason}`, 'INVALID_BLOOD_CHEMISTRY_ID');
+  }
+}
+
+export class InvalidPatientIdException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid patient ID: ${reason}`, 'INVALID_PATIENT_ID');
+  }
+}
+
+export class InvalidPatientNameException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid patient name: ${reason}`, 'INVALID_PATIENT_NAME');
+  }
+}
+
+export class InvalidAgeGenderException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid age/gender: ${reason}`, 'INVALID_AGE_GENDER');
+  }
+}
+
+export class InvalidLabTestTypeException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid lab test type: ${reason}`, 'INVALID_LAB_TEST_TYPE');
+  }
+}
+
+export class InvalidBloodChemValueException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid blood chemistry value: ${reason}`, 'INVALID_BLOOD_CHEM_VALUE');
+  }
+}
