@@ -143,3 +143,54 @@ export class InvalidContactNumberException extends DomainException {
     super(`Invalid contact number: ${reason}`, 'INVALID_CONTACT_NUMBER');
   }
 }
+
+/**
+ * Laboratory-specific domain exceptions
+ */
+export class LabRequestNotFoundException extends DomainException {
+  constructor(id: string) {
+    super(`Lab request with ID ${id} not found`, 'LAB_REQUEST_NOT_FOUND', 404);
+  }
+}
+
+export class InvalidTestTypeException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid test type: ${reason}`, 'INVALID_TEST_TYPE');
+  }
+}
+
+export class InvalidLabStatusException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid lab status: ${reason}`, 'INVALID_LAB_STATUS');
+  }
+}
+
+export class InvalidStatusTransitionException extends DomainException {
+  constructor(fromStatus: string, toStatus: string) {
+    super(`Cannot transition from ${fromStatus} to ${toStatus}`, 'INVALID_STATUS_TRANSITION');
+  }
+}
+
+export class InvalidPatientNameException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid patient name: ${reason}`, 'INVALID_PATIENT_NAME');
+  }
+}
+
+export class InvalidTestResultException extends DomainException {
+  constructor(reason: string) {
+    super(`Invalid test result: ${reason}`, 'INVALID_TEST_RESULT');
+  }
+}
+
+export class BloodChemistryNotFoundException extends DomainException {
+  constructor(id: string) {
+    super(`Blood chemistry record with ID ${id} not found`, 'BLOOD_CHEMISTRY_NOT_FOUND', 404);
+  }
+}
+
+export class InvalidBloodChemistryValueException extends DomainException {
+  constructor(field: string, reason: string) {
+    super(`Invalid ${field}: ${reason}`, 'INVALID_BLOOD_CHEMISTRY_VALUE');
+  }
+}

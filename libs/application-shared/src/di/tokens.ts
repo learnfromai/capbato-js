@@ -12,6 +12,7 @@ export const TOKENS = {
   UserRepository: 'IUserRepository',
   PatientRepository: 'IPatientRepository',
   DoctorRepository: 'IDoctorRepository',
+  LaboratoryRepository: 'ILaboratoryRepository',
 
   // Infrastructure Layer - Services
   PasswordHashingService: 'IPasswordHashingService',
@@ -35,6 +36,10 @@ export const TOKENS = {
   ChangeUserPasswordUseCase: 'ChangeUserPasswordUseCase',
   CreatePatientUseCase: 'CreatePatientUseCase',
   CreateDoctorProfileCommandHandler: 'CreateDoctorProfileCommandHandler',
+  CreateLabRequestUseCase: 'CreateLabRequestUseCase',
+  UpdateLabRequestUseCase: 'UpdateLabRequestUseCase',
+  DeleteLabRequestUseCase: 'DeleteLabRequestUseCase',
+  CreateBloodChemistryUseCase: 'CreateBloodChemistryUseCase',
 
   // Application Layer - Use Cases (Queries)
   GetAllTodosQueryHandler: 'GetAllTodosQueryHandler',
@@ -52,6 +57,12 @@ export const TOKENS = {
   GetDoctorByUserIdQueryHandler: 'GetDoctorByUserIdQueryHandler',
   GetDoctorsBySpecializationQueryHandler: 'GetDoctorsBySpecializationQueryHandler',
   CheckDoctorProfileExistsQueryHandler: 'CheckDoctorProfileExistsQueryHandler',
+  GetAllLabRequestsQueryHandler: 'GetAllLabRequestsQueryHandler',
+  GetLabRequestByPatientIdQueryHandler: 'GetLabRequestByPatientIdQueryHandler',
+  GetLabRequestByIdQueryHandler: 'GetLabRequestByIdQueryHandler',
+  GetCompletedLabRequestsQueryHandler: 'GetCompletedLabRequestsQueryHandler',
+  GetAllBloodChemistriesQueryHandler: 'GetAllBloodChemistriesQueryHandler',
+  GetLaboratoryStatsQueryHandler: 'GetLaboratoryStatsQueryHandler',
 
   // Domain Layer - Services
   TodoDomainService: 'TodoDomainService',
@@ -59,6 +70,7 @@ export const TOKENS = {
   PatientNumberService: 'PatientNumberService',
   PhoneNumberService: 'PhoneNumberService',
   AgeCalculationService: 'AgeCalculationService',
+  LaboratoryDomainService: 'LaboratoryDomainService',
 
   // Application Layer - Validation Services
   CreateTodoValidationService: 'CreateTodoValidationService',
@@ -75,6 +87,14 @@ export const TOKENS = {
   GetDoctorByIdValidationService: 'GetDoctorByIdValidationService',
   GetDoctorsBySpecializationValidationService: 'GetDoctorsBySpecializationValidationService',
   DoctorValidationService: 'DoctorValidationService',
+  CreateLabRequestValidationService: 'CreateLabRequestValidationService',
+  UpdateLabRequestValidationService: 'UpdateLabRequestValidationService',
+  DeleteLabRequestValidationService: 'DeleteLabRequestValidationService',
+  CreateBloodChemistryValidationService: 'CreateBloodChemistryValidationService',
+  GetLabRequestByPatientIdValidationService: 'GetLabRequestByPatientIdValidationService',
+  GetLabRequestByIdValidationService: 'GetLabRequestByIdValidationService',
+  LabRequestIdValidationService: 'LabRequestIdValidationService',
+  LaboratoryValidationService: 'LaboratoryValidationService',
 } as const;
 
 // Type-safe token keys

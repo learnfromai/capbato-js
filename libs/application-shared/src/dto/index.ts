@@ -17,3 +17,7 @@ export * from './PatientQueries';
 export * from './PatientDto';
 export * from './PatientRequestDtos';
 export * from './DoctorQueries';
+export * from './LaboratoryDto';
+export * from './LaboratoryCommands';
+export * from './LaboratoryQueries';
+export * from './LaboratoryRequestDtos';
