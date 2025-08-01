@@ -10,3 +10,9 @@ export interface ScheduleEntry {
   note: string;
   details?: string;
 }
+
+export interface UpdateDoctorScheduleFormData {
+  doctorName: string;
+  date: string;
+  time: string;
+}

@@ -27,6 +27,7 @@ export {
   ChangeUserPasswordCommandSchema,
   ChangePasswordFormSchema,
   GetAllUsersQuerySchema,
+  UpdateDoctorScheduleCommandSchema,
   FirstNameSchema,
   LastNameSchema,
   EmailSchema,

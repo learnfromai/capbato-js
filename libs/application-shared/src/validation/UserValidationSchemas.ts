@@ -20,7 +20,12 @@ export const USER_VALIDATION_ERRORS = {
   REG_INVALID_MOBILE: 'Please provide a valid Philippine mobile number (09xxxxxxxxx or +639xxxxxxxxx)',
   AUTH_MISSING_IDENTIFIER: 'Email or username is required',
   AUTH_MISSING_PASSWORD: 'Password is required',
-  AUTH_INVALID_EMAIL: 'Please provide a valid email address'
+  AUTH_INVALID_EMAIL: 'Please provide a valid email address',
+  SCHEDULE_MISSING_DOCTOR_NAME: 'Doctor name is required',
+  SCHEDULE_MISSING_DATE: 'Date is required',
+  SCHEDULE_MISSING_TIME: 'Time is required',
+  SCHEDULE_INVALID_DATE: 'Please provide a valid date',
+  SCHEDULE_INVALID_TIME: 'Please provide a valid time format (e.g., 9AM - 5PM)'
 } as const;
 
 // Name validation schema (for firstName and lastName)
@@ -134,6 +139,22 @@ export const ChangePasswordFormSchema = z.object({
 // Get all users query schema (empty object)  
 export const GetAllUsersQuerySchema = z.object({});
 
+// Doctor Schedule validation schemas
+export const UpdateDoctorScheduleCommandSchema = z.object({
+  doctorName: z
+    .string()
+    .min(1, USER_VALIDATION_ERRORS.SCHEDULE_MISSING_DOCTOR_NAME)
+    .max(100, 'Doctor name cannot exceed 100 characters'),
+  date: z
+    .string()
+    .min(1, USER_VALIDATION_ERRORS.SCHEDULE_MISSING_DATE)
+    .regex(/^\d{4}-\d{2}-\d{2}$/, USER_VALIDATION_ERRORS.SCHEDULE_INVALID_DATE),
+  time: z
+    .string()
+    .min(1, USER_VALIDATION_ERRORS.SCHEDULE_MISSING_TIME)
+    .max(50, 'Time cannot exceed 50 characters')
+});
+
 // Export all schemas for easy access
 export const UserValidationSchemas = {
   RegisterUserCommand: RegisterUserCommandSchema,
@@ -142,6 +163,7 @@ export const UserValidationSchemas = {
   ChangeUserPasswordCommand: ChangeUserPasswordCommandSchema,
   ChangePasswordForm: ChangePasswordFormSchema,
   GetAllUsersQuery: GetAllUsersQuerySchema,
+  UpdateDoctorScheduleCommand: UpdateDoctorScheduleCommandSchema,
   FirstName: FirstNameSchema,
   LastName: LastNameSchema,
   Email: EmailSchema,

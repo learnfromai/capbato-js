@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { MedicalClinicLayout } from '../../../components/layout';
-import { DoctorsTable, CustomCalendar } from '../components';
-import { Doctor, ScheduleEntry } from '../types';
+import { Modal } from '../../../components/common';
+import { DoctorsTable, CustomCalendar, UpdateDoctorScheduleForm } from '../components';
+import { Doctor, ScheduleEntry, UpdateDoctorScheduleFormData } from '../types';
 
 // Dummy data for doctors
 const dummyDoctors: Doctor[] = [
@@ -50,9 +52,39 @@ const dummySchedules: ScheduleEntry[] = [
 ];
 
 export const DoctorsPage: React.FC = () => {
+  const [opened, { open, close }] = useDisclosure(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleEditSchedule = () => {
     console.log('Edit schedule clicked');
-    // TODO: Implement edit schedule functionality
+    open(); // Open the modal
+  };
+
+  const handleScheduleSubmit = async (data: UpdateDoctorScheduleFormData) => {
+    setIsLoading(true);
+    try {
+      // Mock API call - simulate saving to backend
+      console.log('Saving schedule:', data);
+      
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Mock success
+      console.log('Schedule saved successfully');
+      
+      // TODO: Update the schedules array with the new data
+      // For now, just close the modal
+      close();
+    } catch (error) {
+      console.error('Error saving schedule:', error);
+      // TODO: Handle error display
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    close();
   };
 
   return (
@@ -75,6 +107,25 @@ export const DoctorsPage: React.FC = () => {
           onEdit={handleEditSchedule}
         />
       </Box>
+
+      {/* Update Doctor Schedule Modal */}
+      <Modal
+        opened={opened}
+        onClose={close}
+        title=""
+        size="sm"
+        customStyles={{
+          body: {
+            padding: '20px',
+          }
+        }}
+      >
+        <UpdateDoctorScheduleForm
+          onSubmit={handleScheduleSubmit}
+          onCancel={handleCancel}
+          isLoading={isLoading}
+        />
+      </Modal>
     </MedicalClinicLayout>
   );
 };
