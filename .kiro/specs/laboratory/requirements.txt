@@ -1,0 +1,240 @@
+Laboratory Page Display and Navigation:
+WHEN a user navigates to the laboratory page 
+THE SYSTEM SHALL display the laboratory interface with navbar showing clinic branding "M.G. Amores Medical Clinic", sidebar navigation, and main content area
+
+WHEN the laboratory page loads 
+THE SYSTEM SHALL highlight "Laboratory" as the active navigation item in the sidebar with distinctive styling
+
+WHEN the laboratory page loads 
+THE SYSTEM SHALL display user's role (uppercase) and username in the navbar with profile avatar showing first letter and consistent hash-based color
+
+WHEN a user clicks the profile avatar 
+THE SYSTEM SHALL display dropdown menu with "Settings" and "Logout" options
+
+WHEN a user clicks "Logout" from profile dropdown 
+THE SYSTEM SHALL clear localStorage authentication data and redirect to login.html
+
+WHEN a user has admin role 
+THE SYSTEM SHALL inject "Accounts" menu item in the sidebar navigation
+
+WHEN sidebar navigation items are clicked 
+THE SYSTEM SHALL navigate to corresponding pages: Dashboard→index.html, Appointments→appointments.html, Patients→patients.html, Laboratory→laboratory.html, Prescriptions→prescriptions.html, Doctors→doctor-schedule.html, Accounts→accounts.html (admin only)
+
+---
+
+Laboratory Data Table Display:
+WHEN the laboratory page loads 
+THE SYSTEM SHALL display the laboratory header with "Laboratory" title centered and "Add Lab Test" button aligned to the right
+
+WHEN the laboratory page loads 
+THE SYSTEM SHALL fetch lab request data from /api/lab_requests endpoint and display in table with columns: Patient #, Patient's Name, Status, Results
+
+WHEN displaying patient names in the table 
+THE SYSTEM SHALL format names in proper title case (first letter of each word capitalized)
+
+WHEN determining patient status in the main table 
+THE SYSTEM SHALL show "Pending" if any test for that patient is pending, "Complete" if all tests are complete, or the most recent status for mixed states
+
+WHEN lab request data fails to load 
+THE SYSTEM SHALL handle errors gracefully and display empty table without breaking interface
+
+WHEN no lab requests exist 
+THE SYSTEM SHALL display table structure with column headers but no data rows
+
+---
+
+Add Lab Test Functionality:
+WHEN a user clicks the "Add Lab Test" button 
+THE SYSTEM SHALL open overlay modal containing lab-request-form.html loaded in iframe
+
+WHEN lab request form overlay is displayed 
+THE SYSTEM SHALL provide close button to dismiss overlay and clear iframe source
+
+WHEN lab request form is successfully submitted 
+THE SYSTEM SHALL close overlay, display success toast notification, and refresh laboratory table data
+
+WHEN overlay forms receive closeLabOverlay message 
+THE SYSTEM SHALL close overlay and handle any provided toast messages or table refresh requests
+
+---
+
+Lab Test Details Modal Management:
+WHEN a user clicks "View" button for a patient row 
+THE SYSTEM SHALL open floating lab test modal displaying detailed test information for that patient
+
+WHEN lab test modal opens 
+THE SYSTEM SHALL display patient header information (Patient # and Patient's Name) and table with columns: Lab Test, Date, Status, Results
+
+WHEN displaying lab tests in the modal 
+THE SYSTEM SHALL group tests by categories and show descriptive test names, formatted dates, individual status, and appropriate action buttons
+
+WHEN no lab tests exist for a patient 
+THE SYSTEM SHALL display "No test results available" message in modal table
+
+WHEN user clicks close button on lab test modal 
+THE SYSTEM SHALL close modal and return to main laboratory view
+
+---
+
+Lab Test Status and Action Management:
+WHEN a lab test has "Complete" status in the detail modal 
+THE SYSTEM SHALL display "View" and "Edit" action buttons for that test
+
+WHEN a lab test has "Pending" status in the detail modal 
+THE SYSTEM SHALL display "Add Result" and "Cancel" action buttons for that test
+
+WHEN a user clicks "Add Result" button 
+THE SYSTEM SHALL open appropriate lab form overlay based on test type mapping in read-write mode
+
+WHEN a user clicks "View" button for completed test 
+THE SYSTEM SHALL open corresponding lab form overlay in read-only mode
+
+WHEN a user clicks "Edit" button for completed test 
+THE SYSTEM SHALL open corresponding lab form overlay in edit mode
+
+WHEN a user clicks "Cancel" button for pending test 
+THE SYSTEM SHALL display confirmation modal asking "Are you sure you want to cancel this lab test?"
+
+WHEN user confirms test cancellation 
+THE SYSTEM SHALL update test status to "Canceled" and close confirmation modal
+
+WHEN user declines test cancellation 
+THE SYSTEM SHALL close confirmation modal without making changes
+
+---
+
+Lab Form Integration and Test Type Mapping:
+WHEN opening lab form for urinalysis tests 
+THE SYSTEM SHALL load urinalysis.html in overlay iframe
+
+WHEN opening lab form for blood chemistry tests (fbs field) 
+THE SYSTEM SHALL load blood-chemistry.html in overlay iframe
+
+WHEN opening lab form for hematology tests (cbc_with_platelet field) 
+THE SYSTEM SHALL load hematology.html in overlay iframe
+
+WHEN opening lab form for serology tests (hepa_b_screening, hepa_a_screening, hepatitis_profile, vdrl_rpr, dengue_ns1, ca_125_cea_psa fields) 
+THE SYSTEM SHALL load serology-immunology.html in overlay iframe
+
+WHEN opening lab form for fecalysis tests 
+THE SYSTEM SHALL load fecalysis.html in overlay iframe
+
+WHEN no specific form mapping exists for a test type 
+THE SYSTEM SHALL default to blood-chemistry.html form
+
+WHEN lab form loads in overlay iframe 
+THE SYSTEM SHALL send patient data, test details, and mode settings via postMessage API
+
+---
+
+Test Categories and Data Processing:
+WHEN processing laboratory data for display 
+THE SYSTEM SHALL group tests into categories: ROUTINE (cbc_with_platelet, pregnancy_test, urinalysis, fecalysis, occult_blood_test), SEROLOGY & IMMUNOLOGY (hepa_b_screening, hepa_a_screening, hepatitis_profile, vdrl_rpr, dengue_ns1, ca_125_cea_psa), BLOOD CHEMISTRY (fbs, bun, creatinine, blood_uric_acid, lipid_profile, sgot, sgpt, alp, sodium_na, potassium_k, hba1c), MISCELLANEOUS TEST (ecg), THYROID FUNCTION TEST (t3, t4, ft3, ft4, tsh)
+
+WHEN displaying test names in interface 
+THE SYSTEM SHALL use human-readable labels: cbc_with_platelet→"CBC with Platelet", fbs→"FBS", urinalysis→"Urinalysis", hepa_b_screening→"Hepa B Screening", etc.
+
+WHEN grouping patient lab data 
+THE SYSTEM SHALL consolidate multiple test requests by patient_id and display as single table rows with overall status
+
+WHEN displaying dates in lab test modal 
+THE SYSTEM SHALL format dates in readable format using toLocaleDateString with options {year: "numeric", month: "short", day: "numeric"}
+
+---
+
+Form Communication and Modal State Management:
+WHEN lab form submission is completed successfully 
+THE SYSTEM SHALL receive success notification via postMessage and handle overlay closure with appropriate refreshing
+
+WHEN closing lab overlay after adding results (addResult mode) 
+THE SYSTEM SHALL refresh lab test modal content in place without closing it and refresh main table
+
+WHEN closing lab overlay after viewing results (view mode) 
+THE SYSTEM SHALL reopen lab test modal to maintain user context
+
+WHEN closing lab overlay after editing results (edit mode) 
+THE SYSTEM SHALL refresh main laboratory table data and close modal
+
+WHEN form overlay operations complete successfully 
+THE SYSTEM SHALL display toast message if provided in postMessage response
+
+---
+
+URL Parameter Handling and Deep Linking:
+WHEN laboratory page loads with openModal URL parameter 
+THE SYSTEM SHALL automatically open lab test modal for specified patient after table data loads
+
+WHEN laboratory page loads with testType and readOnly parameters 
+THE SYSTEM SHALL directly open specific lab form overlay in read-only mode for specified patient
+
+WHEN processing URL parameters with encoded patient names 
+THE SYSTEM SHALL properly decode patient names using decodeURIComponent
+
+WHEN URL parameters specify patient not found in loaded data 
+THE SYSTEM SHALL handle gracefully without errors or interface disruption
+
+---
+
+User Feedback and Notification System:
+WHEN displaying toast notifications 
+THE SYSTEM SHALL show messages at top center of page with fade in/out animation for 3 seconds duration
+
+WHEN lab operations complete successfully 
+THE SYSTEM SHALL display appropriate success toast messages
+
+WHEN confirmation dialogs are displayed 
+THE SYSTEM SHALL provide clear Yes/No options with proper button styling
+
+WHEN API operations fail 
+THE SYSTEM SHALL log errors to console for debugging while maintaining interface functionality
+
+---
+
+API Integration and Data Management:
+WHEN making GET request to /api/lab_requests 
+THE SYSTEM SHALL handle both array responses and responses with rows property gracefully
+
+WHEN updating lab request results 
+THE SYSTEM SHALL send PUT requests to /api/lab_requests/:patientId/:requestDate with form data
+
+WHEN creating new lab requests 
+THE SYSTEM SHALL send POST requests to /api/lab_requests endpoint
+
+WHEN API responses contain unexpected data formats 
+THE SYSTEM SHALL validate structure and handle gracefully without application crashes
+
+WHEN laboratory data is successfully retrieved 
+THE SYSTEM SHALL process data by reversing order to show most recent entries first
+
+---
+
+Authentication and Session Management:
+WHEN laboratory page is accessed 
+THE SYSTEM SHALL retrieve user role and username from localStorage for display
+
+WHEN generating profile avatar 
+THE SYSTEM SHALL use first letter of username and assign consistent color based on username hash from predefined color array
+
+WHEN user authentication data is missing 
+THE SYSTEM SHALL handle gracefully and maintain interface functionality
+
+WHEN logout is performed 
+THE SYSTEM SHALL clear loggedInRole, loggedInUsername, and isLoggedIn from localStorage
+
+---
+
+Responsive Design and Layout:
+WHEN laboratory page is viewed on mobile devices 
+THE SYSTEM SHALL hide sidebar (transform: translateX(-100%)) and adjust main content margin to 0
+
+WHEN table content exceeds available width 
+THE SYSTEM SHALL implement text truncation with ellipsis while maintaining column alignment
+
+WHEN modals are displayed 
+THE SYSTEM SHALL center them on screen with proper overlay background and z-index management
+
+WHEN buttons are interacted with 
+THE SYSTEM SHALL provide hover effects with color changes and scale transformations
+
+WHEN laboratory table is displayed 
+THE SYSTEM SHALL maintain column widths: Patient # (20%), Name (40%), Status (20%), Results (20%) with appropriate text alignment
