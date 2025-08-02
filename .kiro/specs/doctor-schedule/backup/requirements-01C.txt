@@ -1,0 +1,156 @@
+Page Display and Authentication:
+WHEN a user navigates to the doctor-schedule page
+THE SYSTEM SHALL display the clinic header with logo, title "M.G. Amores Medical Clinic", user role, username, and profile avatar
+
+WHEN the doctor-schedule page loads
+THE SYSTEM SHALL display the logged-in user's role in uppercase and username from localStorage
+
+WHEN the profile avatar is displayed
+THE SYSTEM SHALL show the first letter of the username in uppercase with a randomly assigned color based on username hash
+
+WHEN a user clicks the profile avatar
+THE SYSTEM SHALL toggle a dropdown menu with "Settings" and "Logout" options
+
+WHEN a user clicks outside the profile dropdown
+THE SYSTEM SHALL close the dropdown menu
+
+WHEN a user clicks the "Logout" option
+THE SYSTEM SHALL clear all localStorage data (loggedInRole, loggedInUsername, isLoggedIn) and redirect to login.html
+
+---
+
+Sidebar Navigation:
+WHEN the doctor-schedule page loads
+THE SYSTEM SHALL display a sidebar with navigation items: Dashboard, Appointments, Patients, Laboratory, Prescriptions, and Doctors (highlighted as active)
+
+WHEN the logged-in user has admin role
+THE SYSTEM SHALL add an "Accounts" navigation item to the sidebar
+
+WHEN a user clicks any sidebar navigation item
+THE SYSTEM SHALL navigate to the corresponding page (index.html, appointments.html, patients.html, laboratory.html, prescriptions.html, doctor-schedule.html, accounts.html)
+
+---
+
+Doctors Table Display:
+WHEN the doctor-schedule page loads
+THE SYSTEM SHALL display a "Doctors" title and a table with columns: "Doctor's Name", "Specialization", "Contact Number"
+
+WHEN the page loads
+THE SYSTEM SHALL fetch doctors data from the /doctors API endpoint
+
+WHEN the doctors API call succeeds
+THE SYSTEM SHALL populate the table with doctor information showing "Dr. [FirstName] [LastName]", specialization, and contact number
+
+WHEN the doctors API call fails
+THE SYSTEM SHALL display fallback static data with sample doctors (Maria Santos - General Medicine, Juan Cruz - Cardiology, Anna Reyes - Pediatrics)
+
+WHEN doctor data is displayed in the table
+THE SYSTEM SHALL left-align doctor names, center-align specialization and contact number columns
+
+---
+
+Calendar Display and Navigation:
+WHEN the doctor-schedule page loads
+THE SYSTEM SHALL display a "Doctor's Schedule" title with an "Edit" button positioned at the top right
+
+WHEN the calendar section loads
+THE SYSTEM SHALL show the current month and year in uppercase format with previous and next month navigation buttons
+
+WHEN the calendar displays
+THE SYSTEM SHALL show a grid with day headers (Sun, Mon, Tue, Wed, Thu, Fri, Sat) and calendar cells for all days of the current month
+
+WHEN a user clicks the previous month button
+THE SYSTEM SHALL navigate to the previous month and update the calendar display
+
+WHEN a user clicks the next month button
+THE SYSTEM SHALL navigate to the next month and update the calendar display
+
+WHEN the calendar loads
+THE SYSTEM SHALL fetch schedule data from the /schedules API endpoint
+
+WHEN schedule data is available for a date
+THE SYSTEM SHALL display the doctor name and time within the corresponding calendar cell
+
+WHEN there is no schedule data for a date
+THE SYSTEM SHALL display the calendar cell with only the date number
+
+---
+
+Schedule Management:
+WHEN a user clicks the "Edit" button
+THE SYSTEM SHALL open an overlay displaying the edit-sched.html form in an iframe
+
+WHEN the edit schedule overlay opens
+THE SYSTEM SHALL display a close button (X) in the top right corner of the overlay
+
+WHEN a user clicks the close button or completes schedule editing
+THE SYSTEM SHALL close the overlay and clear the iframe source
+
+WHEN a schedule is successfully updated via the edit form
+THE SYSTEM SHALL close the overlay and reload the page to show updated schedule data
+
+WHEN the edit schedule form is submitted
+THE SYSTEM SHALL send a POST request to /schedules endpoint with doctor name, date, and time
+
+---
+
+Data Loading and Error Handling:
+WHEN the page loads
+THE SYSTEM SHALL make concurrent API calls to fetch doctors data and schedules data
+
+WHEN API calls are in progress
+THE SYSTEM SHALL handle loading states gracefully without showing error messages to users
+
+WHEN the schedules API call fails
+THE SYSTEM SHALL log the error to console and display an empty calendar
+
+WHEN the doctors API call fails
+THE SYSTEM SHALL log the error to console and fall back to displaying static sample doctor data
+
+WHEN schedule data is successfully loaded
+THE SYSTEM SHALL cache the data and use it for calendar navigation without making additional API calls
+
+---
+
+User Interface Interactions:
+WHEN a user hovers over navigation items
+THE SYSTEM SHALL show visual feedback with background color change and highlight color
+
+WHEN a user hovers over the profile avatar
+THE SYSTEM SHALL show a slight scale animation and enhanced shadow
+
+WHEN the calendar is displayed
+THE SYSTEM SHALL show inactive days (from previous/next month) with transparent background
+
+WHEN the page is displayed on different screen sizes
+THE SYSTEM SHALL maintain responsive layout with appropriate spacing and font sizes
+
+WHEN the doctors table has multiple rows
+THE SYSTEM SHALL show hover effects on table rows for better user experience
+
+---
+
+Form and Edit Functionality:
+WHEN the edit schedule form is displayed
+THE SYSTEM SHALL show input fields for Doctor Name (text), Date (date picker), and Time (text with placeholder "e.g. 9AM - 5PM")
+
+WHEN a user submits the edit schedule form with valid data
+THE SYSTEM SHALL disable the submit button, send the schedule data to the backend, and notify the parent window of successful update
+
+WHEN the schedule form submission succeeds
+THE SYSTEM SHALL send a postMessage to the parent window with type "scheduleUpdated" to trigger page reload
+
+WHEN all required fields are not filled in the edit form
+THE SYSTEM SHALL prevent form submission and require field completion
+
+---
+
+Authentication and Security:
+WHEN a user accesses the doctor-schedule page without being logged in
+THE SYSTEM SHALL redirect to the login page (handled by parent authentication system)
+
+WHEN localStorage contains valid authentication tokens
+THE SYSTEM SHALL allow access to the page and display user information
+
+WHEN the user's session expires or authentication is invalid
+THE SYSTEM SHALL redirect to login page and clear stored authentication data
