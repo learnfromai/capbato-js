@@ -1,0 +1,15 @@
+Authentication Processing:
+WHEN the form is submitted
+THE SYSTEM SHALL send POST request to "http://localhost:3001/auth/login" endpoint
+
+WHEN sending authentication request
+THE SYSTEM SHALL include username and password in JSON format in the request body
+
+WHEN sending authentication request
+THE SYSTEM SHALL set "Content-Type" header to "application/json"
+
+WHEN the server processes the authentication request
+THE SYSTEM SHALL receive JSON response containing either success data or error message
+
+WHEN authentication processing encounters network error
+THE SYSTEM SHALL catch the error and log it to console as "Login Error"

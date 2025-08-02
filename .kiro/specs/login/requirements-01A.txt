@@ -1,0 +1,21 @@
+Login Form Display:
+WHEN a user navigates to the login page
+THE SYSTEM SHALL display a navigation bar with clinic logo and "M.G. Amores Medical Clinic" title
+
+WHEN the login page loads
+THE SYSTEM SHALL display a centered login form wrapper with "Login" heading
+
+WHEN the login form is displayed
+THE SYSTEM SHALL show a username input field with person icon and "Username" placeholder
+
+WHEN the login form is displayed
+THE SYSTEM SHALL show a password input field with lock icon and "Password" placeholder
+
+WHEN the login form is displayed
+THE SYSTEM SHALL display a "Login" button with sign-in icon
+
+WHEN the login form is displayed
+THE SYSTEM SHALL display a "Go Back" button with arrow-left icon below the login button
+
+WHEN the login form is displayed
+THE SYSTEM SHALL include a message area for displaying error messages in red text

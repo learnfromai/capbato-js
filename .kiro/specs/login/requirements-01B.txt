@@ -1,0 +1,15 @@
+Form Input Handling:
+WHEN a user types in the username input field
+THE SYSTEM SHALL accept text input without format validation
+
+WHEN a user types in the password input field
+THE SYSTEM SHALL mask the input characters for security
+
+WHEN the username input field is focused
+THE SYSTEM SHALL change the username input background color to indicate active state
+
+WHEN the password input field is focused
+THE SYSTEM SHALL change the password input background color to indicate active state
+
+WHEN input fields contain autofill data
+THE SYSTEM SHALL properly style the autofilled text with appropriate colors
