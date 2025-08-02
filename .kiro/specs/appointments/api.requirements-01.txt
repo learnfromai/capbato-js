@@ -1,0 +1,130 @@
+Core Appointment Management:
+WHEN a client sends GET request to /api/appointments 
+THE SYSTEM SHALL return HTTP 200 with array of all appointments including patient name, appointment date, time, status, and doctor name
+
+WHEN a client sends POST request to /api/appointments/add with valid patient_id, patient_name, reason_for_visit, appointment_date, and appointment_time in JSON format
+THE SYSTEM SHALL create new appointment and return HTTP 201 with success message and appointment ID
+
+WHEN a client sends PUT request to /api/appointments/update/{id} with valid appointment data in JSON format
+THE SYSTEM SHALL update the specified appointment and return HTTP 200 with success message
+
+WHEN a client sends PUT request to /api/appointments/cancel/{id} with status "Cancelled" in JSON format
+THE SYSTEM SHALL cancel the specified appointment and return HTTP 200 with success message
+
+WHEN a client sends PUT request to /api/appointments/cancel/{id} with status "Confirmed" in JSON format
+THE SYSTEM SHALL confirm the specified appointment and return HTTP 200 with success message
+
+---
+
+Appointment Retrieval:
+WHEN a client sends GET request to /api/appointments/today/confirmed
+THE SYSTEM SHALL return HTTP 200 with count of today's confirmed appointments
+
+WHEN a client sends GET request to /api/appointments/today
+THE SYSTEM SHALL return HTTP 200 with list of today's confirmed appointments ordered by appointment time
+
+WHEN a client sends GET request to /api/appointments/patient/{id} with valid patient ID
+THE SYSTEM SHALL return HTTP 200 with list of appointments for the specified patient ordered by date descending
+
+WHEN a client sends GET request to /api/appointments/weekly-summary
+THE SYSTEM SHALL return HTTP 200 with weekly appointment summary showing date and count for confirmed appointments in last 7 days
+
+---
+
+Request Validation:
+WHEN a client sends appointment creation request missing patient_name field
+THE SYSTEM SHALL return HTTP 400 with error code APPT_MISSING_REQUIRED_FIELDS and message "All fields including valid Patient # are required"
+
+WHEN a client sends appointment creation request missing reason_for_visit field
+THE SYSTEM SHALL return HTTP 400 with error code APPT_MISSING_REQUIRED_FIELDS and message "All fields including valid Patient # are required"
+
+WHEN a client sends appointment creation request missing appointment_date field
+THE SYSTEM SHALL return HTTP 400 with error code APPT_MISSING_REQUIRED_FIELDS and message "All fields including valid Patient # are required"
+
+WHEN a client sends appointment creation request missing appointment_time field
+THE SYSTEM SHALL return HTTP 400 with error code APPT_MISSING_REQUIRED_FIELDS and message "All fields including valid Patient # are required"
+
+WHEN a client sends appointment creation request missing patient_id field
+THE SYSTEM SHALL return HTTP 400 with error code APPT_MISSING_REQUIRED_FIELDS and message "All fields including valid Patient # are required"
+
+WHEN a client sends appointment update request missing patient_name field
+THE SYSTEM SHALL return HTTP 400 with error code APPT_MISSING_REQUIRED_FIELDS and message "All fields are required"
+
+WHEN a client sends appointment update request missing reason_for_visit field
+THE SYSTEM SHALL return HTTP 400 with error code APPT_MISSING_REQUIRED_FIELDS and message "All fields are required"
+
+WHEN a client sends appointment update request missing appointment_date field
+THE SYSTEM SHALL return HTTP 400 with error code APPT_MISSING_REQUIRED_FIELDS and message "All fields are required"
+
+WHEN a client sends appointment update request missing appointment_time field
+THE SYSTEM SHALL return HTTP 400 with error code APPT_MISSING_REQUIRED_FIELDS and message "All fields are required"
+
+WHEN a client sends appointment cancellation request missing status field
+THE SYSTEM SHALL return HTTP 400 with error code APPT_MISSING_STATUS and message "Status is required."
+
+---
+
+Business Rule Enforcement:
+WHEN a client sends appointment creation request with non-existent patient_id
+THE SYSTEM SHALL return HTTP 400 with error code APPT_PATIENT_NOT_FOUND and message "Patient does not exist in the database."
+
+WHEN a client sends appointment creation request with appointment_date and appointment_time in the past
+THE SYSTEM SHALL return HTTP 400 with error code APPT_PAST_TIME_SLOT and message "Cannot book a past time slot."
+
+WHEN a client sends appointment creation request for patient who already has confirmed appointment on same date
+THE SYSTEM SHALL return HTTP 400 with error code APPT_DUPLICATE_DATE and message "This patient already has an appointment for that day."
+
+WHEN a client sends appointment creation request for time slot that already has confirmed appointment
+THE SYSTEM SHALL return HTTP 400 with error code APPT_TIME_SLOT_BOOKED and message "This time slot is already booked."
+
+WHEN a client sends appointment update request for patient who already has another confirmed appointment on same date
+THE SYSTEM SHALL return HTTP 400 with error code APPT_DUPLICATE_DATE and message "This patient already has another appointment on the same day."
+
+WHEN a client sends appointment update request for time slot that already has 4 confirmed appointments
+THE SYSTEM SHALL return HTTP 400 with error code APPT_TIME_SLOT_FULL and message "This time slot is already fully booked."
+
+WHEN a client sends appointment confirmation request for time slot that already has 4 confirmed appointments
+THE SYSTEM SHALL return HTTP 400 with error code APPT_TIME_SLOT_FULL and message "This time slot is already fully booked. Please choose another."
+
+---
+
+Patient Validation and Contact Management:
+WHEN creating or updating appointment for valid patient_id
+THE SYSTEM SHALL retrieve and store patient's contact number from patients table
+
+WHEN patient contact number exists and has invalid Philippine mobile format
+THE SYSTEM SHALL log warning but continue with appointment creation/update
+
+WHEN retrieving appointments by patient ID that does not exist
+THE SYSTEM SHALL return HTTP 200 with empty array
+
+---
+
+Error Handling:
+WHEN appointment creation fails due to database error
+THE SYSTEM SHALL return HTTP 500 with error code APPT_DATABASE_ERROR and message "Failed to insert appointment"
+
+WHEN appointment update fails due to database error
+THE SYSTEM SHALL return HTTP 500 with error code APPT_DATABASE_ERROR and message "Failed to update appointment"
+
+WHEN appointment cancellation fails due to database error
+THE SYSTEM SHALL return HTTP 500 with error code APPT_DATABASE_ERROR and message "Failed to update appointment status."
+
+WHEN appointment retrieval fails due to database error
+THE SYSTEM SHALL return HTTP 500 with error code APPT_DATABASE_ERROR and message "Database error"
+
+WHEN appointment update or cancellation request specifies non-existent appointment ID
+THE SYSTEM SHALL return HTTP 404 with error code APPT_NOT_FOUND and message "Appointment not found."
+
+WHEN any appointment query fails due to database connection issues
+THE SYSTEM SHALL log error details and return HTTP 500 with error code APPT_DATABASE_ERROR and appropriate error message
+
+---
+
+Data Integrity Requirements:
+THE SYSTEM SHALL automatically set created_at timestamp when creating new appointments
+THE SYSTEM SHALL validate appointment status values are within enum ('Confirmed', 'Cancelled')
+THE SYSTEM SHALL set default status to 'Confirmed' for new appointments
+THE SYSTEM SHALL preserve existing appointment data when partial updates are performed
+THE SYSTEM SHALL log all appointment operations for audit purposes
+THE SYSTEM SHALL ensure appointment times are stored in TIME format and dates in DATE format
