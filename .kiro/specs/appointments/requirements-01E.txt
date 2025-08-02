@@ -1,0 +1,189 @@
+Page Display and Loading:
+WHEN a user navigates to the appointments page
+THE SYSTEM SHALL display the appointments page with navbar, sidebar navigation, main content area, and appointments table
+
+WHEN the appointments page loads
+THE SYSTEM SHALL automatically set the date filter to today's date and load today's appointments
+
+WHEN the appointments page loads
+THE SYSTEM SHALL display the page title "Appointments" and an "Add Appointment" button in the header
+
+WHEN the appointments page loads
+THE SYSTEM SHALL display user role and username in the navbar with profile avatar and dropdown menu
+
+---
+
+Filter Controls and Date Selection:
+WHEN the appointments page loads
+THE SYSTEM SHALL display date selection control with label "Select Date:" and today's date pre-selected
+
+WHEN the appointments page loads
+THE SYSTEM SHALL display "Show All" checkbox control that is initially unchecked
+
+WHEN a user changes the selected date
+THE SYSTEM SHALL uncheck the "Show All" checkbox and load appointments for the selected date
+
+WHEN a user checks the "Show All" checkbox
+THE SYSTEM SHALL load and display all appointments regardless of date
+
+WHEN a user unchecks the "Show All" checkbox
+THE SYSTEM SHALL load appointments for the currently selected date
+
+---
+
+Appointment Table Display:
+WHEN appointments are loaded
+THE SYSTEM SHALL display appointments in a table with columns: Patient #, Patient Name, Reason for Visit, Date, Time, Doctor, Status, Action
+
+WHEN appointments are displayed
+THE SYSTEM SHALL format patient names in proper case (first letter of each word capitalized)
+
+WHEN appointments are displayed
+THE SYSTEM SHALL format time in 12-hour format (e.g., "2:30 PM")
+
+WHEN appointments are displayed
+THE SYSTEM SHALL format dates in readable format (e.g., "Jul 15, 2025")
+
+WHEN appointments are displayed
+THE SYSTEM SHALL show status badges with color-coded styling: green for "Confirmed", red for "Cancelled"
+
+WHEN appointments are displayed
+THE SYSTEM SHALL show appointment count summary including total, confirmed, and cancelled counts
+
+---
+
+Appointment Actions and Status Management:
+WHEN an appointment has "Confirmed" status
+THE SYSTEM SHALL display "Modify" and "Cancel" action buttons for that appointment
+
+WHEN an appointment has "Cancelled" status
+THE SYSTEM SHALL display only "Reconfirm" action button for that appointment
+
+WHEN a user clicks the "Cancel" button on an appointment
+THE SYSTEM SHALL show confirmation modal asking "Are you sure you want to cancel this appointment?"
+
+WHEN a user confirms appointment cancellation
+THE SYSTEM SHALL update the appointment status to "Cancelled" and show success toast notification
+
+WHEN a user clicks the "Reconfirm" button on a cancelled appointment
+THE SYSTEM SHALL check if the time slot has less than 4 confirmed appointments
+
+WHEN reconfirming an appointment with available time slots
+THE SYSTEM SHALL show confirmation modal asking "Reconfirm this appointment?"
+
+WHEN reconfirming an appointment with fully booked time slots
+THE SYSTEM SHALL open the modify appointment form to allow time change
+
+WHEN a user confirms appointment reconfirmation
+THE SYSTEM SHALL update the appointment status to "Confirmed" and show success toast notification
+
+---
+
+Add Appointment Integration:
+WHEN a user clicks the "Add Appointment" button
+THE SYSTEM SHALL display an overlay with iframe containing the add appointment form
+
+WHEN the add appointment overlay is displayed
+THE SYSTEM SHALL show a close button (X) in the top-right corner of the overlay
+
+WHEN a user clicks the close button on the overlay
+THE SYSTEM SHALL hide the overlay and clear the iframe source
+
+WHEN the add appointment iframe loads
+THE SYSTEM SHALL send a "resetForm" message to clear any previous form data
+
+WHEN a new appointment is successfully added
+THE SYSTEM SHALL receive "appointmentAdded" message and reload appropriate appointments list
+
+WHEN appointment add/edit operations complete
+THE SYSTEM SHALL display toast notifications with success or error messages
+
+---
+
+Modify Appointment Integration:
+WHEN a user clicks the "Modify" button on an appointment
+THE SYSTEM SHALL open the add appointment overlay with form pre-populated with existing appointment data
+
+WHEN modify appointment overlay loads
+THE SYSTEM SHALL send "editAppointment" message with appointment data to the iframe
+
+WHEN modify appointment form is submitted successfully
+THE SYSTEM SHALL reload appointments list and show success notification
+
+---
+
+Data Loading and Error Handling:
+WHEN appointments data is being loaded
+THE SYSTEM SHALL fetch appointments from the backend API endpoint
+
+WHEN appointment data loading fails
+THE SYSTEM SHALL display "Error loading appointments." message in the table
+
+WHEN no appointments are found for today
+THE SYSTEM SHALL display "No upcoming appointments for today." message
+
+WHEN no appointments are found for selected date
+THE SYSTEM SHALL display "No appointments found." message
+
+WHEN appointment status update fails
+THE SYSTEM SHALL display error message via toast notification
+
+---
+
+Table Sorting and Display Rules:
+WHEN "Show All" is active
+THE SYSTEM SHALL sort appointments from latest to oldest by date and time
+
+WHEN viewing appointments for a specific date
+THE SYSTEM SHALL display appointments without additional sorting
+
+WHEN appointments table is displayed
+THE SYSTEM SHALL use fixed table layout with optimized column widths
+
+WHEN long text appears in table cells
+THE SYSTEM SHALL use text truncation with ellipsis for overflow content
+
+---
+
+Navigation and Sidebar Integration:
+WHEN the appointments page is active
+THE SYSTEM SHALL highlight the "Appointments" item in the sidebar navigation
+
+WHEN a user clicks sidebar navigation items
+THE SYSTEM SHALL navigate to the corresponding pages (Dashboard, Patients, etc.)
+
+WHEN user role is "admin"
+THE SYSTEM SHALL inject "Accounts" menu item into the sidebar navigation
+
+WHEN a user clicks profile avatar
+THE SYSTEM SHALL display dropdown menu with "Settings" and "Logout" options
+
+WHEN a user clicks "Logout" from profile dropdown
+THE SYSTEM SHALL clear stored authentication data and redirect to login page
+
+---
+
+Confirmation Modal Behavior:
+WHEN a confirmation modal is displayed
+THE SYSTEM SHALL show modal overlay with confirmation text and "Yes"/"No" buttons
+
+WHEN a user clicks "Yes" in confirmation modal
+THE SYSTEM SHALL execute the confirmed action and hide the modal
+
+WHEN a user clicks "No" in confirmation modal
+THE SYSTEM SHALL cancel the action and hide the modal
+
+WHEN confirmation modal is displayed
+THE SYSTEM SHALL prevent interaction with background content
+
+---
+
+Toast Notification System:
+WHEN system operations complete
+THE SYSTEM SHALL display toast notifications at the top center of the screen
+
+WHEN toast notifications are shown
+THE SYSTEM SHALL automatically hide them after 2 seconds
+
+WHEN toast notifications are displayed
+THE SYSTEM SHALL use consistent styling with dark background and white text
