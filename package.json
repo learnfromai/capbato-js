@@ -79,6 +79,7 @@
     "prepare": "husky || echo 'Husky setup failed - this is normal if git is not initialized'",
     "setup:git-template": "git config commit.template .gitmessage",
     "api": "pnpm start:api",
+    "api:fast": "pnpm start:api:fast",
     "web": "pnpm start:web",
     "endapi": "pnpm e2e:api",
     "endweb": "pnpm e2e:web",
