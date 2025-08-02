@@ -1,0 +1,126 @@
+Core Appointment Management:
+WHEN a client sends GET request to /api/appointments 
+THE SYSTEM SHALL return HTTP 200 with complete list of appointments including patient details and formatted appointment dates
+
+WHEN a client sends POST request to /api/appointments/add with valid appointment data in JSON format
+THE SYSTEM SHALL create the appointment and return HTTP 201 with success message and appointment ID
+
+WHEN a client sends PUT request to /api/appointments/update/{id} with valid appointment data in JSON format
+THE SYSTEM SHALL update the appointment and return HTTP 200 with success message
+
+WHEN a client sends PUT request to /api/appointments/cancel/{id} with status in JSON format
+THE SYSTEM SHALL update the appointment status and return HTTP 200 with success message
+
+WHEN a client sends GET request to /api/appointments/patient/{id}
+THE SYSTEM SHALL return HTTP 200 with list of appointments for the specified patient ordered by date descending
+
+WHEN a client sends GET request to /api/appointments/today
+THE SYSTEM SHALL return HTTP 200 with list of today's confirmed appointments ordered by appointment time
+
+WHEN a client sends GET request to /api/appointments/today/confirmed
+THE SYSTEM SHALL return HTTP 200 with count of today's confirmed appointments
+
+WHEN a client sends GET request to /api/appointments/weekly-summary
+THE SYSTEM SHALL return HTTP 200 with weekly appointment summary data grouped by date
+
+---
+
+Request Validation:
+WHEN a client sends appointment creation request missing patient_id field
+THE SYSTEM SHALL return HTTP 400 with message "All fields including valid Patient # are required"
+
+WHEN a client sends appointment creation request missing patient_name field
+THE SYSTEM SHALL return HTTP 400 with message "All fields including valid Patient # are required"
+
+WHEN a client sends appointment creation request missing reason_for_visit field
+THE SYSTEM SHALL return HTTP 400 with message "All fields including valid Patient # are required"
+
+WHEN a client sends appointment creation request missing appointment_date field
+THE SYSTEM SHALL return HTTP 400 with message "All fields including valid Patient # are required"
+
+WHEN a client sends appointment creation request missing appointment_time field
+THE SYSTEM SHALL return HTTP 400 with message "All fields including valid Patient # are required"
+
+WHEN a client sends appointment update request missing required fields
+THE SYSTEM SHALL return HTTP 400 with message "All fields are required"
+
+WHEN a client sends appointment cancellation request missing status field
+THE SYSTEM SHALL return HTTP 400 with message "Status is required."
+
+---
+
+Business Logic Validation:
+WHEN a client sends appointment creation request with past appointment date and time
+THE SYSTEM SHALL return HTTP 400 with message "Cannot book a past time slot."
+
+WHEN a client sends appointment creation request for non-existent patient
+THE SYSTEM SHALL return HTTP 400 with message "Patient does not exist in the database."
+
+WHEN a client sends appointment creation request for patient who already has confirmed appointment on same date
+THE SYSTEM SHALL return HTTP 400 with message "This patient already has an appointment for that day."
+
+WHEN a client sends appointment creation request for time slot that is already booked
+THE SYSTEM SHALL return HTTP 400 with message "This time slot is already booked."
+
+WHEN a client sends appointment update request that would create duplicate appointment for same patient on same date
+THE SYSTEM SHALL return HTTP 400 with message "This patient already has another appointment on the same day."
+
+WHEN a client sends appointment update request for fully booked time slot (4 appointments)
+THE SYSTEM SHALL return HTTP 400 with message "This time slot is already fully booked."
+
+WHEN a client sends appointment confirmation request for fully booked time slot (4 appointments)
+THE SYSTEM SHALL return HTTP 400 with message "This time slot is already fully booked. Please choose another."
+
+---
+
+Data Integrity Requirements:
+WHEN creating an appointment
+THE SYSTEM SHALL verify patient exists in database before creating appointment record
+
+WHEN creating or updating an appointment
+THE SYSTEM SHALL retrieve and store patient contact number from patient record
+
+WHEN storing appointment data
+THE SYSTEM SHALL validate Philippine mobile number format for contact numbers and log warnings for invalid formats
+
+WHEN updating appointment status to "Confirmed"
+THE SYSTEM SHALL check time slot capacity limits before confirming
+
+---
+
+Error Handling:
+WHEN database query fails during appointment retrieval
+THE SYSTEM SHALL return HTTP 500 with message "Database error"
+
+WHEN database query fails during appointment creation
+THE SYSTEM SHALL return HTTP 500 with message "Failed to insert appointment"
+
+WHEN database query fails during appointment update
+THE SYSTEM SHALL return HTTP 500 with message "Failed to update appointment"
+
+WHEN database query fails during appointment cancellation
+THE SYSTEM SHALL return HTTP 500 with message "Failed to update appointment status."
+
+WHEN appointment not found during update or cancellation operations
+THE SYSTEM SHALL return HTTP 404 with message "Appointment not found"
+
+WHEN patient not found during appointment retrieval by patient ID
+THE SYSTEM SHALL return HTTP 404 with message "Patient not found"
+
+---
+
+Data Format Requirements:
+THE SYSTEM SHALL format appointment dates as YYYY-MM-DD in responses
+THE SYSTEM SHALL store appointment times in HH:MM:SS format
+THE SYSTEM SHALL concatenate patient names as "LastName, FirstName MiddleName" in appointment listings
+THE SYSTEM SHALL support appointment status values of "Confirmed" and "Cancelled"
+THE SYSTEM SHALL automatically set created_at timestamp when creating new appointments
+
+---
+
+Security and Logging Requirements:
+THE SYSTEM SHALL log all appointment operations with error details for debugging
+THE SYSTEM SHALL sanitize all input data to prevent SQL injection attacks
+THE SYSTEM SHALL validate all date and time inputs to prevent malformed data storage
+THE SYSTEM SHALL enforce data type constraints for all appointment fields
+THE SYSTEM SHALL log warnings for invalid contact number formats found in database records
