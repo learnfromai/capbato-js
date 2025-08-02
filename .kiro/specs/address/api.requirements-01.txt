@@ -1,0 +1,72 @@
+Core Address Data Retrieval:
+WHEN a client sends GET request to /api/address/provinces 
+THE SYSTEM SHALL return HTTP 200 with JSON array of all Philippine provinces containing code and name properties
+
+WHEN a client sends GET request to /api/address/cities/{provinceCode} with valid province code
+THE SYSTEM SHALL return HTTP 200 with JSON array of cities/municipalities for that province containing code and name properties
+
+WHEN a client sends GET request to /api/address/barangays/{cityCode} with valid city code
+THE SYSTEM SHALL return HTTP 200 with JSON array of barangays for that city containing code and name properties
+
+WHEN the system returns province data
+THE SYSTEM SHALL generate province codes by converting province names to uppercase with spaces replaced by underscores
+
+WHEN the system returns city/municipality data
+THE SYSTEM SHALL generate city codes by converting city names to lowercase with spaces replaced by underscores
+
+WHEN the system returns barangay data
+THE SYSTEM SHALL generate barangay codes in format "B001", "B002", etc. based on alphabetical ordering
+
+---
+
+Request Validation:
+WHEN a client sends GET request to /api/address/cities/{provinceCode} with non-existent province code
+THE SYSTEM SHALL return HTTP 200 with empty JSON array
+
+WHEN a client sends GET request to /api/address/barangays/{cityCode} with non-existent city code  
+THE SYSTEM SHALL return HTTP 200 with empty JSON array
+
+WHEN a client sends GET request to /api/address/cities/{provinceCode} with malformed province code
+THE SYSTEM SHALL return HTTP 200 with empty JSON array
+
+WHEN a client sends GET request to /api/address/barangays/{cityCode} with malformed city code
+THE SYSTEM SHALL return HTTP 200 with empty JSON array
+
+---
+
+Data Processing Requirements:
+WHEN the system processes address data
+THE SYSTEM SHALL load Philippine address data from philippines-complete.json file
+
+WHEN the system returns province list
+THE SYSTEM SHALL sort provinces alphabetically by name
+
+WHEN the system returns city/municipality list  
+THE SYSTEM SHALL sort cities alphabetically by name
+
+WHEN the system returns barangay list
+THE SYSTEM SHALL sort barangays alphabetically by name
+
+---
+
+Error Handling:
+WHEN the system fails to load Philippine address data file
+THE SYSTEM SHALL return HTTP 500 with error message "Failed to fetch provinces"
+
+WHEN the system encounters error while processing cities request
+THE SYSTEM SHALL return HTTP 500 with error message "Failed to fetch cities"
+
+WHEN the system encounters error while processing barangays request  
+THE SYSTEM SHALL return HTTP 500 with error message "Failed to fetch barangays"
+
+WHEN any address endpoint encounters an error
+THE SYSTEM SHALL log the error details to console for debugging
+
+---
+
+Data Format Requirements:
+THE SYSTEM SHALL return all address data in JSON format with Content-Type application/json
+THE SYSTEM SHALL ensure all province objects contain "code" and "name" string properties
+THE SYSTEM SHALL ensure all city/municipality objects contain "code" and "name" string properties  
+THE SYSTEM SHALL ensure all barangay objects contain "code" and "name" string properties
+THE SYSTEM SHALL return consistent data structure across all address endpoints
