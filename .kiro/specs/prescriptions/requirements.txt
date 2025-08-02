@@ -1,0 +1,237 @@
+Page Display and Navigation:
+WHEN a user navigates to the prescriptions page
+THE SYSTEM SHALL display a navigation header with clinic logo, user role, username, and profile avatar
+
+WHEN the prescriptions page loads
+THE SYSTEM SHALL highlight the "Prescriptions" item in the sidebar navigation as active
+
+WHEN the prescriptions page is displayed
+THE SYSTEM SHALL show the sidebar with navigation options for Dashboard, Appointments, Patients, Laboratory, Prescriptions, and Doctors
+
+WHEN the prescriptions page loads
+THE SYSTEM SHALL display the main content area with "Prescriptions" title and prescription management interface
+
+---
+
+Role-Based Access Control:
+WHEN a user with "doctor" role accesses the prescriptions page
+THE SYSTEM SHALL display the "Add Prescription" button in the top-right corner of the prescriptions header
+
+WHEN a user with non-doctor role accesses the prescriptions page
+THE SYSTEM SHALL hide the "Add Prescription" button and Actions column header
+
+WHEN a doctor user clicks the "Add Prescription" button
+THE SYSTEM SHALL open the add prescription form overlay with iframe
+
+WHEN the user role is "admin"
+THE SYSTEM SHALL inject an "Accounts" navigation item in the sidebar
+
+---
+
+Prescription Table Display:
+WHEN the prescriptions page loads
+THE SYSTEM SHALL display a table with columns: Patient Number, Patient Name, Doctor, Date Prescribed, Medications, Actions
+
+WHEN prescription data is available
+THE SYSTEM SHALL populate the table with prescription records showing patient information, prescribing doctor, date, and medications
+
+WHEN the prescription table is displayed
+THE SYSTEM SHALL center-align Patient Number and Date Prescribed columns
+
+WHEN the prescription table is displayed
+THE SYSTEM SHALL left-align Patient Name, Doctor, and Medications columns for better readability
+
+WHEN the user hovers over a prescription table row
+THE SYSTEM SHALL highlight the row with a light background color
+
+---
+
+Search Functionality:
+WHEN the prescriptions page loads
+THE SYSTEM SHALL display a search input field above the prescriptions table
+
+WHEN a user types in the search input field
+THE SYSTEM SHALL filter prescription table rows in real-time based on the search term
+
+WHEN the search term matches any content in a prescription row
+THE SYSTEM SHALL keep that row visible in the table
+
+WHEN the search term does not match any content in a prescription row
+THE SYSTEM SHALL hide that row from the table display
+
+WHEN the search input is cleared
+THE SYSTEM SHALL show all prescription rows in the table
+
+---
+
+Add Prescription Form Display:
+WHEN a doctor clicks the "Add Prescription" button
+THE SYSTEM SHALL display an overlay with the add prescription form in an iframe
+
+WHEN the add prescription form loads
+THE SYSTEM SHALL display fields for Patient Name, Doctor, Date Prescribed, and Medications
+
+WHEN the add prescription form loads
+THE SYSTEM SHALL auto-fill the doctor field with the logged-in user's username
+
+WHEN the add prescription form loads
+THE SYSTEM SHALL set the date prescribed field to today's date as default
+
+WHEN the add prescription form is displayed
+THE SYSTEM SHALL show a close button (X) in the top-right corner of the overlay
+
+---
+
+Patient Name Autocomplete:
+WHEN a user types in the Patient Name field of the add prescription form
+THE SYSTEM SHALL display autocomplete suggestions based on patients who have appointments on the selected date
+
+WHEN the user selects a date in the Date Prescribed field
+THE SYSTEM SHALL update the patient name autocomplete suggestions to show only patients with appointments on that date
+
+WHEN a user selects a patient from the autocomplete suggestions
+THE SYSTEM SHALL fill the Patient Name field and display the Patient Number below the field
+
+WHEN a user clicks outside the autocomplete suggestions
+THE SYSTEM SHALL hide the suggestions dropdown
+
+WHEN no patients match the search criteria or selected date
+THE SYSTEM SHALL hide the autocomplete suggestions
+
+---
+
+Form Validation and Submission:
+WHEN the add prescription form is displayed
+THE SYSTEM SHALL require all fields (Patient Name, Doctor, Date Prescribed, Medications) to be filled
+
+WHEN a user submits the add prescription form with valid data
+THE SYSTEM SHALL add the prescription to the table and close the overlay
+
+WHEN a prescription is successfully added
+THE SYSTEM SHALL display a success toast notification "Prescription added!"
+
+WHEN a user clicks the Cancel button in the add prescription form
+THE SYSTEM SHALL close the overlay without saving any data
+
+WHEN a user clicks outside the overlay area
+THE SYSTEM SHALL close the add prescription overlay
+
+---
+
+Prescription Actions (View/Edit/Delete):
+WHEN the user role permits prescription actions
+THE SYSTEM SHALL display View, Edit, and Delete buttons in the Actions column for each prescription row
+
+WHEN a user clicks the View button for a prescription
+THE SYSTEM SHALL display an info toast showing "Viewing prescription [ID]"
+
+WHEN a user clicks the Edit button for a prescription
+THE SYSTEM SHALL display an info toast showing "Editing prescription [ID]"
+
+WHEN a user clicks the Delete button for a prescription
+THE SYSTEM SHALL display a confirmation modal asking "Are you sure you want to delete prescription [ID]?"
+
+---
+
+Confirmation Modal Behavior:
+WHEN a delete confirmation modal is displayed
+THE SYSTEM SHALL show Yes and No buttons with appropriate icons
+
+WHEN a user clicks Yes in the delete confirmation modal
+THE SYSTEM SHALL remove the prescription row from the table and display a success toast
+
+WHEN a user clicks No in the delete confirmation modal
+THE SYSTEM SHALL close the modal without performing any action
+
+WHEN a user clicks outside the confirmation modal
+THE SYSTEM SHALL close the modal without performing any action
+
+---
+
+Profile and User Management:
+WHEN the prescriptions page loads
+THE SYSTEM SHALL display the user's role in uppercase in the profile area
+
+WHEN the prescriptions page loads
+THE SYSTEM SHALL display the logged-in username in the profile area
+
+WHEN the prescriptions page loads
+THE SYSTEM SHALL show a profile avatar with the first letter of the username and a color based on username hash
+
+WHEN a user clicks the profile avatar
+THE SYSTEM SHALL toggle the profile dropdown menu with Settings and Logout options
+
+WHEN a user clicks Settings in the profile dropdown
+THE SYSTEM SHALL show an alert "Settings functionality coming soon!" and close the dropdown
+
+WHEN a user clicks Logout in the profile dropdown
+THE SYSTEM SHALL clear localStorage authentication data and redirect to login.html
+
+---
+
+Toast Notification System:
+WHEN a toast notification is triggered
+THE SYSTEM SHALL display the notification in the top-right corner of the page
+
+WHEN a success toast is displayed
+THE SYSTEM SHALL show the message with green background
+
+WHEN an error toast is displayed
+THE SYSTEM SHALL show the message with red background
+
+WHEN a toast notification is displayed
+THE SYSTEM SHALL automatically hide it after 3 seconds
+
+---
+
+Responsive Design Behavior:
+WHEN the page is viewed on mobile devices (max-width: 768px)
+THE SYSTEM SHALL adjust the main content to full width minus margins
+
+WHEN the page is viewed on mobile devices
+THE SYSTEM SHALL hide the sidebar by default with transform translateX(-100%)
+
+WHEN the page is viewed on mobile devices
+THE SYSTEM SHALL stack the prescriptions header elements vertically with gaps
+
+WHEN the page is viewed on mobile devices
+THE SYSTEM SHALL adjust the search bar to full width
+
+---
+
+Navigation Integration:
+WHEN a user clicks on Dashboard in the sidebar
+THE SYSTEM SHALL navigate to index.html
+
+WHEN a user clicks on Appointments in the sidebar
+THE SYSTEM SHALL navigate to appointments.html
+
+WHEN a user clicks on Patients in the sidebar
+THE SYSTEM SHALL navigate to patients.html
+
+WHEN a user clicks on Laboratory in the sidebar
+THE SYSTEM SHALL navigate to laboratory.html
+
+WHEN a user clicks on Doctors in the sidebar
+THE SYSTEM SHALL navigate to doctor-schedule.html
+
+WHEN a user clicks on the Prescriptions item in the sidebar
+THE SYSTEM SHALL stay on the current prescriptions.html page
+
+---
+
+Data Integration and State Management:
+WHEN the add prescription form loads
+THE SYSTEM SHALL fetch patient data from the patients API endpoint
+
+WHEN the add prescription form loads
+THE SYSTEM SHALL fetch appointment data from the appointments API endpoint
+
+WHEN form data is successfully fetched
+THE SYSTEM SHALL enable patient name autocomplete functionality
+
+WHEN API calls fail during form initialization
+THE SYSTEM SHALL gracefully handle errors and set empty arrays for patient and appointment data
+
+WHEN a prescription is added via the form
+THE SYSTEM SHALL update the parent page table through the window.parent.addPrescriptionToTable function
