@@ -1,0 +1,207 @@
+Dashboard Page Load and Authentication:
+WHEN a user navigates to the dashboard page (index.html)
+THE SYSTEM SHALL verify user authentication status from localStorage or sessionStorage
+
+WHEN the dashboard page loads with valid authentication
+THE SYSTEM SHALL display the user's role and username in the header area
+
+WHEN the dashboard page loads without valid authentication
+THE SYSTEM SHALL redirect the user to the login page
+
+WHEN the dashboard page loads for an authenticated user
+THE SYSTEM SHALL generate and display a profile avatar with user initials and random color based on username
+
+---
+
+Header and Profile Management:
+WHEN the dashboard loads
+THE SYSTEM SHALL display the clinic logo, name "M.G. Amores Medical Clinic", role display, username display, and profile avatar in the header
+
+WHEN a user clicks on the profile avatar
+THE SYSTEM SHALL toggle the profile dropdown menu with "Settings" and "Logout" options
+
+WHEN a user clicks outside the profile dropdown
+THE SYSTEM SHALL close the dropdown menu
+
+WHEN a user clicks the "Settings" option in the profile dropdown
+THE SYSTEM SHALL display a coming soon message (placeholder functionality)
+
+WHEN a user clicks the "Logout" option in the profile dropdown
+THE SYSTEM SHALL clear localStorage authentication data and redirect to login page
+
+---
+
+Sidebar Navigation:
+WHEN the dashboard loads
+THE SYSTEM SHALL display a sidebar with navigation items: Dashboard, Appointments, Patients, Laboratory, Prescriptions, and Doctors
+
+WHEN the dashboard loads for an admin user
+THE SYSTEM SHALL include an additional "Accounts" navigation item in the sidebar
+
+WHEN a user clicks any sidebar navigation item
+THE SYSTEM SHALL redirect to the corresponding page with proper cursor pointer styling
+
+WHEN the dashboard page is active
+THE SYSTEM SHALL highlight the Dashboard navigation item as active with visual styling
+
+---
+
+Summary Cards Display:
+WHEN the dashboard loads
+THE SYSTEM SHALL display three summary cards: Doctor, Current Patient, and Total Appointments
+
+WHEN the dashboard loads
+THE SYSTEM SHALL fetch and display the assigned doctor name in the Doctor card with "Assigned" status
+
+WHEN the dashboard loads
+THE SYSTEM SHALL fetch and display the current patient name based on the closest appointment time to now
+
+WHEN no current patient is found
+THE SYSTEM SHALL display "N/A" in the Current Patient card
+
+WHEN the dashboard loads
+THE SYSTEM SHALL fetch and display today's total confirmed appointments count
+
+WHEN the dashboard loads
+THE SYSTEM SHALL display today's formatted date in the Total Appointments card
+
+---
+
+Today's Appointments Table:
+WHEN the dashboard loads
+THE SYSTEM SHALL fetch and display today's appointments in a table with columns: Patient #, Patient, Reason for visit, Contact, Time, Doctor, Status
+
+WHEN displaying today's appointments
+THE SYSTEM SHALL filter appointments to show only those with appointment times at or after the current time
+
+WHEN displaying appointment times
+THE SYSTEM SHALL format times in 12-hour format with AM/PM notation
+
+WHEN displaying patient names
+THE SYSTEM SHALL format names with proper capitalization (first letter of each word capitalized)
+
+WHEN displaying patient names in the appointments table
+THE SYSTEM SHALL create clickable links that navigate to patientinfo.html with the patient_id parameter
+
+WHEN the appointments table is displayed
+THE SYSTEM SHALL include a "See All" link that navigates to the appointments page
+
+WHEN no appointments are found for today
+THE SYSTEM SHALL display an empty table with proper headers
+
+---
+
+Lab Results Display (Doctor Role):
+WHEN the dashboard loads for a user with doctor role
+THE SYSTEM SHALL display the "Today's Lab Test Results" table section
+
+WHEN the dashboard loads for a non-doctor user
+THE SYSTEM SHALL hide the "Today's Lab Test Results" table section
+
+WHEN displaying lab results for doctors
+THE SYSTEM SHALL fetch completed lab tests filtered for today's date only
+
+WHEN lab test results are displayed
+THE SYSTEM SHALL show columns: Patient #, Patient Name, Lab Test, Date, Status, Action
+
+WHEN displaying lab test patient names
+THE SYSTEM SHALL create clickable links that navigate to patientinfo.html with the patient_id parameter
+
+WHEN displaying lab test dates
+THE SYSTEM SHALL format dates in MM/DD/YYYY format with abbreviated month names
+
+WHEN displaying lab test status
+THE SYSTEM SHALL show status as a styled badge with "Complete" status and green coloring
+
+WHEN lab test results include a View button
+THE SYSTEM SHALL enable clicking to open the lab result in a modal overlay
+
+WHEN no lab test results are found for today
+THE SYSTEM SHALL display a message "No completed lab tests for today" in the table
+
+---
+
+Real-time Data Updates:
+WHEN the dashboard is active
+THE SYSTEM SHALL automatically refresh dashboard data (appointments count and appointments table) every 10 seconds
+
+WHEN the dashboard is active
+THE SYSTEM SHALL automatically refresh current patient data every 10 seconds
+
+WHEN the dashboard is active for doctors
+THE SYSTEM SHALL automatically refresh lab test results every 30 seconds
+
+WHEN API calls fail during data refresh
+THE SYSTEM SHALL log errors to console and display fallback values without breaking the interface
+
+---
+
+Lab Result Modal Functionality:
+WHEN a doctor clicks the "View" button for a lab test result
+THE SYSTEM SHALL open a modal overlay displaying the lab test form
+
+WHEN opening the lab result modal
+THE SYSTEM SHALL determine the correct lab form (urinalysis, blood-chemistry, hematology, etc.) based on the test type
+
+WHEN the lab result modal opens
+THE SYSTEM SHALL load the appropriate form in an iframe and pass the lab data via postMessage
+
+WHEN the lab result modal is displayed
+THE SYSTEM SHALL show a close button (X) in the top-right corner
+
+WHEN a user clicks the close button or clicks outside the modal
+THE SYSTEM SHALL close the modal and clear the iframe source
+
+WHEN a user presses the Escape key while the modal is open
+THE SYSTEM SHALL close the modal
+
+WHEN the lab form within the modal sends a close message
+THE SYSTEM SHALL close the modal and refresh lab test results if data was updated
+
+---
+
+Error Handling and Fallbacks:
+WHEN API endpoints are unreachable for appointments data
+THE SYSTEM SHALL display "0" for appointment counts and "Error" for current patient
+
+WHEN API endpoints are unreachable for lab test data
+THE SYSTEM SHALL display "Error loading lab results" message in the lab results table
+
+WHEN appointment data fails to load
+THE SYSTEM SHALL display an empty appointments table without breaking the page layout
+
+WHEN patient data is missing or incomplete
+THE SYSTEM SHALL display "N/A" for missing fields rather than showing undefined values
+
+---
+
+Role-based Content Access:
+WHEN a user with admin role accesses the dashboard
+THE SYSTEM SHALL include the Accounts navigation item in the sidebar
+
+WHEN a user with doctor role accesses the dashboard
+THE SYSTEM SHALL display the lab results section and enable lab result viewing functionality
+
+WHEN a user with non-doctor role accesses the dashboard
+THE SYSTEM SHALL hide the lab results section completely
+
+WHEN role information is missing or invalid
+THE SYSTEM SHALL default to the most restrictive permissions (no admin or doctor features)
+
+---
+
+Responsive Design and UI Behavior:
+WHEN the browser window is resized below 992px width
+THE SYSTEM SHALL adapt the layout to single-column display for better mobile experience
+
+WHEN hovering over sidebar navigation items
+THE SYSTEM SHALL show visual feedback with color changes and pointer cursor
+
+WHEN hovering over patient name links
+THE SYSTEM SHALL show visual feedback by changing text color to gray
+
+WHEN the dashboard cards are displayed
+THE SYSTEM SHALL maintain consistent spacing and alignment across different screen sizes
+
+WHEN tables contain long text content
+THE SYSTEM SHALL handle text overflow with ellipsis and maintain table layout integrity
