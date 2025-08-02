@@ -1,0 +1,228 @@
+Page Display and Navigation:
+WHEN a user navigates to the appointments page
+THE SYSTEM SHALL display the appointments page with header navigation, sidebar menu, and main content area
+
+WHEN the appointments page loads
+THE SYSTEM SHALL display the page title "Appointments" and show the user's role and username in the header
+
+WHEN the appointments page loads
+THE SYSTEM SHALL display an active state for the "Appointments" menu item in the sidebar navigation
+
+WHEN the appointments page loads
+THE SYSTEM SHALL show an "Add Appointment" button in the header area
+
+WHEN a user with "admin" role accesses the appointments page
+THE SYSTEM SHALL inject an "Accounts" menu item into the sidebar navigation
+
+---
+
+Filter Controls and Data Loading:
+WHEN the appointments page loads
+THE SYSTEM SHALL set the date filter to today's date and load today's appointments by default
+
+WHEN the appointments page loads
+THE SYSTEM SHALL display filter controls including a date picker and "Show All" checkbox
+
+WHEN a user changes the selected date in the date picker
+THE SYSTEM SHALL automatically uncheck the "Show All" checkbox and load appointments for the selected date
+
+WHEN a user checks the "Show All" checkbox
+THE SYSTEM SHALL load and display all appointments regardless of date, sorted from latest to oldest
+
+WHEN a user unchecks the "Show All" checkbox
+THE SYSTEM SHALL load appointments for the currently selected date
+
+WHEN appointments are loaded
+THE SYSTEM SHALL display a count showing total appointments with breakdown of confirmed and cancelled statuses
+
+---
+
+Appointments Table Display:
+WHEN the appointments page loads
+THE SYSTEM SHALL display a table with columns for Patient #, Patient Name, Reason for Visit, Date, Time, Doctor, Status, and Action
+
+WHEN appointments data is loaded
+THE SYSTEM SHALL display appointment information in proper case formatting for patient names and readable date/time formats
+
+WHEN appointments data is loaded
+THE SYSTEM SHALL display appointment status with color-coded badges (green for Confirmed, red for Cancelled)
+
+WHEN no appointments are found for today
+THE SYSTEM SHALL display "No upcoming appointments for today." message in the table body
+
+WHEN no appointments are found for the selected criteria
+THE SYSTEM SHALL display "No appointments found." message in the table body
+
+WHEN appointments data fails to load
+THE SYSTEM SHALL display "Error loading appointments." message in red color in the table
+
+---
+
+Add Appointment Functionality:
+WHEN a user clicks the "Add Appointment" button
+THE SYSTEM SHALL open an overlay modal containing an iframe with the add appointment form
+
+WHEN the add appointment overlay opens
+THE SYSTEM SHALL display a close button and reset any previous form data
+
+WHEN a user clicks the close button in the add appointment overlay
+THE SYSTEM SHALL close the overlay and clear the iframe source
+
+WHEN an appointment is successfully added through the overlay form
+THE SYSTEM SHALL close the overlay, refresh the appointments list, and show a success toast notification
+
+WHEN an appointment is added with a specific date
+THE SYSTEM SHALL set the date picker to that date, uncheck "Show All", and display appointments for that date
+
+---
+
+Appointment Form Interactions:
+WHEN a user types in the patient name field
+THE SYSTEM SHALL display autocomplete suggestions from existing patients
+
+WHEN a user selects a patient from autocomplete
+THE SYSTEM SHALL populate patient information and display patient ID
+
+WHEN a user selects a date in the appointment form
+THE SYSTEM SHALL load available time slots for that date excluding past times for today and taken slots
+
+WHEN all time slots are full for a selected date
+THE SYSTEM SHALL display "All time slots are full for this day." warning
+
+WHEN a user selects a time slot that is already full (4 confirmed appointments)
+THE SYSTEM SHALL display "This timeslot is already full." warning
+
+WHEN a user selects a time slot in the past
+THE SYSTEM SHALL display "You cannot select a time in the past." warning
+
+WHEN the appointment form loads
+THE SYSTEM SHALL populate doctor selection dropdown with available doctors
+
+WHEN form fields are incomplete
+THE SYSTEM SHALL disable the submit button and show field validation errors
+
+WHEN patient is not selected from autocomplete suggestions
+THE SYSTEM SHALL display "Please select a patient from the suggestions." error message
+
+WHEN required form fields are empty
+THE SYSTEM SHALL display "Please fill in all fields." error message
+
+WHEN appointment form is submitted with valid data
+THE SYSTEM SHALL disable submit button and show loading state to prevent double submission
+
+---
+
+Appointment Management Actions:
+WHEN the appointment status is "Confirmed"
+THE SYSTEM SHALL display "Modify" and "Cancel" action buttons for that appointment
+
+WHEN the appointment status is "Cancelled"
+THE SYSTEM SHALL display only a "Reconfirm" action button for that appointment
+
+WHEN a user clicks the "Modify" button
+THE SYSTEM SHALL open the appointment form overlay pre-populated with the existing appointment data
+
+WHEN appointment form is opened in edit mode
+THE SYSTEM SHALL change form title to "Update Appointment" and button text to "Update Appointment"
+
+WHEN appointment form is opened in edit mode
+THE SYSTEM SHALL populate all fields with existing appointment data including patient name, reason, date, time, and doctor
+
+WHEN a user clicks the "Cancel" button
+THE SYSTEM SHALL display a confirmation modal asking "Are you sure you want to cancel this appointment?"
+
+WHEN a user confirms appointment cancellation
+THE SYSTEM SHALL update the appointment status to "Cancelled", refresh the appointments list, and show a success toast
+
+WHEN a user clicks the "Reconfirm" button for a cancelled appointment
+THE SYSTEM SHALL check if the time slot has available capacity (less than 4 confirmed appointments)
+
+WHEN a user clicks "Reconfirm" and the time slot has available capacity
+THE SYSTEM SHALL display a confirmation modal asking "Reconfirm this appointment?"
+
+WHEN a user confirms appointment reconfirmation and the time slot is available
+THE SYSTEM SHALL update the appointment status to "Confirmed", refresh the appointments list, and show a success toast
+
+WHEN a user attempts to reconfirm an appointment but the time slot is fully booked
+THE SYSTEM SHALL open the modify appointment form to allow selection of a different time
+
+---
+
+Confirmation Modal Interactions:
+WHEN a confirmation modal is displayed
+THE SYSTEM SHALL show modal overlay with "Yes" and "No" buttons with appropriate icons
+
+WHEN a user clicks "Yes" in a confirmation modal
+THE SYSTEM SHALL execute the confirmed action and close the modal
+
+WHEN a user clicks "No" in a confirmation modal
+THE SYSTEM SHALL cancel the action and close the modal without making changes
+
+WHEN a confirmation modal is displayed
+THE SYSTEM SHALL prevent interaction with background elements until the modal is closed
+
+---
+
+User Feedback and Notifications:
+WHEN any appointment action (add, modify, cancel, reconfirm) is successful
+THE SYSTEM SHALL display a toast notification with appropriate success message
+
+WHEN any appointment action fails due to validation or server error
+THE SYSTEM SHALL display the error message in a toast notification
+
+WHEN toast notifications are displayed
+THE SYSTEM SHALL automatically hide them after 2 seconds
+
+WHEN toast notifications are displayed
+THE SYSTEM SHALL position them at the top center of the viewport
+
+---
+
+Profile and Authentication:
+WHEN the user profile avatar is clicked
+THE SYSTEM SHALL display a dropdown menu with "Settings" and "Logout" options
+
+WHEN a user clicks "Settings" from the profile dropdown
+THE SYSTEM SHALL display "Settings functionality coming soon!" message
+
+WHEN a user clicks "Logout" from the profile dropdown
+THE SYSTEM SHALL clear localStorage authentication data and redirect to the login page
+
+WHEN a user clicks outside the profile dropdown
+THE SYSTEM SHALL automatically close the dropdown menu
+
+WHEN the appointments page loads
+THE SYSTEM SHALL display the user's role and username from localStorage in the header
+
+WHEN the profile avatar is displayed
+THE SYSTEM SHALL generate consistent color based on username hash for visual identification
+
+---
+
+Data Formatting and Display:
+WHEN appointments are displayed in the table
+THE SYSTEM SHALL format patient names in proper case (first letter capitalized)
+
+WHEN appointments are displayed in the table
+THE SYSTEM SHALL format time in 12-hour format with AM/PM
+
+WHEN appointments are displayed in the table
+THE SYSTEM SHALL format dates in readable format (Month Day, Year)
+
+WHEN appointments are displayed with "Show All" active
+THE SYSTEM SHALL sort appointments from latest to oldest by date and time
+
+---
+
+Backend Integration and Error Handling:
+WHEN loading appointments data
+THE SYSTEM SHALL fetch from /appointments API endpoint and handle response appropriately
+
+WHEN updating appointment status
+THE SYSTEM SHALL send PUT request to /appointments/cancel/{id} endpoint with new status
+
+WHEN API request fails
+THE SYSTEM SHALL log error to console and display user-friendly error message
+
+WHEN appointment operations complete
+THE SYSTEM SHALL reload the appropriate view (filtered date or all appointments) based on current filter state
